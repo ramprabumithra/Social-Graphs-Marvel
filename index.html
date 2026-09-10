@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
 <title>Web of Heroes — The Turncoat Protocol</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Oswald:wght@400;500&display=swap');
-
+ 
   :root {
     --ink: #14100c;
     --paper: #E8DEC8;
@@ -24,34 +25,34 @@
     color: var(--ink);
     display: flex;
   }
-
+ 
   .game-area { flex: 1; position: relative; background: #050403; min-width: 0; }
   #scene-canvas { display: block; width: 100%; height: 100%; cursor: pointer; }
-
+ 
   .hud-overlay { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between;
     pointer-events: none; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
   .location-card { background: rgba(20,16,12,0.85); border: 2px solid var(--gold); color: var(--gold);
     padding: 10px 16px; max-width: 55%; }
   .location-card .name { font-size: 1.3rem; line-height: 1.1; }
   .location-card .stats { font-family: 'Oswald', sans-serif; font-size: 0.75rem; color: #d8c98a; font-weight: 500; margin-top: 3px; }
-
+ 
   .facing-card { background: rgba(20,16,12,0.85); border: 2px solid #3a6ea5; color: #8ab4e8;
     padding: 10px 16px; text-align: right; }
   .facing-card .name { font-size: 1.1rem; }
   .facing-card .hint { font-family: 'Oswald', sans-serif; font-size: 0.7rem; color: #b7cbe4; font-weight: 500; }
-
+ 
   .center-crosshair { position: absolute; top: 50%; left: 50%; width: 10px; height: 10px;
     border: 2px solid var(--gold); border-radius: 50%; transform: translate(-50%,-50%); pointer-events: none; }
-
+ 
   .minimap-wrap { position: absolute; bottom: 90px; right: 14px; background: rgba(20,16,12,0.85); border: 2px solid var(--gold); }
   #minimap { display: block; }
-
+ 
   .lose-flash { position: absolute; inset: 0; background: rgba(179,36,28,0.35); display: none; align-items: center; justify-content: center;
     flex-direction: column; text-align: center; pointer-events: none; }
   .lose-flash.show { display: flex; }
   .lose-flash .big { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--ink); }
   .lose-flash .small { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #fce; margin-top: 8px; max-width: 480px; }
-
+ 
   .controls-row { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
     display: flex; align-items: center; gap: 8px; }
   .dbtn { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1.2rem; width: 52px; height: 44px; background: rgba(217,202,168,0.9);
@@ -62,7 +63,7 @@
   .dpad .left { grid-column: 1; grid-row: 2; }
   .dpad .down { grid-column: 2; grid-row: 2; }
   .dpad .right { grid-column: 3; grid-row: 2; }
-
+ 
   .sidebar {
     width: 340px; flex-shrink: 0; background: #050403;
     border-left: 1px solid #1a1611;
@@ -72,14 +73,14 @@
     transition: width 0.25s ease, padding 0.25s ease;
   }
   .sidebar.collapsed { width: 0; padding: 0; overflow: hidden; border-left: none; }
-
+ 
   .sidebar-toggle {
     position: absolute; top: 14px; right: 14px; z-index: 10;
     width: 36px; height: 36px; background: rgba(5,4,3,0.85); border: 1px solid #3a342a;
     color: #b3a888; font-family: 'Orbitron', sans-serif; font-size: 1rem; cursor: pointer;
   }
   .sidebar-toggle:hover { border-color: var(--gold); color: var(--gold); }
-
+ 
   .drone-toggle {
     position: absolute; top: 14px; right: 58px; z-index: 10;
     height: 36px; padding: 0 12px; background: rgba(5,4,3,0.85); border: 1px solid #3a342a;
@@ -93,7 +94,7 @@
     color: #b3a888; font-family: 'Orbitron', sans-serif; font-size: 1rem; cursor: pointer;
   }
   .help-toggle:hover { border-color: var(--gold); color: var(--gold); }
-
+ 
   .music-toggle {
     position: absolute; top: 58px; left: 14px; z-index: 10;
     width: 36px; height: 36px; background: rgba(5,4,3,0.85); border: 1px solid #3a342a;
@@ -103,7 +104,7 @@
   .music-toggle.playing { background: var(--amber); color: #14100c; border-color: var(--amber); }
   .music-toggle.prompt { animation: music-pulse 1.6s ease-in-out infinite; }
   @keyframes music-pulse { 0%,100% { border-color: #3a342a; } 50% { border-color: var(--gold); } }
-
+ 
   /* ===== Centered launch briefing modal ===== */
   .modal-backdrop {
     position: absolute; inset: 0; z-index: 40;
@@ -150,25 +151,25 @@
   .sidebar h1 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1.5rem; letter-spacing: 0.02em; color: var(--blood);
     text-shadow: 2px 2px 0 #000; margin: 0 0 4px; }
   .sidebar .tagline { font-size: 0.72rem; font-weight: 500; color: #b3a888; margin-bottom: 14px; line-height: 1.5; }
-
+ 
   .hud-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
   .readout { display: flex; flex-direction: column; align-items: center; background: #1c160f; border: 2px solid var(--gold);
     padding: 5px 10px; flex: 1; min-width: 70px; box-shadow: 3px 3px 0 #000; }
   .readout .label { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.03em; color: #b3a888; text-transform: uppercase; }
   .readout .value { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1.1rem; color: var(--gold); }
   .readout.good .value { color: #8fc76a; }
-
+ 
   .diff-row { display: flex; gap: 6px; margin-bottom: 8px; }
   .diff-btn { flex: 1; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.78rem; padding: 6px 4px; background: #1c160f;
     border: 2px solid var(--gold); color: #d8c98a; cursor: pointer; box-shadow: 3px 3px 0 #000; }
   .diff-btn.active { background: var(--amber); color: #14100c; }
   .diff-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
-
+ 
   .new-op-btn { width: 100%; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1rem; padding: 9px; background: var(--blood);
     color: #fff; border: 2px solid var(--gold); cursor: pointer; box-shadow: 4px 4px 0 #000; margin-bottom: 12px; }
   .new-op-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #000; }
   .new-op-btn.lost { background: #000; color: var(--blood); }
-
+ 
   .sidebar h3 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.9rem; color: var(--gold); margin: 4px 0 6px; }
   .corridor-search { width: 100%; padding: 6px 8px; border: 2px solid var(--gold); font-family: 'Oswald', sans-serif;
     font-size: 0.8rem; background: #1c160f; color: #E8DEC8; margin-bottom: 6px; }
@@ -180,15 +181,15 @@
   .corridor-item.visited { color: #8fc76a; font-weight: 600; }
   .corridor-item .n { font-size: 0.62rem; color: #8a7a5a; }
   .corridor-item:hover .n { color: #14100c; }
-
+ 
   .instructions { font-size: 0.76rem; color: #b3a888; line-height: 1.6; margin-bottom: 12px; }
   .instructions b { color: var(--gold); }
   .instructions ul { margin: 6px 0; padding-left: 18px; }
-
+ 
   .msg { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.95rem; text-align: center; min-height: 1.4rem; color: #d8c98a; }
   .msg.win { color: #8fc76a; }
   .msg.lose { color: var(--blood); }
-
+ 
   @media (max-width: 780px) {
     body { flex-direction: column; }
     .sidebar { width: 100%; height: 42vh; border-left: none; border-top: 1px solid #1a1611; }
@@ -198,7 +199,7 @@
 </style>
 </head>
 <body>
-
+ 
 <div class="game-area">
   <canvas id="scene-canvas"></canvas>
   <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
@@ -207,6 +208,9 @@
   <button class="music-toggle prompt" id="music-toggle" onclick="toggleMusic()" title="Toggle music">♪</button>
   <audio id="bgm" loop preload="auto">
     <source src="theme.mp3" type="audio/mpeg">
+  </audio>
+  <audio id="ambush-sfx" preload="auto">
+    <source src="theme2.mp3" type="audio/mpeg">
   </audio>
   <div class="hud-overlay">
     <div class="location-card">
@@ -232,7 +236,7 @@
     <div class="big" id="lose-big">AMBUSHED</div>
     <div class="small" id="lose-small"></div>
   </div>
-
+ 
   <div class="modal-backdrop" id="modal-backdrop">
     <div class="modal-panel">
       <div class="modal-ticks"><span></span><span></span><span></span><span></span></div>
@@ -248,17 +252,17 @@
     </div>
   </div>
 </div>
-
+ 
 <div class="sidebar">
   <h1>WEB OF HEROES — THE TURNCOAT PROTOCOL</h1>
   <div class="tagline">Walk the real network node by node. Every corridor is a real Wikipedia link. Somewhere out there, some of these characters have turned.</div>
-
+ 
   <div class="hud-row">
     <div class="readout"><span class="label">Compromised</span><span class="value" id="mine-count">30</span></div>
     <div class="readout good"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
     <div class="readout"><span class="label">Danger here</span><span class="value" id="danger-count">-</span></div>
   </div>
-
+ 
   <div class="diff-row">
     <button class="diff-btn active" onclick="setDifficulty('recon')">RECON</button>
     <button class="diff-btn" onclick="setDifficulty('assault')">ASSAULT</button>
@@ -266,32 +270,32 @@
   </div>
   <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW OPERATION</button>
   <div class="msg" id="msg"></div>
-
+ 
   <h3>CORRIDORS HERE</h3>
   <input class="corridor-search" id="corridor-search" placeholder="Search corridors..." oninput="renderCorridorList()">
   <div class="corridor-list" id="corridor-list"></div>
 </div>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const GRAPH = 
 {"nodes": [{"id": "Abomination_(character)", "name": "Abomination (character)", "x": 892.3, "y": 332.4, "deg": 9}, {"id": "Adam_Warlock", "name": "Adam Warlock", "x": 630.5, "y": 730.1, "deg": 25}, {"id": "Agent_X_(Marvel_Comics)", "name": "Agent X (Marvel Comics)", "x": 1147.7, "y": 853.5, "deg": 5}, {"id": "Ajak", "name": "Ajak", "x": 434.3, "y": 296.4, "deg": 4}, {"id": "Alex_Wilder", "name": "Alex Wilder", "x": 322.7, "y": 952.2, "deg": 2}, {"id": "Anne_Weying", "name": "She-Venom (Patricia Robertson)", "x": 1187.1, "y": 706.0, "deg": 5}, {"id": "Anole_(character)", "name": "Anole (character)", "x": 1088.7, "y": 799.7, "deg": 8}, {"id": "Anya_Corazon", "name": "Anya Corazon", "x": 768.9, "y": 884.8, "deg": 16}, {"id": "Arabian_Knight_(character)", "name": "Arabian Knight (character)", "x": 778.0, "y": 319.5, "deg": 10}, {"id": "Ares_(Marvel_Comics)", "name": "Ares (Marvel Comics)", "x": 1030.5, "y": 853.8, "deg": 9}, {"id": "Backhand_(character)", "name": "Backhand (character)", "x": 222.1, "y": 1383.7, "deg": 2}, {"id": "Balder_the_Brave", "name": "Balder the Brave", "x": 449.9, "y": 1020.8, "deg": 3}, {"id": "Battlestar_(character)", "name": "Battlestar (character)", "x": 330.3, "y": 896.0, "deg": 3}, {"id": "Baymax", "name": "Baymax", "x": 900, "y": 1290, "deg": 0}, {"id": "Beta_Ray_Bill", "name": "Beta Ray Bill", "x": 381.5, "y": 616.9, "deg": 7}, {"id": "Betsy_Braddock", "name": "Betsy Braddock", "x": 659.2, "y": 581.6, "deg": 28}, {"id": "Bill_Foster_(character)", "name": "Bill Foster (character)", "x": 553.8, "y": 542.3, "deg": 17}, {"id": "Bird-Brain_(Marvel_Comics)", "name": "Bird-Brain (Marvel Comics)", "x": 942, "y": 1290, "deg": 0}, {"id": "Black_Bolt", "name": "Black Bolt", "x": 970.3, "y": 697.6, "deg": 18}, {"id": "Black_Cat_(Marvel_Comics)", "name": "Black Cat (Marvel Comics)", "x": 878.5, "y": 614.0, "deg": 28}, {"id": "Black_Fox_(Robert_Paine)", "name": "Black Fox (Robert Paine)", "x": 984, "y": 1290, "deg": 0}, {"id": "Black_Jack_Tarr", "name": "Black Jack Tarr", "x": 1299.9, "y": 781.0, "deg": 1}, {"id": "Black_Knight_(Marvel_Comics)", "name": "Black Knight (Marvel Comics)", "x": 918.2, "y": 995.9, "deg": 7}, {"id": "Black_Marvel", "name": "Black Marvel", "x": 400.6, "y": 422.2, "deg": 6}, {"id": "Black_Panther_(character)", "name": "Black Panther (character)", "x": 849.4, "y": 672.6, "deg": 31}, {"id": "Black_Rider_(character)", "name": "Black Rider (character)", "x": 768.0, "y": 1112.2, "deg": 4}, {"id": "Black_Widow_(Natasha_Romanova)", "name": "Black Widow (Natasha Romanova)", "x": 912.8, "y": 660.6, "deg": 25}, {"id": "Blackthorn_(character)", "name": "Blackthorn (character)", "x": 130.7, "y": 1289.7, "deg": 2}, {"id": "Blackwulf", "name": "Blackwulf", "x": 976.6, "y": 162.3, "deg": 2}, {"id": "Blade_(character)", "name": "Blade (character)", "x": 699.7, "y": 472.5, "deg": 22}, {"id": "Blazing_Skull", "name": "Blazing Skull", "x": 630.7, "y": 978.5, "deg": 8}, {"id": "Blue_Bullet", "name": "Blue Bullet", "x": 1135.1, "y": 316.0, "deg": 3}, {"id": "Blue_Diamond_(character)", "name": "Blue Diamond (character)", "x": 462.2, "y": 479.8, "deg": 9}, {"id": "Blue_Eagle_(character)", "name": "Blue Eagle (character)", "x": 667.1, "y": 1188.1, "deg": 1}, {"id": "Blue_Marvel", "name": "Blue Marvel", "x": 411.5, "y": 359.1, "deg": 5}, {"id": "Bob,_Agent_of_Hydra", "name": "Bob, Agent of Hydra", "x": 664.9, "y": 256.4, "deg": 7}, {"id": "Box_(comics)", "name": "Box (comics)", "x": 259.7, "y": 734.7, "deg": 3}, {"id": "Brain_Drain_(character)", "name": "Brain Drain (character)", "x": 1026, "y": 1290, "deg": 0}, {"id": "Breeze_Barton", "name": "Breeze Barton", "x": 1068, "y": 1290, "deg": 0}, {"id": "Brian_Braddock", "name": "Brian Braddock", "x": 941.9, "y": 386.5, "deg": 11}, {"id": "Bucky_(Marvel_Comics)", "name": "Bucky (Marvel Comics)", "x": 628.2, "y": 914.7, "deg": 12}, {"id": "Bug_(Marvel_Comics)", "name": "Bug (Marvel Comics)", "x": 295.0, "y": 523.4, "deg": 4}, {"id": "Cable_(character)", "name": "Cable (character)", "x": 842.0, "y": 783.0, "deg": 24}, {"id": "Cammi_(character)", "name": "Cammi (character)", "x": 1200.1, "y": 769.9, "deg": 4}, {"id": "Captain_Marvel_(Khn'nr)", "name": "Captain Marvel (Khn'nr)", "x": 1079.4, "y": 1046.4, "deg": 3}, {"id": "Captain_Marvel_(Marvel_Comics)", "name": "Captain Marvel (Marvel Comics)", "x": 642.1, "y": 841.1, "deg": 17}, {"id": "Captain_Midlands", "name": "Captain Midlands", "x": 1110, "y": 1290, "deg": 0}, {"id": "Captain_Ultra", "name": "Captain Ultra", "x": 1307.3, "y": 588.0, "deg": 1}, {"id": "Captain_Universe", "name": "Captain Universe", "x": 980.4, "y": 572.0, "deg": 17}, {"id": "Caretaker_(comics)", "name": "Caretaker (comics)", "x": 468.7, "y": 236.1, "deg": 3}, {"id": "Ch'od", "name": "Ch'od", "x": 358.4, "y": 560.8, "deg": 6}, {"id": "Charcoal_(comics)", "name": "Charcoal (comics)", "x": 1152, "y": 1290, "deg": 0}, {"id": "Chase_Stein", "name": "Chase Stein", "x": 645.3, "y": 1035.8, "deg": 6}, {"id": "Citizen_V", "name": "Citizen V", "x": 265.7, "y": 625.5, "deg": 3}, {"id": "Cloak_and_Dagger_(characters)", "name": "Cloak and Dagger (characters)", "x": 805.1, "y": 543.6, "deg": 28}, {"id": "Coldblood", "name": "Coldblood", "x": 301.2, "y": 381.4, "deg": 2}, {"id": "Crane_Mother", "name": "Crane Mother", "x": 978.4, "y": 1092.5, "deg": 3}, {"id": "Crippler_(character)", "name": "Crippler (character)", "x": 346.6, "y": 842.0, "deg": 4}, {"id": "Cyclops_(Marvel_Comics)", "name": "Cyclops (Marvel Comics)", "x": 753.2, "y": 786.5, "deg": 26}, {"id": "Dargo_Ktor", "name": "Dargo Ktor", "x": 1170.1, "y": 977.2, "deg": 2}, {"id": "Darkdevil", "name": "Darkdevil", "x": 299.5, "y": 793.1, "deg": 4}, {"id": "Darkhawk", "name": "Darkhawk", "x": 650.1, "y": 399.0, "deg": 15}, {"id": "Deadpool", "name": "Deadpool", "x": 693.7, "y": 628.3, "deg": 41}, {"id": "Deathlok", "name": "Deathlok", "x": 761.0, "y": 438.1, "deg": 20}, {"id": "Debrii", "name": "Debrii", "x": 447.9, "y": 964.4, "deg": 5}, {"id": "Delroy_Garrett", "name": "Delroy Garrett", "x": 703.5, "y": 1018.0, "deg": 7}, {"id": "Detroit_Steel", "name": "Detroit Steel", "x": 556.6, "y": 1143.0, "deg": 1}, {"id": "Devil_Dinosaur", "name": "Devil Dinosaur", "x": 895.2, "y": 906.7, "deg": 12}, {"id": "Devil_Hulk", "name": "Devil Hulk", "x": 228.8, "y": 668.4, "deg": 2}, {"id": "Digitek_(character)", "name": "Digitek (character)", "x": 1198.0, "y": 299.2, "deg": 1}, {"id": "Doctor_Druid", "name": "Doctor Druid", "x": 414.5, "y": 665.2, "deg": 9}, {"id": "Doctor_Nemesis", "name": "Doctor Nemesis", "x": 795.1, "y": 388.4, "deg": 15}, {"id": "Doctor_Spectrum", "name": "Alice Nugent", "x": 787.3, "y": 1040.0, "deg": 7}, {"id": "Doctor_Strange", "name": "Doctor Strange", "x": 795.5, "y": 686.2, "deg": 57}, {"id": "Dogpool", "name": "Dogpool", "x": 1245.1, "y": 887.5, "deg": 1}, {"id": "Doom_2099", "name": "Doom 2099", "x": 526.5, "y": 377.5, "deg": 9}, {"id": "Dragon_Lord_(character)", "name": "Dragon Lord (character)", "x": 685.6, "y": 115.4, "deg": 2}, {"id": "Dusk_(comics)", "name": "Dusk (comics)", "x": 468.7, "y": 362.5, "deg": 6}, {"id": "Eddie_Brock", "name": "Eddie Brock", "x": 920.4, "y": 724.3, "deg": 22}, {"id": "Elsa_Bloodstone", "name": "Elsa Bloodstone", "x": 508.1, "y": 582.0, "deg": 15}, {"id": "Emma_Frost", "name": "Emma Frost", "x": 687.6, "y": 743.0, "deg": 27}, {"id": "Empath_(character)", "name": "Empath (character)", "x": 1208.0, "y": 611.7, "deg": 5}, {"id": "Emrys_Killebrew", "name": "Emrys Killebrew", "x": 1194.6, "y": 356.1, "deg": 2}, {"id": "Enigma_(Marvel_Comics)", "name": "Enigma (Marvel Comics)", "x": 1248.8, "y": 407.0, "deg": 1}, {"id": "Ethan_Edwards", "name": "Ethan Edwards", "x": 756.0, "y": 88.2, "deg": 1}, {"id": "Fabio_Medina", "name": "Fabio Medina", "x": 355.5, "y": 365.7, "deg": 3}, {"id": "Fandral", "name": "Fandral", "x": 412.2, "y": 233.3, "deg": 2}, {"id": "Father_Time_(Marvel_Comics)", "name": "Father Time (Marvel Comics)", "x": 1194, "y": 1290, "deg": 0}, {"id": "Fin_Fang_Foom", "name": "Fin Fang Foom", "x": 1055.8, "y": 400.4, "deg": 7}, {"id": "Firebird_(Marvel_Comics)", "name": "Firebird (Marvel Comics)", "x": 1048.3, "y": 693.9, "deg": 13}, {"id": "Firelord_(character)", "name": "Firelord (character)", "x": 514.2, "y": 180.3, "deg": 2}, {"id": "Flatman_(character)", "name": "Flatman (character)", "x": 1248.7, "y": 741.3, "deg": 3}, {"id": "Force_(comics)", "name": "Force (comics)", "x": 569.9, "y": 130.8, "deg": 1}, {"id": "Frankenstein's_Monster_(Marvel_Comics)", "name": "Frankenstein's Monster (Marvel Comics)", "x": 797.3, "y": 951.6, "deg": 11}, {"id": "Franklin_Richards_(character)", "name": "Franklin Richards (character)", "x": 967.2, "y": 833.5, "deg": 14}, {"id": "Frog-Man", "name": "Frog-Man", "x": 944.3, "y": 265.3, "deg": 6}, {"id": "G._W._Bridge", "name": "G. W. Bridge", "x": 731.3, "y": 148.6, "deg": 3}, {"id": "Gargoyle_(comics)", "name": "Gargoyle (comics)", "x": 1082.6, "y": 478.4, "deg": 8}, {"id": "Garrison_Kane", "name": "Garrison Kane", "x": 1022.5, "y": 911.6, "deg": 7}, {"id": "Gauntlet_(Joseph_Green)", "name": "Gauntlet (Joseph Green)", "x": 372.3, "y": 791.3, "deg": 6}, {"id": "Genis-Vell", "name": "Genis-Vell", "x": 475.5, "y": 851.5, "deg": 8}, {"id": "Ghost_Rider", "name": "Ghost Rider", "x": 581.8, "y": 687.0, "deg": 22}, {"id": "Ghost_Rider_(Danny_Ketch)", "name": "Ghost Rider (Danny Ketch)", "x": 456.3, "y": 776.7, "deg": 10}, {"id": "Ghost_Rider_(Johnny_Blaze)", "name": "Ghost Rider (Johnny Blaze)", "x": 678.9, "y": 890.0, "deg": 15}, {"id": "Gladiator_(Kallark)", "name": "Gladiator (Kallark)", "x": 684.9, "y": 959.2, "deg": 10}, {"id": "Golem_(Marvel_Comics)", "name": "Golem (Marvel Comics)", "x": 798.9, "y": 125.7, "deg": 3}, {"id": "Gorgon_(Inhuman)", "name": "Gorgon (Inhuman)", "x": 1008.0, "y": 270.4, "deg": 5}, {"id": "Gremlin_(comics)", "name": "Gremlin (comics)", "x": 835.1, "y": 168.9, "deg": 4}, {"id": "Guardian_(Marvel_Comics)", "name": "Guardian (Marvel Comics)", "x": 1131.1, "y": 512.6, "deg": 7}, {"id": "Guardsman_(character)", "name": "Guardsman (character)", "x": 414.5, "y": 541.7, "deg": 8}, {"id": "Gwenpool", "name": "Gwenpool", "x": 1033.7, "y": 594.3, "deg": 15}, {"id": "Hank_Pym", "name": "Hank Pym", "x": 743.3, "y": 510.8, "deg": 27}, {"id": "Happy_Sam_Sawyer", "name": "Happy Sam Sawyer", "x": 1236, "y": 1290, "deg": 0}, {"id": "Hawkeye_(comics)", "name": "Hawkeye (comics)", "x": 872.7, "y": 1114.4, "deg": 3}, {"id": "Helix_(Marvel_Comics)", "name": "Helix (Marvel Comics)", "x": 457.7, "y": 172.2, "deg": 1}, {"id": "Hellfire_(J._T._Slade)", "name": "Hellfire (J. T. Slade)", "x": 1278, "y": 1290, "deg": 0}, {"id": "Hellion_(character)", "name": "Hellion (character)", "x": 839.9, "y": 353.8, "deg": 12}, {"id": "Hercules_(Marvel_Comics)", "name": "Hercules (Marvel Comics)", "x": 663.6, "y": 524.5, "deg": 26}, {"id": "Hit-Monkey", "name": "Hit-Monkey", "x": 1136.7, "y": 918.8, "deg": 4}, {"id": "Hornet_(comics)", "name": "Hornet (comics)", "x": 1069.4, "y": 343.9, "deg": 6}, {"id": "Hrimhari", "name": "Hrimhari", "x": 248.9, "y": 555.9, "deg": 2}, {"id": "Hulk", "name": "Hulk", "x": 735.2, "y": 662.7, "deg": 65}, {"id": "Hulk_2099", "name": "Hulk 2099", "x": 1201.9, "y": 837.7, "deg": 4}, {"id": "Hulkling", "name": "Hulkling", "x": 520.6, "y": 434.2, "deg": 11}, {"id": "Human_Fly_(character)", "name": "Human Fly (character)", "x": 399.4, "y": 880.6, "deg": 5}, {"id": "Human_Torch", "name": "Human Torch", "x": 645.3, "y": 457.7, "deg": 18}, {"id": "Human_Torch_(android)", "name": "Human Torch (android)", "x": 845.1, "y": 849.1, "deg": 17}, {"id": "Hybrid_(Scott_Washington)", "name": "Hybrid (Scott Washington)", "x": 346.0, "y": 498.9, "deg": 5}, {"id": "Hyperion_(character)", "name": "Hyperion (character)", "x": 598.9, "y": 352.4, "deg": 10}, {"id": "Ikaris", "name": "Ikaris", "x": 1127.9, "y": 371.9, "deg": 5}, {"id": "Illuminator_(Marvel_Comics)", "name": "Illuminator (Marvel Comics)", "x": 1320, "y": 1290, "deg": 0}, {"id": "Inferno_(Dante_Pertuz)", "name": "Inferno (Dante Pertuz)", "x": 1191.9, "y": 907.5, "deg": 3}, {"id": "Iron_Fist_(character)", "name": "Iron Fist (character)", "x": 861.2, "y": 539.3, "deg": 26}, {"id": "Iron_Lad", "name": "Iron Lad", "x": 1110.8, "y": 426.4, "deg": 6}, {"id": "Iron_Man_(Ultimate_Marvel_character)", "name": "Iron Man (Ultimate Marvel character)", "x": 618.8, "y": 221.9, "deg": 5}, {"id": "Iron_Man_2020", "name": "Iron Man 2020", "x": 456.0, "y": 907.8, "deg": 6}, {"id": "Isaiah_Bradley", "name": "Isaiah Bradley", "x": 883.3, "y": 272.1, "deg": 7}, {"id": "Jack_Frost_(Marvel_Comics)", "name": "Jack Frost (Marvel Comics)", "x": 545.5, "y": 321.9, "deg": 7}, {"id": "Jack_Monroe_(character)", "name": "Jack Monroe (character)", "x": 516.5, "y": 1037.6, "deg": 4}, {"id": "Janice_Lincoln", "name": "Janice Lincoln", "x": 669.6, "y": 1087.4, "deg": 5}, {"id": "Jean_Grey", "name": "Jean Grey", "x": 599.7, "y": 588.9, "deg": 24}, {"id": "Jean_Grey_(X-Men_film_series)", "name": "Jean Grey (X-Men film series)", "x": 863.7, "y": 217.7, "deg": 5}, {"id": "Jeffrey_Mace", "name": "Jeffrey Mace", "x": 626.1, "y": 301.6, "deg": 8}, {"id": "Jericho_Drumm", "name": "Jericho Drumm", "x": 529.1, "y": 489.9, "deg": 15}, {"id": "Jessica_Jones", "name": "Jessica Jones", "x": 927.4, "y": 513.0, "deg": 18}, {"id": "John_Jameson_(character)", "name": "John Jameson (character)", "x": 587.8, "y": 860.1, "deg": 14}, {"id": "Jubilee_(character)", "name": "Jubilee (character)", "x": 986.8, "y": 511.5, "deg": 15}, {"id": "Junior_Juniper", "name": "Junior Juniper", "x": 1133.3, "y": 259.5, "deg": 2}, {"id": "Justice_(New_Universe)", "name": "Justice (New Universe)", "x": 803.4, "y": 235.8, "deg": 6}, {"id": "Karnak_(character)", "name": "Karnak (character)", "x": 438.9, "y": 593.6, "deg": 10}, {"id": "Kid_Colt", "name": "Kid Colt", "x": 1233.5, "y": 673.5, "deg": 4}, {"id": "Killpower", "name": "Killpower", "x": 1113.9, "y": 983.8, "deg": 3}, {"id": "Killraven", "name": "Killraven", "x": 401.6, "y": 483.8, "deg": 7}, {"id": "Kismet_(Marvel_Comics)", "name": "Kismet (Marvel Comics)", "x": 1089.4, "y": 556.6, "deg": 9}, {"id": "Korvus", "name": "Korvus", "x": 292.7, "y": 689.0, "deg": 4}, {"id": "Kristoff_Vernard", "name": "Kristoff Vernard", "x": 408.2, "y": 744.7, "deg": 8}, {"id": "Leech_(character)", "name": "Leech (character)", "x": 1080.0, "y": 920.6, "deg": 6}, {"id": "Lei_Kung_(character)", "name": "Lei Kung (character)", "x": 670.8, "y": 181.1, "deg": 4}, {"id": "Living_Lightning", "name": "Living Lightning", "x": 731.8, "y": 1068.7, "deg": 6}, {"id": "Luke_Cage", "name": "Luke Cage", "x": 793.4, "y": 746.5, "deg": 28}, {"id": "Machine_Man", "name": "Machine Man", "x": 474.5, "y": 637.2, "deg": 14}, {"id": "Magician_(Marvel_Comics)", "name": "Magician (Marvel Comics)", "x": 1244.7, "y": 568.8, "deg": 3}, {"id": "Mahr_Vehl", "name": "Mahr Vehl", "x": 390.8, "y": 1048.8, "deg": 1}, {"id": "Makkari_(character)", "name": "Makkari (character)", "x": 1146.8, "y": 789.9, "deg": 6}, {"id": "Man-Thing", "name": "Man-Thing", "x": 624.8, "y": 786.1, "deg": 20}, {"id": "Mania_(character)", "name": "Mania (character)", "x": 750.0, "y": 263.9, "deg": 7}, {"id": "Mark_Hazzard:_Merc", "name": "Mark Hazzard: Merc", "x": 234.1, "y": 785.4, "deg": 1}, {"id": "Marvel_Boy_(Robert_Grayson)", "name": "Marvel Boy (Robert Grayson)", "x": 622.5, "y": 152.1, "deg": 3}, {"id": "Mayday_Parker", "name": "Mayday Parker", "x": 721.9, "y": 849.4, "deg": 18}, {"id": "Miracleman_(character)", "name": "Miracleman (character)", "x": 1362, "y": 1290, "deg": 0}, {"id": "Misty_Knight", "name": "Misty Knight", "x": 607.2, "y": 521.6, "deg": 21}, {"id": "Mockingbird_(Marvel_Comics)", "name": "Mockingbird (Marvel Comics)", "x": 792.2, "y": 827.6, "deg": 21}, {"id": "Moon_Knight", "name": "Moon Knight", "x": 621.4, "y": 645.7, "deg": 27}, {"id": "Moondragon", "name": "Moondragon", "x": 1005.9, "y": 744.3, "deg": 15}, {"id": "Moonglow_(comics)", "name": "Moonglow (comics)", "x": 859.3, "y": 1178.7, "deg": 1}, {"id": "Morbius", "name": "Morbius", "x": 897.5, "y": 791.6, "deg": 19}, {"id": "Motormouth_(comics)", "name": "Motormouth (comics)", "x": 996.7, "y": 215.1, "deg": 4}, {"id": "Ms._Marvel", "name": "Ms. Marvel", "x": 456.4, "y": 703.6, "deg": 11}, {"id": "NFL_SuperPro", "name": "Phil Grayfield", "x": 265.8, "y": 901.2, "deg": 1}, {"id": "Nightmask", "name": "Nightmask", "x": 1057.5, "y": 981.1, "deg": 5}, {"id": "Nightwatch_(character)", "name": "Nightwatch (character)", "x": 1182.7, "y": 411.3, "deg": 4}, {"id": "Noh-Varr", "name": "Noh-Varr", "x": 837.6, "y": 430.7, "deg": 18}, {"id": "Nomad_(Marvel_Comics)", "name": "Nomad (Marvel Comics)", "x": 1001.8, "y": 968.5, "deg": 6}, {"id": "Northstar_(character)", "name": "Northstar (character)", "x": 521.6, "y": 669.7, "deg": 17}, {"id": "Nova_(Richard_Rider)", "name": "Nova (Richard Rider)", "x": 861.3, "y": 482.4, "deg": 21}, {"id": "Ogre_(Marvel_Comics)", "name": "Ogre (Marvel Comics)", "x": 900, "y": 1332, "deg": 0}, {"id": "Outlaw_(Marvel_Comics)", "name": "Outlaw (Marvel Comics)", "x": 572.5, "y": 925.4, "deg": 9}, {"id": "Oya_(comics)", "name": "Oya (comics)", "x": 904.3, "y": 159.9, "deg": 3}, {"id": "Paladin_(comics)", "name": "Paladin (comics)", "x": 509.3, "y": 796.0, "deg": 13}, {"id": "Patsy_Walker", "name": "Patsy Walker", "x": 731.9, "y": 928.1, "deg": 13}, {"id": "Peggy_Carter", "name": "Peggy Carter", "x": 1273.6, "y": 633.8, "deg": 3}, {"id": "Phil_Urich", "name": "Phil Urich", "x": 771.0, "y": 188.7, "deg": 5}, {"id": "Phoenix_Force", "name": "Phoenix (Guardians of the Galaxy)", "x": 738.6, "y": 719.6, "deg": 32}, {"id": "Phyla-Vell", "name": "Phyla-Vell", "x": 998.8, "y": 386.8, "deg": 9}, {"id": "Power_Man_(Victor_Alvarez)", "name": "Power Man (Victor Alvarez)", "x": 523.9, "y": 248.0, "deg": 4}, {"id": "Powerhouse_(Marvel_Comics)", "name": "Powerhouse (Marvel Comics)", "x": 387.3, "y": 935.9, "deg": 4}, {"id": "Puck_(Marvel_Comics)", "name": "Puck (Marvel Comics)", "x": 870.8, "y": 957.7, "deg": 9}, {"id": "Quasar_(character)", "name": "Quasar (character)", "x": 915.7, "y": 568.0, "deg": 24}, {"id": "Quicksilver_(Marvel_Comics)", "name": "Quicksilver (Marvel Comics)", "x": 506.3, "y": 729.9, "deg": 15}, {"id": "Rachel_Summers", "name": "Rachel Summers", "x": 795.4, "y": 482.6, "deg": 24}, {"id": "Radian_(Morituri)", "name": "Radian (Morituri)", "x": 220.0, "y": 1280.0, "deg": 6}, {"id": "Radioactive_Man_(comics)", "name": "Radioactive Man (comics)", "x": 1077.3, "y": 630.0, "deg": 11}, {"id": "Ravage_2099", "name": "Ravage 2099", "x": 928.8, "y": 210.6, "deg": 4}, {"id": "Raza_Longknife", "name": "Raza Longknife", "x": 827.0, "y": 1081.3, "deg": 5}, {"id": "Red_Guardian", "name": "Red Guardian", "x": 949.5, "y": 323.8, "deg": 8}, {"id": "Red_Raven_(Marvel_Comics)", "name": "Red Raven (Dania)", "x": 582.2, "y": 1042.5, "deg": 5}, {"id": "Red_Wolf_(comics)", "name": "Red Wolf (comics)", "x": 705.2, "y": 301.3, "deg": 9}, {"id": "Redneck_(comics)", "name": "Redneck (comics)", "x": 322.1, "y": 309.2, "deg": 1}, {"id": "Ricochet_(comics)", "name": "Ricochet (comics)", "x": 877.5, "y": 1042.1, "deg": 6}, {"id": "Rikki_Barnes", "name": "Rikki Barnes", "x": 1163.7, "y": 647.9, "deg": 6}, {"id": "Robbie_Baldwin", "name": "Robbie Baldwin", "x": 887.4, "y": 400.5, "deg": 15}, {"id": "Rocket_Raccoon", "name": "Rocket Raccoon", "x": 917.3, "y": 455.2, "deg": 16}, {"id": "Rockman_(character)", "name": "Rockman (character)", "x": 1252.8, "y": 813.3, "deg": 2}, {"id": "Rockslide_(character)", "name": "Rockslide (character)", "x": 571.7, "y": 985.9, "deg": 7}, {"id": "Rom_the_Space_Knight", "name": "Rom the Space Knight", "x": 905.3, "y": 851.1, "deg": 15}, {"id": "Ronin_(Marvel_Comics)", "name": "Ronin (Marvel Comics)", "x": 366.7, "y": 701.7, "deg": 7}, {"id": "Ruby_Summers", "name": "Ruby Summers", "x": 923.3, "y": 1139.6, "deg": 2}, {"id": "Rusty_Collins", "name": "Rusty Collins", "x": 344.8, "y": 433.2, "deg": 4}, {"id": "Sabra_(character)", "name": "Sabra (character)", "x": 964.3, "y": 889.8, "deg": 10}, {"id": "Satana_(Marvel_Comics)", "name": "Satana (Marvel Comics)", "x": 1029.6, "y": 456.3, "deg": 10}, {"id": "Scaredycat", "name": "Scaredycat", "x": 187.1, "y": 1263.8, "deg": 3}, {"id": "Scarlet_Scarab", "name": "Scarlet Scarab", "x": 278.6, "y": 845.5, "deg": 2}, {"id": "Scarlet_Spider", "name": "Scarlet Spider", "x": 514.4, "y": 922.9, "deg": 8}, {"id": "Scarlet_Witch", "name": "Scarlet Witch", "x": 719.0, "y": 561.0, "deg": 32}, {"id": "Scatterbrain_(Morituri)", "name": "Scatterbrain (Morituri)", "x": 286.1, "y": 1328.5, "deg": 2}, {"id": "Scorpio_(Marvel_Comics)", "name": "Scorpio (Marvel Comics)", "x": 631.0, "y": 1143.9, "deg": 2}, {"id": "Sean_and_Chris", "name": "Sean and Chris", "x": 942, "y": 1332, "deg": 0}, {"id": "Sentry_(Robert_Reynolds)", "name": "Sentry (Robert Reynolds)", "x": 478.3, "y": 534.0, "deg": 12}, {"id": "Shamrock_(comics)", "name": "Shamrock (comics)", "x": 834.2, "y": 1002.6, "deg": 8}, {"id": "Shang-Chi", "name": "Shang-Chi", "x": 563.7, "y": 740.7, "deg": 18}, {"id": "Shatterstar", "name": "Shatterstar", "x": 969.4, "y": 1022.6, "deg": 5}, {"id": "She-Hulk", "name": "She-Hulk", "x": 823.5, "y": 599.6, "deg": 37}, {"id": "She-Hulk_(Lyra)", "name": "She-Hulk (Lyra)", "x": 713.7, "y": 218.3, "deg": 6}, {"id": "Shear_(character)", "name": "Shear (character)", "x": 284.0, "y": 1207.1, "deg": 2}, {"id": "Shuri_(character)", "name": "Shuri (character)", "x": 1074.7, "y": 743.8, "deg": 10}, {"id": "Silencer_(comics)", "name": "Silencer (comics)", "x": 1033.8, "y": 1104.7, "deg": 2}, {"id": "Silhouette_(comics)", "name": "Silhouette (comics)", "x": 243.2, "y": 482.0, "deg": 2}, {"id": "Silk_(character)", "name": "Silk (character)", "x": 1041.0, "y": 527.2, "deg": 12}, {"id": "Skull_the_Slayer", "name": "Skull the Slayer", "x": 1065.6, "y": 231.3, "deg": 3}, {"id": "Snapdragon_(Morituri)", "name": "Snapdragon (Morituri)", "x": 205.7, "y": 1208.1, "deg": 3}, {"id": "Solarman", "name": "Solarman", "x": 984, "y": 1332, "deg": 0}, {"id": "Solo_(Marvel_Comics)", "name": "Solo (Marvel Comics)", "x": 585.0, "y": 407.0, "deg": 13}, {"id": "Solomon_Kane_(comics)", "name": "Solomon Kane (comics)", "x": 1136.4, "y": 1045.0, "deg": 1}, {"id": "Speed_(character)", "name": "Speed (character)", "x": 1134.4, "y": 730.0, "deg": 7}, {"id": "Spider-Bitch_(Ashley_Barton)", "name": "Spider-Bitch (Ashley Barton)", "x": 1009.2, "y": 652.7, "deg": 16}, {"id": "Spider-Girl", "name": "Spider-Girl", "x": 738.1, "y": 359.3, "deg": 14}, {"id": "Spider-Man", "name": "Spider-Man", "x": 760.0, "y": 640.0, "deg": 106}, {"id": "Spider-Man_(Marvel_Mangaverse)", "name": "Spider-Man (Marvel Mangaverse)", "x": 1232.0, "y": 461.2, "deg": 3}, {"id": "Spider-Man_Noir", "name": "Spider-Man Noir", "x": 1111.1, "y": 676.0, "deg": 9}, {"id": "Spider-UK", "name": "Spider-UK", "x": 1130.7, "y": 597.5, "deg": 8}, {"id": "Spider-Woman", "name": "Spider-Woman", "x": 954.0, "y": 777.8, "deg": 17}, {"id": "Spider-Woman_(Gwen_Stacy)", "name": "Spider-Woman (Gwen Stacy)", "x": 553.5, "y": 620.9, "deg": 18}, {"id": "Spider-Woman_(Jessica_Drew)", "name": "Spider-Woman (Jessica Drew)", "x": 692.5, "y": 801.3, "deg": 22}, {"id": "Spitfire_(character)", "name": "Spitfire (character)", "x": 1173.5, "y": 557.5, "deg": 6}, {"id": "Star_Brand", "name": "Star Brand", "x": 586.4, "y": 463.9, "deg": 16}, {"id": "Star-Lord", "name": "Star-Lord", "x": 710.5, "y": 409.7, "deg": 17}, {"id": "Starhawk_(character)", "name": "Starhawk (character)", "x": 510.1, "y": 981.2, "deg": 6}, {"id": "Starr_the_Slayer", "name": "Starr the Slayer", "x": 292.2, "y": 453.5, "deg": 3}, {"id": "Steel_Spider", "name": "Steel Spider", "x": 926.0, "y": 1071.8, "deg": 4}, {"id": "Stingray_(Marvel_Comics)", "name": "Stingray (Marvel Comics)", "x": 459.1, "y": 421.8, "deg": 8}, {"id": "Storm_(Marvel_Comics)", "name": "Storm (Marvel Comics)", "x": 862.9, "y": 726.7, "deg": 27}, {"id": "Straw_Man_(comics)", "name": "Straw Man (comics)", "x": 461.1, "y": 1076.2, "deg": 2}, {"id": "Super_Rabbit", "name": "Super Rabbit", "x": 1026, "y": 1332, "deg": 0}, {"id": "Surge_(Marvel_Comics)", "name": "Surge (Marvel Comics)", "x": 328.7, "y": 744.7, "deg": 5}, {"id": "Synapse_(character)", "name": "Synapse (character)", "x": 1292.3, "y": 705.1, "deg": 2}, {"id": "Tarantula_(Marvel_Comics)", "name": "Tarantula (Marvel Comics)", "x": 973.9, "y": 447.9, "deg": 13}, {"id": "The_Union_(Marvel)", "name": "The Union (Marvel)", "x": 871.8, "y": 113.4, "deg": 2}, {"id": "The_Witness_(character)", "name": "The Witness (character)", "x": 207.9, "y": 595.5, "deg": 1}, {"id": "Thena", "name": "Thena", "x": 378.0, "y": 298.4, "deg": 3}, {"id": "Thin_Man_(character)", "name": "Thin Man (character)", "x": 1023.5, "y": 1039.1, "deg": 4}, {"id": "Thor_Girl", "name": "Thor Girl", "x": 568.2, "y": 196.8, "deg": 4}, {"id": "Thunderbolt_(Marvel_Comics)", "name": "Thunderbolt (Marvel Comics)", "x": 1274.0, "y": 520.5, "deg": 2}, {"id": "Thunderclap_(comics)", "name": "Thunderclap (comics)", "x": 1050.1, "y": 176.6, "deg": 1}, {"id": "Timeslip_(comics)", "name": "Timeslip (comics)", "x": 741.8, "y": 1173.8, "deg": 2}, {"id": "Toro_(character)", "name": "Toro (character)", "x": 1090.5, "y": 859.4, "deg": 7}, {"id": "Toxyn", "name": "Toxyn", "x": 187.0, "y": 1334.3, "deg": 3}, {"id": "Turbo_(comics)", "name": "Turbo (comics)", "x": 308.9, "y": 589.3, "deg": 5}, {"id": "Two-Gun_Kid", "name": "Two-Gun Kid", "x": 576.6, "y": 269.4, "deg": 6}, {"id": "Typeface_(character)", "name": "Typeface (character)", "x": 1072.3, "y": 287.3, "deg": 4}, {"id": "U.S._Agent", "name": "U.S. Agent", "x": 955.5, "y": 623.8, "deg": 21}, {"id": "Ulysses_Bloodstone", "name": "Ulysses Bloodstone", "x": 810.8, "y": 1148.9, "deg": 3}, {"id": "Union_Jack_(Joseph_Chapman)", "name": "Union Jack (Joseph Chapman)", "x": 1009.2, "y": 327.7, "deg": 7}, {"id": "Union_Jack_(Marvel_Comics)", "name": "Union Jack (Marvel Comics)", "x": 947.5, "y": 944.6, "deg": 8}, {"id": "Ursa_Major_(character)", "name": "Ursa Major (character)", "x": 1207.0, "y": 511.7, "deg": 4}, {"id": "Vance_Astrovik", "name": "Vance Astrovik", "x": 671.1, "y": 346.6, "deg": 11}, {"id": "Venom_(character)", "name": "Venom (character)", "x": 666.7, "y": 678.5, "deg": 29}, {"id": "Vindicator_(comics)", "name": "Vindicator (comics)", "x": 333.2, "y": 649.3, "deg": 6}, {"id": "Vulcan_(Marvel_Comics)", "name": "Vulcan (Marvel Comics)", "x": 1025.3, "y": 797.2, "deg": 11}, {"id": "Vyking", "name": "Vyking", "x": 269.8, "y": 1265.5, "deg": 3}, {"id": "War_Machine", "name": "War Machine", "x": 565.9, "y": 800.4, "deg": 16}, {"id": "Werewolf_by_Night", "name": "Werewolf by Night", "x": 828.4, "y": 904.7, "deg": 15}, {"id": "White_Tiger_(Heroes_for_Hire)", "name": "White Tiger (Heroes for Hire)", "x": 532.3, "y": 1091.7, "deg": 3}, {"id": "White_Tiger_(comics)", "name": "White Tiger (comics)", "x": 1161.8, "y": 463.8, "deg": 5}, {"id": "Whizzer_(Robert_Frank)", "name": "Whizzer (Robert Frank)", "x": 827.1, "y": 290.3, "deg": 8}, {"id": "Wild_Child_(character)", "name": "Wild Child (character)", "x": 702.1, "y": 1133.4, "deg": 3}, {"id": "Will_o'_the_Wisp_(comics)", "name": "Will o' the Wisp (comics)", "x": 384.7, "y": 992.2, "deg": 3}, {"id": "William_Burnside_(character)", "name": "William Burnside (character)", "x": 490.4, "y": 303.8, "deg": 5}, {"id": "Wolverine_(Ultimate_Marvel_character)", "name": "Wolverine (Ultimate Marvel character)", "x": 531.6, "y": 862.9, "deg": 11}, {"id": "Wolverine_(character)", "name": "Wolverine (character)", "x": 764.2, "y": 592.6, "deg": 63}, {"id": "Xorn", "name": "Xorn", "x": 754.9, "y": 989.6, "deg": 9}, {"id": "Yelena_Belova", "name": "Yelena Belova", "x": 421.8, "y": 827.3, "deg": 7}, {"id": "Yo-Yo_Rodriguez", "name": "Yo-Yo Rodriguez", "x": 1068, "y": 1332, "deg": 0}, {"id": "Zombie_(comics)", "name": "Zombie (comics)", "x": 602.4, "y": 1095.3, "deg": 4}], "edges": [["Gargoyle_(comics)", "Gremlin_(comics)"], ["Deadpool", "Outlaw_(Marvel_Comics)"], ["Cyclops_(Marvel_Comics)", "Northstar_(character)"], ["Doctor_Strange", "Storm_(Marvel_Comics)"], ["Firebird_(Marvel_Comics)", "Mockingbird_(Marvel_Comics)"], ["White_Tiger_(Heroes_for_Hire)", "White_Tiger_(comics)"], ["Venom_(character)", "Wolverine_(character)"], ["Noh-Varr", "Spider-Woman_(Jessica_Drew)"], ["Black_Marvel", "Blazing_Skull"], ["Spider-Woman", "Star-Lord"], ["Black_Bolt", "Sentry_(Robert_Reynolds)"], ["Kismet_(Marvel_Comics)", "Moondragon"], ["Doom_2099", "Hulk_2099"], ["Hulk", "Sentry_(Robert_Reynolds)"], ["Ghost_Rider", "Satana_(Marvel_Comics)"], ["Deadpool", "Venom_(character)"], ["Deadpool", "Garrison_Kane"], ["Jericho_Drumm", "Luke_Cage"], ["Guardsman_(character)", "Hybrid_(Scott_Washington)"], ["Jean_Grey_(X-Men_film_series)", "Phoenix_Force"], ["Human_Torch_(android)", "Jack_Frost_(Marvel_Comics)"], ["Deadpool", "Stingray_(Marvel_Comics)"], ["Eddie_Brock", "Scarlet_Spider"], ["Anole_(character)", "Cloak_and_Dagger_(characters)"], ["Doctor_Strange", "Human_Torch"], ["Gargoyle_(comics)", "Jericho_Drumm"], ["Nova_(Richard_Rider)", "Rom_the_Space_Knight"], ["Eddie_Brock", "John_Jameson_(character)"], ["Black_Bolt", "Kristoff_Vernard"], ["Man-Thing", "Zombie_(comics)"], ["Moon_Knight", "Wolverine_(character)"], ["Frankenstein's_Monster_(Marvel_Comics)", "John_Jameson_(character)"], ["Radioactive_Man_(comics)", "Robbie_Baldwin"], ["Jeffrey_Mace", "William_Burnside_(character)"], ["Firelord_(character)", "Hercules_(Marvel_Comics)"], ["Ghost_Rider", "Spider-Man"], ["Eddie_Brock", "She-Hulk"], ["Black_Cat_(Marvel_Comics)", "Paladin_(comics)"], ["Bucky_(Marvel_Comics)", "William_Burnside_(character)"], ["Jessica_Jones", "She-Hulk"], ["Jubilee_(character)", "Storm_(Marvel_Comics)"], ["Blazing_Skull", "Skull_the_Slayer"], ["Frankenstein's_Monster_(Marvel_Comics)", "She-Hulk"], ["Hank_Pym", "Robbie_Baldwin"], ["Black_Bolt", "Starhawk_(character)"], ["Fabio_Medina", "Spider-Man"], ["Beta_Ray_Bill", "Rom_the_Space_Knight"], ["Doctor_Strange", "Toro_(character)"], ["Ares_(Marvel_Comics)", "Ghost_Rider"], ["Debrii", "Thor_Girl"], ["Chase_Stein", "Wolverine_(character)"], ["Bob,_Agent_of_Hydra", "Deadpool"], ["Storm_(Marvel_Comics)", "Wolverine_(Ultimate_Marvel_character)"], ["Misty_Knight", "Spider-Man"], ["Moon_Knight", "Werewolf_by_Night"], ["Gorgon_(Inhuman)", "Quicksilver_(Marvel_Comics)"], ["Phoenix_Force", "Star_Brand"], ["Hybrid_(Scott_Washington)", "Spider-Man"], ["Coldblood", "Deathlok"], ["Garrison_Kane", "Nomad_(Marvel_Comics)"], ["Deathlok", "Solo_(Marvel_Comics)"], ["Iron_Fist_(character)", "Wolverine_(character)"], ["Hulk", "Killpower"], ["Doctor_Nemesis", "Hank_Pym"], ["Kristoff_Vernard", "She-Hulk"], ["Puck_(Marvel_Comics)", "Wolverine_(character)"], ["She-Hulk", "Vance_Astrovik"], ["Powerhouse_(Marvel_Comics)", "Rom_the_Space_Knight"], ["Hank_Pym", "Mockingbird_(Marvel_Comics)"], ["Black_Cat_(Marvel_Comics)", "Spider-Man_(Marvel_Mangaverse)"], ["John_Jameson_(character)", "Patsy_Walker"], ["Gladiator_(Kallark)", "Jean_Grey"], ["Cloak_and_Dagger_(characters)", "Emma_Frost"], ["Misty_Knight", "White_Tiger_(comics)"], ["Ms._Marvel", "Scarlet_Witch"], ["Deadpool", "Gwenpool"], ["Kismet_(Marvel_Comics)", "Quasar_(character)"], ["Phil_Urich", "Silk_(character)"], ["Gwenpool", "She-Hulk"], ["Captain_Marvel_(Khn'nr)", "Captain_Marvel_(Marvel_Comics)"], ["Robbie_Baldwin", "She-Hulk"], ["Adam_Warlock", "Moon_Knight"], ["Doctor_Strange", "Shang-Chi"], ["Patsy_Walker", "She-Hulk"], ["Spider-Man", "White_Tiger_(comics)"], ["Betsy_Braddock", "Deadpool"], ["Shuri_(character)", "Spider-Man_Noir"], ["Black_Widow_(Natasha_Romanova)", "Shuri_(character)"], ["Killraven", "Ravage_2099"], ["Cloak_and_Dagger_(characters)", "Robbie_Baldwin"], ["Bob,_Agent_of_Hydra", "Wolverine_(character)"], ["Doctor_Strange", "Motormouth_(comics)"], ["Radioactive_Man_(comics)", "War_Machine"], ["Adam_Warlock", "Man-Thing"], ["Captain_Universe", "Nightmask"], ["Betsy_Braddock", "Cable_(character)"], ["Silk_(character)", "Venom_(character)"], ["Ghost_Rider_(Danny_Ketch)", "Wolverine_(character)"], ["Blade_(character)", "Zombie_(comics)"], ["Betsy_Braddock", "Rachel_Summers"], ["Bill_Foster_(character)", "Firebird_(Marvel_Comics)"], ["Doctor_Strange", "Star-Lord"], ["Gremlin_(comics)", "Spider-Woman_(Jessica_Drew)"], ["Radioactive_Man_(comics)", "Spider-Man"], ["Blackwulf", "Deathlok"], ["Darkhawk", "Quasar_(character)"], ["Captain_Universe", "Jean_Grey"], ["Hulk", "Hulkling"], ["Hank_Pym", "Hyperion_(character)"], ["Moondragon", "Patsy_Walker"], ["Bug_(Marvel_Comics)", "Star-Lord"], ["Cable_(character)", "Shatterstar"], ["Star-Lord", "Wolverine_(character)"], ["Anole_(character)", "Betsy_Braddock"], ["Black_Cat_(Marvel_Comics)", "Patsy_Walker"], ["Doctor_Strange", "Venom_(character)"], ["Cable_(character)", "Emma_Frost"], ["Cloak_and_Dagger_(characters)", "Eddie_Brock"], ["Black_Cat_(Marvel_Comics)", "Hulk"], ["Misty_Knight", "Paladin_(comics)"], ["Firebird_(Marvel_Comics)", "Moondragon"], ["She-Hulk_(Lyra)", "Venom_(character)"], ["Betsy_Braddock", "Wolverine_(character)"], ["Jessica_Jones", "Patsy_Walker"], ["Black_Knight_(Marvel_Comics)", "Doctor_Strange"], ["Guardian_(Marvel_Comics)", "Wolverine_(character)"], ["Jessica_Jones", "Scarlet_Witch"], ["U.S._Agent", "Wolverine_(character)"], ["Captain_Marvel_(Marvel_Comics)", "Elsa_Bloodstone"], ["Rom_the_Space_Knight", "Venom_(character)"], ["Mockingbird_(Marvel_Comics)", "Silencer_(comics)"], ["Nova_(Richard_Rider)", "Phyla-Vell"], ["Doctor_Strange", "Red_Wolf_(comics)"], ["Captain_Marvel_(Marvel_Comics)", "Hank_Pym"], ["Ch'od", "Jean_Grey"], ["Black_Bolt", "Human_Torch"], ["Captain_Universe", "Venom_(character)"], ["Genis-Vell", "Mahr_Vehl"], ["Phoenix_Force", "Rachel_Summers"], ["Cloak_and_Dagger_(characters)", "War_Machine"], ["Powerhouse_(Marvel_Comics)", "Wolverine_(character)"], ["Deathlok", "U.S._Agent"], ["Bill_Foster_(character)", "Black_Panther_(character)"], ["Luke_Cage", "Spider-Woman_(Jessica_Drew)"], ["Doom_2099", "Ravage_2099"], ["Cloak_and_Dagger_(characters)", "Jessica_Jones"], ["Paladin_(comics)", "Shang-Chi"], ["Black_Panther_(character)", "Karnak_(character)"], ["Black_Cat_(Marvel_Comics)", "Mayday_Parker"], ["Mockingbird_(Marvel_Comics)", "Moon_Knight"], ["Human_Torch_(android)", "Scarlet_Scarab"], ["Cloak_and_Dagger_(characters)", "Spider-Man"], ["Darkhawk", "Phoenix_Force"], ["Mayday_Parker", "Steel_Spider"], ["Spider-Man", "Spider-Man_(Marvel_Mangaverse)"], ["Luke_Cage", "Thunderbolt_(Marvel_Comics)"], ["Luke_Cage", "Spider-Woman"], ["Deadpool", "Rachel_Summers"], ["Emma_Frost", "Phoenix_Force"], ["Rockman_(character)", "The_Witness_(character)"], ["Chase_Stein", "Speed_(character)"], ["Hulk", "Toro_(character)"], ["Patsy_Walker", "Scarlet_Witch"], ["The_Union_(Marvel)", "Union_Jack_(Joseph_Chapman)"], ["Cable_(character)", "Northstar_(character)"], ["Gladiator_(Kallark)", "Star_Brand"], ["Black_Widow_(Natasha_Romanova)", "Ghost_Rider_(Johnny_Blaze)"], ["Cyclops_(Marvel_Comics)", "Scarlet_Witch"], ["Phoenix_Force", "Wolverine_(character)"], ["Bill_Foster_(character)", "Doctor_Nemesis"], ["Hank_Pym", "Paladin_(comics)"], ["Iron_Man_(Ultimate_Marvel_character)", "Wolverine_(Ultimate_Marvel_character)"], ["Deadpool", "Zombie_(comics)"], ["Ghost_Rider", "Hulk"], ["Jean_Grey", "Misty_Knight"], ["Scorpio_(Marvel_Comics)", "Wolverine_(character)"], ["Franklin_Richards_(character)", "Rachel_Summers"], ["Betsy_Braddock", "Hellion_(character)"], ["Doctor_Strange", "She-Hulk"], ["Hank_Pym", "Jack_Monroe_(character)"], ["Scarlet_Witch", "Storm_(Marvel_Comics)"], ["Cable_(character)", "Citizen_V"], ["Firebird_(Marvel_Comics)", "Patsy_Walker"], ["Deathlok", "Morbius"], ["Man-Thing", "Morbius"], ["Morbius", "Spider-Man"], ["Firebird_(Marvel_Comics)", "Hulk"], ["Captain_Marvel_(Marvel_Comics)", "Rom_the_Space_Knight"], ["Captain_Universe", "Spider-Man_Noir"], ["Backhand_(character)", "Shear_(character)"], ["Deadpool", "Wolverine_(character)"], ["Bill_Foster_(character)", "Isaiah_Bradley"], ["Hyperion_(character)", "Luke_Cage"], ["Darkhawk", "Turbo_(comics)"], ["Robbie_Baldwin", "Wolverine_(character)"], ["Cloak_and_Dagger_(characters)", "Deathlok"], ["Spider-Bitch_(Ashley_Barton)", "Spider-Girl"], ["Iron_Fist_(character)", "Luke_Cage"], ["Human_Torch_(android)", "Union_Jack_(Joseph_Chapman)"], ["Northstar_(character)", "Puck_(Marvel_Comics)"], ["Gladiator_(Kallark)", "Rom_the_Space_Knight"], ["She-Hulk", "Spider-Man"], ["Human_Torch_(android)", "Spitfire_(character)"], ["Captain_Universe", "Star_Brand"], ["Black_Widow_(Natasha_Romanova)", "Doctor_Strange"], ["Hulk", "Motormouth_(comics)"], ["Black_Panther_(character)", "Shang-Chi"], ["Vindicator_(comics)", "Wolverine_(character)"], ["Jericho_Drumm", "Satana_(Marvel_Comics)"], ["Jean_Grey", "Jessica_Jones"], ["Doctor_Strange", "Doom_2099"], ["Arabian_Knight_(character)", "Sabra_(character)"], ["Luke_Cage", "Rom_the_Space_Knight"], ["Makkari_(character)", "Quasar_(character)"], ["Black_Widow_(Natasha_Romanova)", "Cloak_and_Dagger_(characters)"], ["The_Union_(Marvel)", "Union_Jack_(Marvel_Comics)"], ["Radian_(Morituri)", "Snapdragon_(Morituri)"], ["Jubilee_(character)", "Paladin_(comics)"], ["Doctor_Spectrum", "Doctor_Strange"], ["Cyclops_(Marvel_Comics)", "Phoenix_Force"], ["Ghost_Rider", "Phoenix_Force"], ["Mockingbird_(Marvel_Comics)", "Spider-Woman"], ["Nightmask", "Starr_the_Slayer"], ["Shang-Chi", "Tarantula_(Marvel_Comics)"], ["John_Jameson_(character)", "Morbius"], ["Hellion_(character)", "Surge_(Marvel_Comics)"], ["Black_Marvel", "Dusk_(comics)"], ["Hulkling", "Quicksilver_(Marvel_Comics)"], ["Black_Panther_(character)", "Venom_(character)"], ["Gremlin_(comics)", "Hulk"], ["Fabio_Medina", "Phoenix_Force"], ["Black_Bolt", "Spider-Man"], ["Hank_Pym", "Patsy_Walker"], ["Emma_Frost", "Sentry_(Robert_Reynolds)"], ["Black_Bolt", "Vulcan_(Marvel_Comics)"], ["Eddie_Brock", "Radioactive_Man_(comics)"], ["Jean_Grey_(X-Men_film_series)", "Jubilee_(character)"], ["Black_Widow_(Natasha_Romanova)", "Ursa_Major_(character)"], ["Hulkling", "Wolverine_(character)"], ["Kismet_(Marvel_Comics)", "Starhawk_(character)"], ["Misty_Knight", "Phoenix_Force"], ["Blade_(character)", "Morbius"], ["Human_Torch", "John_Jameson_(character)"], ["Mayday_Parker", "Silk_(character)"], ["Emma_Frost", "Empath_(character)"], ["Wild_Child_(character)", "Wolverine_(character)"], ["Hulk", "Red_Wolf_(comics)"], ["Black_Knight_(Marvel_Comics)", "Hank_Pym"], ["Radian_(Morituri)", "Vyking"], ["Red_Guardian", "Sabra_(character)"], ["Human_Torch_(android)", "Union_Jack_(Marvel_Comics)"], ["Gladiator_(Kallark)", "Rachel_Summers"], ["Motormouth_(comics)", "Peggy_Carter"], ["Sentry_(Robert_Reynolds)", "Spider-Man"], ["Black_Marvel", "Ricochet_(comics)"], ["Fandral", "Hulk"], ["Scarlet_Witch", "Whizzer_(Robert_Frank)"], ["Brian_Braddock", "Elsa_Bloodstone"], ["Ghost_Rider_(Johnny_Blaze)", "Satana_(Marvel_Comics)"], ["Black_Rider_(character)", "Two-Gun_Kid"], ["Mania_(character)", "Spider-Man"], ["Gargoyle_(comics)", "War_Machine"], ["Living_Lightning", "Scarlet_Spider"], ["Crippler_(character)", "Eddie_Brock"], ["Ravage_2099", "Spider-Man"], ["Rachel_Summers", "Storm_(Marvel_Comics)"], ["Captain_Universe", "Deadpool"], ["Hulk", "John_Jameson_(character)"], ["Moondragon", "Starhawk_(character)"], ["Deadpool", "Typeface_(character)"], ["Black_Widow_(Natasha_Romanova)", "Eddie_Brock"], ["Franklin_Richards_(character)", "Hawkeye_(comics)"], ["John_Jameson_(character)", "Spider-Girl"], ["Empath_(character)", "Wild_Child_(character)"], ["Eddie_Brock", "Morbius"], ["Adam_Warlock", "Genis-Vell"], ["Bucky_(Marvel_Comics)", "Nomad_(Marvel_Comics)"], ["Ghost_Rider_(Johnny_Blaze)", "Spider-Man"], ["Cable_(character)", "Doom_2099"], ["Spider-Woman_(Jessica_Drew)", "Wolverine_(character)"], ["Human_Torch_(android)", "Jeffrey_Mace"], ["Blue_Diamond_(character)", "Human_Torch"], ["Cloak_and_Dagger_(characters)", "Hulk"], ["Hulk", "She-Hulk"], ["Blade_(character)", "Ghost_Rider_(Danny_Ketch)"], ["Captain_Marvel_(Marvel_Comics)", "Phyla-Vell"], ["Jubilee_(character)", "Patsy_Walker"], ["Scarlet_Witch", "Spider-Man"], ["Quicksilver_(Marvel_Comics)", "Speed_(character)"], ["Jubilee_(character)", "Scarlet_Witch"], ["Blade_(character)", "Spitfire_(character)"], ["Iron_Fist_(character)", "Union_Jack_(Marvel_Comics)"], ["Hank_Pym", "Phoenix_Force"], ["Rachel_Summers", "Shatterstar"], ["Rom_the_Space_Knight", "Wolverine_(character)"], ["Emma_Frost", "Xorn"], ["Blade_(character)", "Nova_(Richard_Rider)"], ["Chase_Stein", "Cloak_and_Dagger_(characters)"], ["Spider-Woman_(Jessica_Drew)", "Werewolf_by_Night"], ["Cyclops_(Marvel_Comics)", "Empath_(character)"], ["Iron_Lad", "Scarlet_Witch"], ["Spider-Girl", "Spider-Man"], ["Debrii", "Gauntlet_(Joseph_Green)"], ["Black_Widow_(Natasha_Romanova)", "Spider-Woman_(Jessica_Drew)"], ["Blade_(character)", "Ghost_Rider_(Johnny_Blaze)"], ["Adam_Warlock", "Phyla-Vell"], ["Anole_(character)", "Hellion_(character)"], ["Hulk", "Sabra_(character)"], ["Moon_Knight", "Solomon_Kane_(comics)"], ["Spider-Girl", "Spider-Woman"], ["Ch'od", "Rachel_Summers"], ["Deadpool", "Emrys_Killebrew"], ["Empath_(character)", "Outlaw_(Marvel_Comics)"], ["Misty_Knight", "Sentry_(Robert_Reynolds)"], ["Arabian_Knight_(character)", "Black_Panther_(character)"], ["Firebird_(Marvel_Comics)", "Franklin_Richards_(character)"], ["Black_Widow_(Natasha_Romanova)", "Spider-Woman"], ["Black_Panther_(character)", "Sabra_(character)"], ["Bob,_Agent_of_Hydra", "Doctor_Strange"], ["Solo_(Marvel_Comics)", "Wolverine_(character)"], ["Marvel_Boy_(Robert_Grayson)", "Quasar_(character)"], ["Moon_Knight", "Ronin_(Marvel_Comics)"], ["Puck_(Marvel_Comics)", "Vindicator_(comics)"], ["Korvus", "Phoenix_Force"], ["Doctor_Nemesis", "Human_Torch_(android)"], ["Black_Panther_(character)", "Doom_2099"], ["Enigma_(Marvel_Comics)", "Spider-Man"], ["Mayday_Parker", "Venom_(character)"], ["Gargoyle_(comics)", "Moondragon"], ["Captain_Universe", "Doctor_Druid"], ["Franklin_Richards_(character)", "Kristoff_Vernard"], ["Scarlet_Witch", "She-Hulk"], ["Dargo_Ktor", "Hercules_(Marvel_Comics)"], ["Black_Bolt", "Gorgon_(Inhuman)"], ["Blade_(character)", "Doctor_Strange"], ["Magician_(Marvel_Comics)", "Wolverine_(Ultimate_Marvel_character)"], ["Blue_Diamond_(character)", "Whizzer_(Robert_Frank)"], ["Hulkling", "Speed_(character)"], ["Hulk", "Hulk_2099"], ["Human_Torch", "Quicksilver_(Marvel_Comics)"], ["Black_Cat_(Marvel_Comics)", "Storm_(Marvel_Comics)"], ["Betsy_Braddock", "Puck_(Marvel_Comics)"], ["Blade_(character)", "Jubilee_(character)"], ["Paladin_(comics)", "Solo_(Marvel_Comics)"], ["Guardian_(Marvel_Comics)", "Puck_(Marvel_Comics)"], ["Beta_Ray_Bill", "Storm_(Marvel_Comics)"], ["Coldblood", "Darkhawk"], ["Blue_Diamond_(character)", "Citizen_V"], ["Jericho_Drumm", "Scarlet_Witch"], ["Devil_Dinosaur", "Elsa_Bloodstone"], ["Spider-Man", "Steel_Spider"], ["Noh-Varr", "Rocket_Raccoon"], ["Black_Cat_(Marvel_Comics)", "Silk_(character)"], ["Cyclops_(Marvel_Comics)", "Xorn"], ["Killpower", "Motormouth_(comics)"], ["Iron_Fist_(character)", "Misty_Knight"], ["Robbie_Baldwin", "Spider-Girl"], ["Guardsman_(character)", "U.S._Agent"], ["Ikaris", "Thena"], ["Human_Torch", "Living_Lightning"], ["Straw_Man_(comics)", "Werewolf_by_Night"], ["Spider-Man_(Marvel_Mangaverse)", "Venom_(character)"], ["Mayday_Parker", "Spider-Man_Noir"], ["Black_Cat_(Marvel_Comics)", "Spider-Woman_(Gwen_Stacy)"], ["Blazing_Skull", "Union_Jack_(Marvel_Comics)"], ["Anya_Corazon", "Cloak_and_Dagger_(characters)"], ["Hercules_(Marvel_Comics)", "Quicksilver_(Marvel_Comics)"], ["Mayday_Parker", "Scarlet_Spider"], ["Cable_(character)", "Phoenix_Force"], ["Moon_Knight", "Spider-Man"], ["Genis-Vell", "Moondragon"], ["Rachel_Summers", "Spider-Man"], ["Betsy_Braddock", "Emma_Frost"], ["Captain_Universe", "Gladiator_(Kallark)"], ["Doctor_Strange", "Speed_(character)"], ["Deadpool", "Hit-Monkey"], ["Gauntlet_(Joseph_Green)", "Hank_Pym"], ["Guardian_(Marvel_Comics)", "Wild_Child_(character)"], ["Ghost_Rider_(Danny_Ketch)", "Machine_Man"], ["Hercules_(Marvel_Comics)", "Wolverine_(character)"], ["Nova_(Richard_Rider)", "Robbie_Baldwin"], ["Anya_Corazon", "Spider-Woman_(Gwen_Stacy)"], ["Spider-Man", "Xorn"], ["Jean_Grey", "Phoenix_Force"], ["Oya_(comics)", "Wolverine_(character)"], ["Gargoyle_(comics)", "Patsy_Walker"], ["Deadpool", "Rocket_Raccoon"], ["Iron_Man_2020", "Machine_Man"], ["Deadpool", "Nomad_(Marvel_Comics)"], ["Red_Wolf_(comics)", "War_Machine"], ["Gargoyle_(comics)", "Hulk"], ["Hercules_(Marvel_Comics)", "Living_Lightning"], ["Bill_Foster_(character)", "Moon_Knight"], ["Black_Widow_(Natasha_Romanova)", "Hercules_(Marvel_Comics)"], ["Hulk", "Solo_(Marvel_Comics)"], ["Iron_Fist_(character)", "Jessica_Jones"], ["Hulk", "Living_Lightning"], ["Cyclops_(Marvel_Comics)", "Storm_(Marvel_Comics)"], ["Frankenstein's_Monster_(Marvel_Comics)", "Toro_(character)"], ["Doctor_Strange", "Morbius"], ["Solo_(Marvel_Comics)", "Typeface_(character)"], ["Devil_Hulk", "Hulk"], ["Dusk_(comics)", "Spider-Man"], ["Luke_Cage", "Shuri_(character)"], ["Ghost_Rider_(Johnny_Blaze)", "Hulk"], ["Puck_(Marvel_Comics)", "Spider-Man"], ["John_Jameson_(character)", "Venom_(character)"], ["Fin_Fang_Foom", "War_Machine"], ["Nova_(Richard_Rider)", "Powerhouse_(Marvel_Comics)"], ["Anya_Corazon", "Robbie_Baldwin"], ["Blazing_Skull", "Jeffrey_Mace"], ["Ms._Marvel", "Venom_(character)"], ["Captain_Marvel_(Marvel_Comics)", "Kismet_(Marvel_Comics)"], ["Northstar_(character)", "Rachel_Summers"], ["Emma_Frost", "Shang-Chi"], ["Deathlok", "Star_Brand"], ["Iron_Fist_(character)", "White_Tiger_(comics)"], ["Deathlok", "Gwenpool"], ["Misty_Knight", "Storm_(Marvel_Comics)"], ["Mockingbird_(Marvel_Comics)", "Tarantula_(Marvel_Comics)"], ["Deadpool", "Ghost_Rider"], ["Red_Raven_(Marvel_Comics)", "Two-Gun_Kid"], ["Mark_Hazzard:_Merc", "Nightmask"], ["She-Hulk", "Timeslip_(comics)"], ["Jack_Frost_(Marvel_Comics)", "Red_Raven_(Marvel_Comics)"], ["Anya_Corazon", "Machine_Man"], ["Deadpool", "Dragon_Lord_(character)"], ["Jean_Grey_(X-Men_film_series)", "Leech_(character)"], ["Hulkling", "Iron_Lad"], ["Betsy_Braddock", "Northstar_(character)"], ["Moon_Knight", "Paladin_(comics)"], ["Doctor_Nemesis", "Jubilee_(character)"], ["Silk_(character)", "Spider-Girl"], ["Iron_Man_2020", "War_Machine"], ["Anne_Weying", "Venom_(character)"], ["Ghost_Rider_(Danny_Ketch)", "Spider-Man"], ["Cable_(character)", "Wolverine_(Ultimate_Marvel_character)"], ["Bucky_(Marvel_Comics)", "Rikki_Barnes"], ["Ghost_Rider_(Johnny_Blaze)", "Werewolf_by_Night"], ["Hornet_(comics)", "Human_Fly_(character)"], ["Frankenstein's_Monster_(Marvel_Comics)", "Man-Thing"], ["Hellion_(character)", "Rockslide_(character)"], ["Adam_Warlock", "Kismet_(Marvel_Comics)"], ["Spider-UK", "Spider-Woman_(Jessica_Drew)"], ["Paladin_(comics)", "U.S._Agent"], ["Franklin_Richards_(character)", "Human_Torch"], ["Black_Panther_(character)", "Doctor_Nemesis"], ["Iron_Man_2020", "Spider-Man"], ["Justice_(New_Universe)", "Starr_the_Slayer"], ["Hercules_(Marvel_Comics)", "Red_Guardian"], ["Storm_(Marvel_Comics)", "Wolverine_(character)"], ["Nightwatch_(character)", "She-Hulk"], ["Captain_Marvel_(Marvel_Comics)", "Nova_(Richard_Rider)"], ["Nova_(Richard_Rider)", "Spider-Man"], ["Hulk", "Red_Guardian"], ["Darkhawk", "Vulcan_(Marvel_Comics)"], ["Spitfire_(character)", "Union_Jack_(Joseph_Chapman)"], ["Hornet_(comics)", "Ricochet_(comics)"], ["Eddie_Brock", "Venom_(character)"], ["Hank_Pym", "Hulkling"], ["U.S._Agent", "War_Machine"], ["Black_Panther_(character)", "Iron_Fist_(character)"], ["Gwenpool", "Moon_Knight"], ["Black_Cat_(Marvel_Comics)", "Blade_(character)"], ["Doctor_Spectrum", "Quasar_(character)"], ["Betsy_Braddock", "Spider-Man"], ["Cable_(character)", "Cyclops_(Marvel_Comics)"], ["Doctor_Nemesis", "Jean_Grey"], ["Arabian_Knight_(character)", "Union_Jack_(Joseph_Chapman)"], ["Hawkeye_(comics)", "Ronin_(Marvel_Comics)"], ["John_Jameson_(character)", "Star_Brand"], ["Noh-Varr", "Star-Lord"], ["Fin_Fang_Foom", "Spider-Bitch_(Ashley_Barton)"], ["Anya_Corazon", "Spider-Woman_(Jessica_Drew)"], ["Beta_Ray_Bill", "Spider-Man"], ["Machine_Man", "Vance_Astrovik"], ["Bill_Foster_(character)", "Hank_Pym"], ["Bucky_(Marvel_Comics)", "Jack_Monroe_(character)"], ["Anole_(character)", "Hulkling"], ["Blackthorn_(character)", "Snapdragon_(Morituri)"], ["Sabra_(character)", "Shamrock_(comics)"], ["Doctor_Strange", "Ghost_Rider_(Johnny_Blaze)"], ["Abomination_(character)", "Jessica_Jones"], ["Anya_Corazon", "Spider-Man"], ["Hulk", "Wolverine_(Ultimate_Marvel_character)"], ["Adam_Warlock", "Iron_Lad"], ["Anya_Corazon", "Spider-Woman"], ["Blade_(character)", "Gwenpool"], ["She-Hulk", "Two-Gun_Kid"], ["Hulk_2099", "Justice_(New_Universe)"], ["Hulk", "Thor_Girl"], ["Black_Panther_(character)", "Radioactive_Man_(comics)"], ["Human_Torch", "Morbius"], ["Powerhouse_(Marvel_Comics)", "Spider-Man"], ["Cloak_and_Dagger_(characters)", "Darkhawk"], ["Black_Knight_(Marvel_Comics)", "Shuri_(character)"], ["Human_Torch", "Human_Torch_(android)"], ["Spider-Man_Noir", "Spider-UK"], ["Jean_Grey", "Magician_(Marvel_Comics)"], ["Deadpool", "Whizzer_(Robert_Frank)"], ["Black_Cat_(Marvel_Comics)", "Spider-Man_Noir"], ["Noh-Varr", "Spider-Man"], ["Spider-Bitch_(Ashley_Barton)", "Wolverine_(character)"], ["Outlaw_(Marvel_Comics)", "Shatterstar"], ["Black_Cat_(Marvel_Comics)", "Scarlet_Spider"], ["Ikaris", "Makkari_(character)"], ["Misty_Knight", "Shang-Chi"], ["Silhouette_(comics)", "Spider-Man"], ["Kid_Colt", "Red_Wolf_(comics)"], ["Captain_Marvel_(Khn'nr)", "Noh-Varr"], ["Anya_Corazon", "Rikki_Barnes"], ["Cloak_and_Dagger_(characters)", "Hulkling"], ["Betsy_Braddock", "Deathlok"], ["Deadpool", "Satana_(Marvel_Comics)"], ["Caretaker_(comics)", "Ghost_Rider_(Johnny_Blaze)"], ["Spitfire_(character)", "Union_Jack_(Marvel_Comics)"], ["Ghost_Rider", "Venom_(character)"], ["Abomination_(character)", "Gwenpool"], ["Doom_2099", "Rachel_Summers"], ["Black_Panther_(character)", "Killraven"], ["Quasar_(character)", "Stingray_(Marvel_Comics)"], ["Phoenix_Force", "Spider-Man"], ["Scorpio_(Marvel_Comics)", "Spider-Man"], ["Adam_Warlock", "Doctor_Strange"], ["Luke_Cage", "Storm_(Marvel_Comics)"], ["Arabian_Knight_(character)", "Union_Jack_(Marvel_Comics)"], ["Adam_Warlock", "Puck_(Marvel_Comics)"], ["Devil_Dinosaur", "Phoenix_Force"], ["Eddie_Brock", "Mania_(character)"], ["Ajak", "Thena"], ["Cyclops_(Marvel_Comics)", "Vulcan_(Marvel_Comics)"], ["Adam_Warlock", "Ghost_Rider"], ["Balder_the_Brave", "Fandral"], ["Anole_(character)", "Emma_Frost"], ["Gauntlet_(Joseph_Green)", "Solo_(Marvel_Comics)"], ["Spider-Man", "Star-Lord"], ["Black_Widow_(Natasha_Romanova)", "Hawkeye_(comics)"], ["Hybrid_(Scott_Washington)", "Venom_(character)"], ["Blue_Marvel", "Jessica_Jones"], ["Deadpool", "Spider-Man"], ["Hyperion_(character)", "Quasar_(character)"], ["Adam_Warlock", "Cloak_and_Dagger_(characters)"], ["Jean_Grey", "Xorn"], ["Spider-Woman", "Spider-Woman_(Jessica_Drew)"], ["Anya_Corazon", "Spider-UK"], ["Doom_2099", "Wolverine_(character)"], ["Peggy_Carter", "Spider-Woman_(Gwen_Stacy)"], ["Captain_Universe", "Doctor_Strange"], ["Hulkling", "Noh-Varr"], ["Spider-Man", "Venom_(character)"], ["Elsa_Bloodstone", "Ulysses_Bloodstone"], ["Scarlet_Witch", "U.S._Agent"], ["Firebird_(Marvel_Comics)", "Red_Wolf_(comics)"], ["Hercules_(Marvel_Comics)", "Kismet_(Marvel_Comics)"], ["Empath_(character)", "Hellion_(character)"], ["Isaiah_Bradley", "Wolverine_(character)"], ["Doctor_Druid", "Nightwatch_(character)"], ["Cammi_(character)", "Chase_Stein"], ["Hulk", "Kismet_(Marvel_Comics)"], ["Anya_Corazon", "Ms._Marvel"], ["Ch'od", "Rocket_Raccoon"], ["Adam_Warlock", "Emma_Frost"], ["Scarlet_Spider", "Venom_(character)"], ["Hank_Pym", "Shang-Chi"], ["Man-Thing", "Werewolf_by_Night"], ["Captain_Marvel_(Marvel_Comics)", "Machine_Man"], ["Sabra_(character)", "Spider-Man"], ["Blade_(character)", "Deadpool"], ["Doctor_Strange", "Moon_Knight"], ["Ursa_Major_(character)", "War_Machine"], ["Nightmask", "Star_Brand"], ["Captain_Marvel_(Marvel_Comics)", "Noh-Varr"], ["Moon_Knight", "Phoenix_Force"], ["Hulk", "Rockslide_(character)"], ["Quasar_(character)", "Star_Brand"], ["Bob,_Agent_of_Hydra", "Hulk"], ["Hank_Pym", "Star-Lord"], ["Firebird_(Marvel_Comics)", "Scarlet_Spider"], ["Doctor_Strange", "Man-Thing"], ["G._W._Bridge", "Solo_(Marvel_Comics)"], ["Mayday_Parker", "Phil_Urich"], ["Franklin_Richards_(character)", "Rikki_Barnes"], ["Ghost_Rider_(Danny_Ketch)", "Hulk"], ["Abomination_(character)", "Hercules_(Marvel_Comics)"], ["Brian_Braddock", "Spitfire_(character)"], ["Anne_Weying", "Deadpool"], ["Blackwulf", "Hank_Pym"], ["Emma_Frost", "Leech_(character)"], ["Ricochet_(comics)", "Spider-Man"], ["Leech_(character)", "Rusty_Collins"], ["Quasar_(character)", "Skull_the_Slayer"], ["Black_Bolt", "Darkhawk"], ["Frankenstein's_Monster_(Marvel_Comics)", "Ulysses_Bloodstone"], ["Doctor_Spectrum", "Jericho_Drumm"], ["Sentry_(Robert_Reynolds)", "Xorn"], ["Anole_(character)", "Northstar_(character)"], ["Jean_Grey", "Storm_(Marvel_Comics)"], ["Ares_(Marvel_Comics)", "Balder_the_Brave"], ["Deadpool", "Spider-Bitch_(Ashley_Barton)"], ["Spider-Man", "Spider-Man_Noir"], ["Hyperion_(character)", "Phoenix_Force"], ["Nova_(Richard_Rider)", "Quasar_(character)"], ["Arabian_Knight_(character)", "Machine_Man"], ["Rachel_Summers", "Raza_Longknife"], ["Iron_Fist_(character)", "Phoenix_Force"], ["Flatman_(character)", "Living_Lightning"], ["Human_Torch", "Karnak_(character)"], ["Luke_Cage", "Misty_Knight"], ["Betsy_Braddock", "Scarlet_Witch"], ["Inferno_(Dante_Pertuz)", "Karnak_(character)"], ["Cloak_and_Dagger_(characters)", "Shang-Chi"], ["Doctor_Druid", "Doctor_Strange"], ["Cable_(character)", "Jubilee_(character)"], ["Ares_(Marvel_Comics)", "Shang-Chi"], ["Beta_Ray_Bill", "Hulk"], ["Machine_Man", "Spider-Man"], ["Sabra_(character)", "She-Hulk"], ["Black_Panther_(character)", "Doctor_Spectrum"], ["Silk_(character)", "Spider-Woman"], ["Scarlet_Witch", "Xorn"], ["Captain_Universe", "Eddie_Brock"], ["Blade_(character)", "Werewolf_by_Night"], ["Ares_(Marvel_Comics)", "Outlaw_(Marvel_Comics)"], ["Brian_Braddock", "Union_Jack_(Marvel_Comics)"], ["Gladiator_(Kallark)", "Spider-Man"], ["Black_Bolt", "Karnak_(character)"], ["Hulk", "Karnak_(character)"], ["Korvus", "Vulcan_(Marvel_Comics)"], ["Blazing_Skull", "Quasar_(character)"], ["Noh-Varr", "Scarlet_Witch"], ["Black_Panther_(character)", "Doctor_Strange"], ["Adam_Warlock", "Spider-Man"], ["Jessica_Jones", "Wolverine_(character)"], ["Doctor_Strange", "Hank_Pym"], ["Luke_Cage", "Spider-Man"], ["Ajak", "Ikaris"], ["Cyclops_(Marvel_Comics)", "Surge_(Marvel_Comics)"], ["Adam_Warlock", "Black_Widow_(Natasha_Romanova)"], ["Moondragon", "Phyla-Vell"], ["Hornet_(comics)", "Wolverine_(character)"], ["Luke_Cage", "Silhouette_(comics)"], ["Mockingbird_(Marvel_Comics)", "Ronin_(Marvel_Comics)"], ["Anya_Corazon", "Mayday_Parker"], ["Crane_Mother", "Iron_Fist_(character)"], ["Betsy_Braddock", "Phoenix_Force"], ["Iron_Fist_(character)", "Janice_Lincoln"], ["Doctor_Strange", "Gwenpool"], ["Nova_(Richard_Rider)", "Raza_Longknife"], ["Doctor_Druid", "Man-Thing"], ["Debrii", "Vance_Astrovik"], ["Hulk", "Iron_Man_(Ultimate_Marvel_character)"], ["Peggy_Carter", "Rikki_Barnes"], ["Ajak", "Makkari_(character)"], ["Doctor_Strange", "Mania_(character)"], ["Scatterbrain_(Morituri)", "Toxyn"], ["Solo_(Marvel_Comics)", "War_Machine"], ["Abomination_(character)", "Gargoyle_(comics)"], ["Deadpool", "Hulk"], ["Jean_Grey", "Northstar_(character)"], ["Silk_(character)", "Spider-UK"], ["Alex_Wilder", "Cloak_and_Dagger_(characters)"], ["Frog-Man", "Jessica_Jones"], ["Elsa_Bloodstone", "Iron_Fist_(character)"], ["Jean_Grey", "Star-Lord"], ["Bill_Foster_(character)", "Iron_Fist_(character)"], ["Bucky_(Marvel_Comics)", "U.S._Agent"], ["Frog-Man", "Spider-Man"], ["Hulk", "Jean_Grey"], ["Gwenpool", "Wolverine_(character)"], ["Nova_(Richard_Rider)", "Turbo_(comics)"], ["Black_Bolt", "Inferno_(Dante_Pertuz)"], ["Franklin_Richards_(character)", "Scarlet_Witch"], ["Blue_Diamond_(character)", "Human_Torch_(android)"], ["Black_Panther_(character)", "Ursa_Major_(character)"], ["Detroit_Steel", "War_Machine"], ["Northstar_(character)", "Storm_(Marvel_Comics)"], ["Darkhawk", "Phil_Urich"], ["Captain_Marvel_(Marvel_Comics)", "Moondragon"], ["Machine_Man", "Ms._Marvel"], ["Blue_Bullet", "Golem_(Marvel_Comics)"], ["Black_Rider_(character)", "Tarantula_(Marvel_Comics)"], ["Justice_(New_Universe)", "Nightmask"], ["Mayday_Parker", "Spider-Girl"], ["Human_Fly_(character)", "Moon_Knight"], ["Bucky_(Marvel_Comics)", "Franklin_Richards_(character)"], ["Deadpool", "Devil_Dinosaur"], ["Dusk_(comics)", "Hornet_(comics)"], ["Toro_(character)", "Whizzer_(Robert_Frank)"], ["Fin_Fang_Foom", "Sentry_(Robert_Reynolds)"], ["Misty_Knight", "White_Tiger_(Heroes_for_Hire)"], ["Luke_Cage", "She-Hulk"], ["Hellion_(character)", "Rusty_Collins"], ["Hercules_(Marvel_Comics)", "Noh-Varr"], ["Hit-Monkey", "Jubilee_(character)"], ["Crippler_(character)", "Human_Torch"], ["Mayday_Parker", "Nova_(Richard_Rider)"], ["Hulk", "Noh-Varr"], ["Deadpool", "Werewolf_by_Night"], ["Mockingbird_(Marvel_Comics)", "War_Machine"], ["Eddie_Brock", "Iron_Fist_(character)"], ["Spider-Man", "Thunderclap_(comics)"], ["Shuri_(character)", "Wolverine_(character)"], ["Captain_Marvel_(Marvel_Comics)", "Hercules_(Marvel_Comics)"], ["Adam_Warlock", "Moondragon"], ["Mockingbird_(Marvel_Comics)", "Spider-Man"], ["Spider-Girl", "Spider-Woman_(Gwen_Stacy)"], ["Northstar_(character)", "Vindicator_(comics)"], ["Bucky_(Marvel_Comics)", "Human_Torch_(android)"], ["Cammi_(character)", "Darkhawk"], ["Bill_Foster_(character)", "Jericho_Drumm"], ["Hulk", "Stingray_(Marvel_Comics)"], ["Captain_Universe", "Spider-UK"], ["Cloak_and_Dagger_(characters)", "Sabra_(character)"], ["Morbius", "She-Hulk"], ["U.S._Agent", "Yelena_Belova"], ["Ethan_Edwards", "Spider-Man"], ["Doctor_Strange", "Moonglow_(comics)"], ["Cloak_and_Dagger_(characters)", "Doom_2099"], ["Cyclops_(Marvel_Comics)", "Doctor_Nemesis"], ["Rocket_Raccoon", "Star-Lord"], ["Hellion_(character)", "Rachel_Summers"], ["Blade_(character)", "Luke_Cage"], ["Franklin_Richards_(character)", "Phoenix_Force"], ["Devil_Dinosaur", "Karnak_(character)"], ["Gauntlet_(Joseph_Green)", "Vance_Astrovik"], ["Mania_(character)", "Venom_(character)"], ["Hit-Monkey", "Man-Thing"], ["Captain_Ultra", "Doctor_Strange"], ["Luke_Cage", "Power_Man_(Victor_Alvarez)"], ["Black_Cat_(Marvel_Comics)", "Killraven"], ["Captain_Marvel_(Marvel_Comics)", "Genis-Vell"], ["Human_Torch", "Mania_(character)"], ["Darkdevil", "Venom_(character)"], ["Bill_Foster_(character)", "Luke_Cage"], ["Betsy_Braddock", "Cyclops_(Marvel_Comics)"], ["Blue_Diamond_(character)", "Makkari_(character)"], ["Captain_Marvel_(Marvel_Comics)", "Quasar_(character)"], ["Chase_Stein", "Darkhawk"], ["Hank_Pym", "Quicksilver_(Marvel_Comics)"], ["Delroy_Garrett", "Isaiah_Bradley"], ["Doctor_Druid", "Skull_the_Slayer"], ["Black_Marvel", "Whizzer_(Robert_Frank)"], ["Star-Lord", "Starhawk_(character)"], ["Mockingbird_(Marvel_Comics)", "Spider-Bitch_(Ashley_Barton)"], ["Human_Fly_(character)", "Spider-Woman"], ["Black_Cat_(Marvel_Comics)", "Morbius"], ["Black_Widow_(Natasha_Romanova)", "Mockingbird_(Marvel_Comics)"], ["Ch'od", "Ms._Marvel"], ["Spider-Bitch_(Ashley_Barton)", "Spider-Woman_(Gwen_Stacy)"], ["Robbie_Baldwin", "Typeface_(character)"], ["Abomination_(character)", "Kristoff_Vernard"], ["Adam_Warlock", "Hulk"], ["Scarlet_Witch", "Stingray_(Marvel_Comics)"], ["Radian_(Morituri)", "Toxyn"], ["Adam_Warlock", "Quasar_(character)"], ["Bug_(Marvel_Comics)", "Genis-Vell"], ["Cyclops_(Marvel_Comics)", "Wolverine_(Ultimate_Marvel_character)"], ["Arabian_Knight_(character)", "Hulk"], ["She-Hulk_(Lyra)", "Wolverine_(character)"], ["Cable_(character)", "Rusty_Collins"], ["Frankenstein's_Monster_(Marvel_Comics)", "Human_Torch_(android)"], ["Rockslide_(character)", "Scarlet_Witch"], ["Battlestar_(character)", "U.S._Agent"], ["Black_Panther_(character)", "Star_Brand"], ["NFL_SuperPro", "Spider-Man"], ["Ms._Marvel", "Nova_(Richard_Rider)"], ["She-Hulk", "Ulysses_Bloodstone"], ["Puck_(Marvel_Comics)", "Storm_(Marvel_Comics)"], ["Kid_Colt", "Two-Gun_Kid"], ["Adam_Warlock", "Devil_Dinosaur"], ["Thin_Man_(character)", "U.S._Agent"], ["Justice_(New_Universe)", "Star_Brand"], ["Black_Marvel", "Spider-Man"], ["Captain_Universe", "Hulk"], ["Doctor_Strange", "Werewolf_by_Night"], ["Redneck_(comics)", "Turbo_(comics)"], ["Captain_Universe", "Quasar_(character)"], ["Emma_Frost", "Rockslide_(character)"], ["Black_Bolt", "Red_Raven_(Marvel_Comics)"], ["Franklin_Richards_(character)", "Radioactive_Man_(comics)"], ["Ghost_Rider", "Killraven"], ["Betsy_Braddock", "Xorn"], ["Misty_Knight", "U.S._Agent"], ["Genis-Vell", "Hyperion_(character)"], ["Hulk", "Rom_the_Space_Knight"], ["Black_Widow_(Natasha_Romanova)", "Spider-Man"], ["Darkhawk", "Nova_(Richard_Rider)"], ["Cable_(character)", "Deadpool"], ["Emrys_Killebrew", "Wolverine_(character)"], ["Ravage_2099", "She-Hulk"], ["Black_Cat_(Marvel_Comics)", "Spider-Girl"], ["Jubilee_(character)", "Wolverine_(character)"], ["Rocket_Raccoon", "Spider-Bitch_(Ashley_Barton)"], ["Elsa_Bloodstone", "Ghost_Rider_(Johnny_Blaze)"], ["Rocket_Raccoon", "She-Hulk"], ["Blue_Marvel", "Luke_Cage"], ["Betsy_Braddock", "Brian_Braddock"], ["Gladiator_(Kallark)", "Phoenix_Force"], ["Iron_Fist_(character)", "Lei_Kung_(character)"], ["Spider-Man", "U.S._Agent"], ["Doctor_Nemesis", "Luke_Cage"], ["Cable_(character)", "G._W._Bridge"], ["Human_Torch_(android)", "Whizzer_(Robert_Frank)"], ["Iron_Fist_(character)", "Shamrock_(comics)"], ["Jessica_Jones", "Spider-Girl"], ["Doctor_Spectrum", "Hyperion_(character)"], ["Radian_(Morituri)", "Scaredycat"], ["Emma_Frost", "Ruby_Summers"], ["Radian_(Morituri)", "Shear_(character)"], ["Luke_Cage", "Phoenix_Force"], ["Killraven", "Spider-Man"], ["Moon_Knight", "Shang-Chi"], ["Bucky_(Marvel_Comics)", "Toro_(character)"], ["Blade_(character)", "Storm_(Marvel_Comics)"], ["Doctor_Strange", "Iron_Fist_(character)"], ["Deathlok", "Machine_Man"], ["Misty_Knight", "Morbius"], ["Mockingbird_(Marvel_Comics)", "Patsy_Walker"], ["Crippler_(character)", "Deathlok"], ["Spider-Woman_(Gwen_Stacy)", "Venom_(character)"], ["Blade_(character)", "Ghost_Rider"], ["Spider-Man_Noir", "Spider-Woman_(Gwen_Stacy)"], ["Betsy_Braddock", "Storm_(Marvel_Comics)"], ["Cable_(character)", "Wolverine_(character)"], ["Frankenstein's_Monster_(Marvel_Comics)", "Ghost_Rider_(Johnny_Blaze)"], ["Deathlok", "Mockingbird_(Marvel_Comics)"], ["Man-Thing", "Mockingbird_(Marvel_Comics)"], ["She-Hulk", "Wolverine_(character)"], ["Black_Jack_Tarr", "Shang-Chi"], ["Cloak_and_Dagger_(characters)", "Doctor_Nemesis"], ["Hank_Pym", "Radioactive_Man_(comics)"], ["Hulk", "She-Hulk_(Lyra)"], ["Spider-Bitch_(Ashley_Barton)", "Spider-Woman_(Jessica_Drew)"], ["Rikki_Barnes", "Toro_(character)"], ["Black_Rider_(character)", "Doctor_Strange"], ["Spider-UK", "Spider-Woman_(Gwen_Stacy)"], ["Raza_Longknife", "Vulcan_(Marvel_Comics)"], ["Spider-Bitch_(Ashley_Barton)", "Spider-Man"], ["Cable_(character)", "Solo_(Marvel_Comics)"], ["Brian_Braddock", "Rachel_Summers"], ["Frog-Man", "Gargoyle_(comics)"], ["Black_Panther_(character)", "Deadpool"], ["Hank_Pym", "U.S._Agent"], ["Devil_Dinosaur", "Hank_Pym"], ["Spider-Bitch_(Ashley_Barton)", "Spider-Woman"], ["Iron_Fist_(character)", "Shang-Chi"], ["Man-Thing", "Satana_(Marvel_Comics)"], ["Mayday_Parker", "Spider-Woman"], ["Cyclops_(Marvel_Comics)", "Spider-Girl"], ["Black_Cat_(Marvel_Comics)", "Doctor_Strange"], ["Rom_the_Space_Knight", "Turbo_(comics)"], ["Emma_Frost", "Jubilee_(character)"], ["Hercules_(Marvel_Comics)", "Hulk"], ["Guardian_(Marvel_Comics)", "Vindicator_(comics)"], ["Black_Bolt", "Quicksilver_(Marvel_Comics)"], ["Doctor_Strange", "Jericho_Drumm"], ["Brian_Braddock", "Hulk"], ["Deathlok", "War_Machine"], ["Rachel_Summers", "Vulcan_(Marvel_Comics)"], ["Balder_the_Brave", "Hercules_(Marvel_Comics)"], ["G._W._Bridge", "Garrison_Kane"], ["Hulk", "Wolverine_(character)"], ["Ghost_Rider", "Ghost_Rider_(Johnny_Blaze)"], ["Deathlok", "Spider-Man"], ["Man-Thing", "Spider-Man"], ["Gwenpool", "Rocket_Raccoon"], ["Cyclops_(Marvel_Comics)", "Ruby_Summers"], ["Anole_(character)", "Cyclops_(Marvel_Comics)"], ["Rocket_Raccoon", "Scarlet_Witch"], ["Cable_(character)", "Doctor_Nemesis"], ["Phoenix_Force", "Storm_(Marvel_Comics)"], ["Quicksilver_(Marvel_Comics)", "Vance_Astrovik"], ["Deadpool", "Dogpool"], ["Shang-Chi", "Silk_(character)"], ["Blade_(character)", "Ronin_(Marvel_Comics)"], ["Ms._Marvel", "Noh-Varr"], ["Guardsman_(character)", "Luke_Cage"], ["Ajak", "Hercules_(Marvel_Comics)"], ["Ch'od", "Raza_Longknife"], ["Robbie_Baldwin", "Vance_Astrovik"], ["Elsa_Bloodstone", "Man-Thing"], ["Emma_Frost", "Jean_Grey"], ["Machine_Man", "Morbius"], ["Doctor_Strange", "Luke_Cage"], ["Leech_(character)", "Shatterstar"], ["Paladin_(comics)", "Tarantula_(Marvel_Comics)"], ["Cyclops_(Marvel_Comics)", "Jean_Grey_(X-Men_film_series)"], ["Hulk", "Werewolf_by_Night"], ["Blade_(character)", "Misty_Knight"], ["Black_Bolt", "Black_Panther_(character)"], ["Iron_Man_(Ultimate_Marvel_character)", "War_Machine"], ["Darkhawk", "Ricochet_(comics)"], ["Mayday_Parker", "Spider-UK"], ["Bill_Foster_(character)", "Mockingbird_(Marvel_Comics)"], ["Nova_(Richard_Rider)", "Star-Lord"], ["Bill_Foster_(character)", "Misty_Knight"], ["Anne_Weying", "Eddie_Brock"], ["Blade_(character)", "Satana_(Marvel_Comics)"], ["Bob,_Agent_of_Hydra", "Spider-Man"], ["Moondragon", "Noh-Varr"], ["Northstar_(character)", "Scarlet_Witch"], ["Guardian_(Marvel_Comics)", "Northstar_(character)"], ["Red_Wolf_(comics)", "Scarlet_Spider"], ["Cloak_and_Dagger_(characters)", "Morbius"], ["Cyclops_(Marvel_Comics)", "Jubilee_(character)"], ["Iron_Lad", "Speed_(character)"], ["Gwenpool", "Spider-Woman_(Gwen_Stacy)"], ["John_Jameson_(character)", "Spider-Man"], ["Man-Thing", "She-Hulk"], ["Scarlet_Witch", "Wolverine_(character)"], ["Blue_Diamond_(character)", "Red_Raven_(Marvel_Comics)"], ["Hercules_(Marvel_Comics)", "Raza_Longknife"], ["Spider-Woman", "Spider-Woman_(Gwen_Stacy)"], ["Deadpool", "Shamrock_(comics)"], ["Jean_Grey", "Wolverine_(Ultimate_Marvel_character)"], ["Black_Cat_(Marvel_Comics)", "Venom_(character)"], ["Doctor_Nemesis", "Emma_Frost"], ["Blade_(character)", "Spider-Man"], ["Doctor_Strange", "Straw_Man_(comics)"], ["Hulk_2099", "Moon_Knight"], ["Betsy_Braddock", "Black_Cat_(Marvel_Comics)"], ["Bill_Foster_(character)", "Spider-Woman_(Jessica_Drew)"], ["Doctor_Strange", "Ikaris"], ["Mockingbird_(Marvel_Comics)", "Yelena_Belova"], ["Captain_Universe", "Starhawk_(character)"], ["Bill_Foster_(character)", "Spider-Man"], ["Betsy_Braddock", "Vulcan_(Marvel_Comics)"], ["Anne_Weying", "Spider-Man"], ["Cyclops_(Marvel_Comics)", "Jean_Grey"], ["Kismet_(Marvel_Comics)", "Star_Brand"], ["Ghost_Rider", "Moon_Knight"], ["Anne_Weying", "Spider-Woman"], ["Dusk_(comics)", "Ms._Marvel"], ["Abomination_(character)", "Spider-Man"], ["Caretaker_(comics)", "Ghost_Rider_(Danny_Ketch)"], ["Black_Widow_(Natasha_Romanova)", "Rockman_(character)"], ["Guardsman_(character)", "Vance_Astrovik"], ["Firebird_(Marvel_Comics)", "Moon_Knight"], ["Korvus", "Nova_(Richard_Rider)"], ["Doctor_Strange", "Rocket_Raccoon"], ["Agent_X_(Marvel_Comics)", "Tarantula_(Marvel_Comics)"], ["Human_Torch_(android)", "Scarlet_Witch"], ["Arabian_Knight_(character)", "Brian_Braddock"], ["Jessica_Jones", "Spider-Woman_(Jessica_Drew)"], ["Eddie_Brock", "Spider-Man"], ["Quicksilver_(Marvel_Comics)", "Whizzer_(Robert_Frank)"], ["Box_(comics)", "Garrison_Kane"], ["Eddie_Brock", "Spider-Woman"], ["Cyclops_(Marvel_Comics)", "Outlaw_(Marvel_Comics)"], ["Ares_(Marvel_Comics)", "Ikaris"], ["Sentry_(Robert_Reynolds)", "Yelena_Belova"], ["Bug_(Marvel_Comics)", "Rocket_Raccoon"], ["Human_Torch", "Kristoff_Vernard"], ["Blackthorn_(character)", "Radian_(Morituri)"], ["Adam_Warlock", "Fin_Fang_Foom"], ["Mayday_Parker", "Wolverine_(character)"], ["Hornet_(comics)", "Spider-Woman_(Jessica_Drew)"], ["Betsy_Braddock", "Captain_Marvel_(Marvel_Comics)"], ["Shang-Chi", "Spider-Man"], ["Iron_Fist_(character)", "Power_Man_(Victor_Alvarez)"], ["Gauntlet_(Joseph_Green)", "Hulk"], ["Union_Jack_(Joseph_Chapman)", "Union_Jack_(Marvel_Comics)"], ["Anya_Corazon", "Spider-Man_Noir"], ["Hulk", "Shuri_(character)"], ["Ronin_(Marvel_Comics)", "Spider-Man"], ["Spider-Man", "Will_o'_the_Wisp_(comics)"], ["Black_Cat_(Marvel_Comics)", "Gwenpool"], ["Phoenix_Force", "Vulcan_(Marvel_Comics)"], ["Black_Cat_(Marvel_Comics)", "Mania_(character)"], ["Doctor_Strange", "Ghost_Rider"], ["Kristoff_Vernard", "Spider-Man"], ["Silk_(character)", "Spider-Woman_(Gwen_Stacy)"], ["Jericho_Drumm", "Morbius"], ["Deathlok", "Digitek_(character)"], ["Black_Panther_(character)", "Shuri_(character)"], ["Arabian_Knight_(character)", "Storm_(Marvel_Comics)"], ["Abomination_(character)", "Deathlok"], ["Nova_(Richard_Rider)", "Red_Raven_(Marvel_Comics)"], ["Wolverine_(character)", "Xorn"], ["Rom_the_Space_Knight", "Storm_(Marvel_Comics)"], ["Deathlok", "Quasar_(character)"], ["Gwenpool", "Hyperion_(character)"], ["Blue_Marvel", "Hyperion_(character)"], ["Black_Widow_(Natasha_Romanova)", "Red_Guardian"], ["Delroy_Garrett", "Red_Wolf_(comics)"], ["Abomination_(character)", "She-Hulk"], ["Gwenpool", "Spider-Man"], ["Black_Panther_(character)", "Luke_Cage"], ["Flatman_(character)", "Hercules_(Marvel_Comics)"], ["Robbie_Baldwin", "Spider-Man"], ["Adam_Warlock", "Human_Torch"], ["Doctor_Nemesis", "Spider-Man"], ["Blue_Diamond_(character)", "Jack_Frost_(Marvel_Comics)"], ["Rachel_Summers", "Wolverine_(character)"], ["Cable_(character)", "Nova_(Richard_Rider)"], ["Cloak_and_Dagger_(characters)", "Doctor_Strange"], ["Phyla-Vell", "Quasar_(character)"], ["Blazing_Skull", "She-Hulk"], ["Caretaker_(comics)", "Ghost_Rider"], ["Cammi_(character)", "Phyla-Vell"], ["Hrimhari", "Werewolf_by_Night"], ["Tarantula_(Marvel_Comics)", "U.S._Agent"], ["Eddie_Brock", "Paladin_(comics)"], ["Scarlet_Witch", "Speed_(character)"], ["Iron_Fist_(character)", "White_Tiger_(Heroes_for_Hire)"], ["Deadpool", "Elsa_Bloodstone"], ["Shamrock_(comics)", "Storm_(Marvel_Comics)"], ["Hank_Pym", "Man-Thing"], ["Nomad_(Marvel_Comics)", "William_Burnside_(character)"], ["Bill_Foster_(character)", "Hercules_(Marvel_Comics)"], ["Arabian_Knight_(character)", "Shamrock_(comics)"], ["Shuri_(character)", "Spider-Man"], ["Black_Widow_(Natasha_Romanova)", "Janice_Lincoln"], ["Black_Widow_(Natasha_Romanova)", "Yelena_Belova"], ["Firebird_(Marvel_Comics)", "Hank_Pym"], ["Rom_the_Space_Knight", "Shamrock_(comics)"], ["Devil_Dinosaur", "Tarantula_(Marvel_Comics)"], ["Brian_Braddock", "Killpower"], ["Ghost_Rider", "Star_Brand"], ["Ghost_Rider_(Johnny_Blaze)", "Morbius"], ["Frog-Man", "Human_Torch"], ["Black_Marvel", "Hornet_(comics)"], ["Anya_Corazon", "Power_Man_(Victor_Alvarez)"], ["Crane_Mother", "Hulk"], ["Spider-Man", "Spider-Woman"], ["Man-Thing", "Phoenix_Force"], ["Doctor_Strange", "Noh-Varr"], ["Deadpool", "She-Hulk"], ["Doctor_Strange", "Mockingbird_(Marvel_Comics)"], ["Tarantula_(Marvel_Comics)", "Two-Gun_Kid"], ["Betsy_Braddock", "Surge_(Marvel_Comics)"], ["Scarlet_Spider", "Spider-Man"], ["Jean_Grey", "Jean_Grey_(X-Men_film_series)"], ["Emma_Frost", "Rachel_Summers"], ["Agent_X_(Marvel_Comics)", "Bob,_Agent_of_Hydra"], ["Cloak_and_Dagger_(characters)", "Moon_Knight"], ["Luke_Cage", "Moon_Knight"], ["Satana_(Marvel_Comics)", "Spider-Man"], ["Backhand_(character)", "Vyking"], ["Hercules_(Marvel_Comics)", "Rocket_Raccoon"], ["Bill_Foster_(character)", "Hulk"], ["Bill_Foster_(character)", "Quasar_(character)"], ["Jean_Grey", "Karnak_(character)"], ["Doctor_Strange", "Satana_(Marvel_Comics)"], ["Hulk", "Rocket_Raccoon"], ["Silk_(character)", "Spider-Woman_(Jessica_Drew)"], ["Elsa_Bloodstone", "Wolverine_(character)"], ["John_Jameson_(character)", "Werewolf_by_Night"], ["Black_Widow_(Natasha_Romanova)", "Human_Torch_(android)"], ["Adam_Warlock", "Star-Lord"], ["Silk_(character)", "Spider-Man"], ["Ghost_Rider_(Danny_Ketch)", "Solo_(Marvel_Comics)"], ["Guardsman_(character)", "War_Machine"], ["Darkhawk", "Wolverine_(character)"], ["Jean_Grey", "Junior_Juniper"], ["Snapdragon_(Morituri)", "Vyking"], ["She-Hulk", "Silencer_(comics)"], ["Abomination_(character)", "Hulk"], ["Jean_Grey", "Jubilee_(character)"], ["Cyclops_(Marvel_Comics)", "Rusty_Collins"], ["Moondragon", "Quasar_(character)"], ["Betsy_Braddock", "Quicksilver_(Marvel_Comics)"], ["Ares_(Marvel_Comics)", "Noh-Varr"], ["Emma_Frost", "Wolverine_(character)"], ["Hellion_(character)", "Spider-Man"], ["Red_Guardian", "Ronin_(Marvel_Comics)"], ["Human_Torch_(android)", "U.S._Agent"], ["Human_Torch", "Spider-Woman_(Gwen_Stacy)"], ["Junior_Juniper", "Wolverine_(character)"], ["Nova_(Richard_Rider)", "Solo_(Marvel_Comics)"], ["Doctor_Strange", "Spider-Woman_(Jessica_Drew)"], ["Doctor_Strange", "Jessica_Jones"], ["Jeffrey_Mace", "Red_Guardian"], ["Black_Cat_(Marvel_Comics)", "Wolverine_(character)"], ["Gladiator_(Kallark)", "Vulcan_(Marvel_Comics)"], ["Luke_Cage", "Venom_(character)"], ["Doctor_Strange", "Spider-Man"], ["Oya_(comics)", "Storm_(Marvel_Comics)"], ["Eddie_Brock", "Quasar_(character)"], ["Moon_Knight", "Radioactive_Man_(comics)"], ["Hulk", "Puck_(Marvel_Comics)"], ["Justice_(New_Universe)", "Vance_Astrovik"], ["Captain_Universe", "Star-Lord"], ["Cable_(character)", "Jean_Grey"], ["Doctor_Druid", "Emma_Frost"], ["Spider-Man", "Spider-UK"], ["Black_Panther_(character)", "Storm_(Marvel_Comics)"], ["Scaredycat", "Scatterbrain_(Morituri)"], ["Doctor_Druid", "Shamrock_(comics)"], ["She-Hulk_(Lyra)", "Spider-Man"], ["Moon_Knight", "U.S._Agent"], ["Hercules_(Marvel_Comics)", "Human_Torch"], ["Ares_(Marvel_Comics)", "Black_Knight_(Marvel_Comics)"], ["Black_Panther_(character)", "Ghost_Rider"], ["She-Hulk", "Will_o'_the_Wisp_(comics)"], ["Morbius", "Outlaw_(Marvel_Comics)"], ["Phoenix_Force", "Scarlet_Witch"], ["Kristoff_Vernard", "Patsy_Walker"], ["Doctor_Nemesis", "Golem_(Marvel_Comics)"], ["Cable_(character)", "Machine_Man"], ["Cyclops_(Marvel_Comics)", "Rachel_Summers"], ["Delroy_Garrett", "Firebird_(Marvel_Comics)"], ["Box_(comics)", "Guardian_(Marvel_Comics)"], ["Brian_Braddock", "Emma_Frost"], ["Captain_Universe", "Spider-Man"], ["Darkdevil", "Doctor_Strange"], ["Black_Bolt", "Emma_Frost"], ["Noh-Varr", "Wolverine_(character)"], ["Franklin_Richards_(character)", "Leech_(character)"], ["Quicksilver_(Marvel_Comics)", "Scarlet_Witch"], ["Frankenstein's_Monster_(Marvel_Comics)", "Werewolf_by_Night"], ["Darkdevil", "Ghost_Rider"], ["Gremlin_(comics)", "Rom_the_Space_Knight"], ["Deadpool", "Firebird_(Marvel_Comics)"], ["Blue_Marvel", "Hulk"], ["Emma_Frost", "Hellion_(character)"], ["Cloak_and_Dagger_(characters)", "Hank_Pym"], ["Cable_(character)", "Garrison_Kane"], ["Black_Panther_(character)", "Shamrock_(comics)"], ["Betsy_Braddock", "Doctor_Nemesis"], ["Devil_Dinosaur", "Ghost_Rider_(Danny_Ketch)"], ["Moon_Knight", "Scarlet_Scarab"], ["Eddie_Brock", "Guardsman_(character)"], ["Hulk", "Robbie_Baldwin"], ["Jericho_Drumm", "Man-Thing"], ["Captain_Marvel_(Marvel_Comics)", "Ms._Marvel"], ["Cyclops_(Marvel_Comics)", "Wolverine_(character)"], ["Isaiah_Bradley", "Luke_Cage"], ["Noh-Varr", "Phyla-Vell"], ["Adam_Warlock", "She-Hulk"], ["Spider-Man", "William_Burnside_(character)"], ["Battlestar_(character)", "Solo_(Marvel_Comics)"], ["Black_Bolt", "Machine_Man"], ["Hulk", "Machine_Man"], ["Arabian_Knight_(character)", "She-Hulk"], ["Paladin_(comics)", "Spider-Woman_(Jessica_Drew)"], ["Doctor_Druid", "Satana_(Marvel_Comics)"], ["Ch'od", "Vulcan_(Marvel_Comics)"], ["Cable_(character)", "War_Machine"], ["Black_Panther_(character)", "Ronin_(Marvel_Comics)"], ["Franklin_Richards_(character)", "Quicksilver_(Marvel_Comics)"], ["Black_Bolt", "Noh-Varr"], ["Paladin_(comics)", "Spider-Man"], ["Janice_Lincoln", "Luke_Cage"], ["Black_Cat_(Marvel_Comics)", "Tarantula_(Marvel_Comics)"], ["Doctor_Strange", "Moondragon"], ["Red_Wolf_(comics)", "Two-Gun_Kid"], ["Misty_Knight", "Wolverine_(character)"], ["Deadpool", "Solo_(Marvel_Comics)"], ["Anya_Corazon", "Phil_Urich"], ["Jack_Monroe_(character)", "William_Burnside_(character)"], ["Hercules_(Marvel_Comics)", "Northstar_(character)"], ["Bug_(Marvel_Comics)", "Moondragon"], ["She-Hulk", "Spider-Woman"], ["Captain_Universe", "Spider-Bitch_(Ashley_Barton)"], ["Black_Panther_(character)", "Misty_Knight"], ["Human_Torch", "Spider-Man"], ["Hulk", "Northstar_(character)"], ["Hercules_(Marvel_Comics)", "Star-Lord"], ["Elsa_Bloodstone", "Jericho_Drumm"], ["Spider-Man", "Wolverine_(character)"], ["Cammi_(character)", "Nova_(Richard_Rider)"], ["Hyperion_(character)", "Kismet_(Marvel_Comics)"], ["Guardian_(Marvel_Comics)", "Wolverine_(Ultimate_Marvel_character)"], ["Hulkling", "Scarlet_Witch"], ["Helix_(Marvel_Comics)", "Spider-Man"], ["Rachel_Summers", "Spider-Girl"], ["Ursa_Major_(character)", "Wolverine_(character)"], ["Agent_X_(Marvel_Comics)", "Outlaw_(Marvel_Comics)"], ["Devil_Dinosaur", "Doctor_Strange"], ["Black_Cat_(Marvel_Comics)", "Jericho_Drumm"], ["Ricochet_(comics)", "Wolverine_(character)"], ["Beta_Ray_Bill", "U.S._Agent"], ["Black_Widow_(Natasha_Romanova)", "Iron_Man_(Ultimate_Marvel_character)"], ["Spider-Man", "Werewolf_by_Night"], ["Hulk", "Spider-Woman_(Jessica_Drew)"], ["Doctor_Strange", "Golem_(Marvel_Comics)"], ["Hercules_(Marvel_Comics)", "Spider-Man"], ["Captain_Marvel_(Marvel_Comics)", "Scarlet_Witch"], ["Brian_Braddock", "Spider-Man"], ["Beta_Ray_Bill", "Dargo_Ktor"], ["Tarantula_(Marvel_Comics)", "Will_o'_the_Wisp_(comics)"], ["Hulk", "Spider-Man"], ["Rocket_Raccoon", "Venom_(character)"], ["Ghost_Rider", "Iron_Fist_(character)"], ["Human_Fly_(character)", "Spider-Woman_(Jessica_Drew)"], ["Hercules_(Marvel_Comics)", "Red_Wolf_(comics)"], ["Hellion_(character)", "Hulk"], ["Human_Fly_(character)", "Spider-Man"], ["Cyclops_(Marvel_Comics)", "Fabio_Medina"], ["Guardsman_(character)", "Quasar_(character)"], ["Blazing_Skull", "U.S._Agent"], ["Ares_(Marvel_Comics)", "Hercules_(Marvel_Comics)"], ["Devil_Hulk", "Venom_(character)"], ["Shang-Chi", "Yelena_Belova"], ["Ghost_Rider_(Johnny_Blaze)", "Venom_(character)"], ["Doctor_Strange", "Patsy_Walker"], ["Star_Brand", "Starr_the_Slayer"], ["Doctor_Strange", "Scarlet_Witch"], ["Korvus", "Rachel_Summers"], ["Rocket_Raccoon", "Vulcan_(Marvel_Comics)"], ["Doctor_Strange", "Hulk"], ["Delroy_Garrett", "Marvel_Boy_(Robert_Grayson)"], ["Phoenix_Force", "Wolverine_(Ultimate_Marvel_character)"], ["Shang-Chi", "U.S._Agent"], ["Hyperion_(character)", "Makkari_(character)"], ["Mayday_Parker", "Spider-Woman_(Gwen_Stacy)"], ["Adam_Warlock", "Scarlet_Witch"], ["Black_Panther_(character)", "White_Tiger_(comics)"], ["Deathlok", "Iron_Man_2020"], ["Black_Panther_(character)", "Kid_Colt"], ["Robbie_Baldwin", "Timeslip_(comics)"], ["Misty_Knight", "Tarantula_(Marvel_Comics)"], ["Jessica_Jones", "Luke_Cage"], ["Blue_Bullet", "Doctor_Nemesis"], ["Human_Torch_(android)", "Toro_(character)"], ["Delroy_Garrett", "Thor_Girl"], ["Jubilee_(character)", "Rachel_Summers"], ["Isaiah_Bradley", "Storm_(Marvel_Comics)"], ["Jack_Frost_(Marvel_Comics)", "Jeffrey_Mace"], ["Spider-Man", "Tarantula_(Marvel_Comics)"], ["Wolverine_(Ultimate_Marvel_character)", "Wolverine_(character)"], ["Iron_Man_2020", "Spider-Girl"], ["Crippler_(character)", "Stingray_(Marvel_Comics)"], ["Ghost_Rider", "Jericho_Drumm"], ["Hrimhari", "Shatterstar"], ["Hercules_(Marvel_Comics)", "She-Hulk"], ["Killraven", "Shang-Chi"], ["Black_Widow_(Natasha_Romanova)", "Venom_(character)"], ["Black_Panther_(character)", "Deathlok"], ["Scarlet_Witch", "Spider-Woman_(Jessica_Drew)"], ["Cable_(character)", "Hercules_(Marvel_Comics)"], ["Hulk", "Spider-Bitch_(Ashley_Barton)"], ["Spider-Woman", "Yelena_Belova"], ["Hit-Monkey", "Spider-Man"], ["Makkari_(character)", "Thena"], ["Ghost_Rider_(Danny_Ketch)", "Ghost_Rider_(Johnny_Blaze)"], ["Blue_Marvel", "Sentry_(Robert_Reynolds)"], ["Betsy_Braddock", "Rockslide_(character)"], ["Vindicator_(comics)", "Wolverine_(Ultimate_Marvel_character)"], ["Rocket_Raccoon", "Star_Brand"], ["Spider-Man", "Typeface_(character)"], ["Hellion_(character)", "Phoenix_Force"], ["Gorgon_(Inhuman)", "Karnak_(character)"], ["She-Hulk", "She-Hulk_(Lyra)"], ["Blue_Diamond_(character)", "Jeffrey_Mace"], ["Black_Bolt", "Moondragon"], ["U.S._Agent", "Union_Jack_(Joseph_Chapman)"], ["Franklin_Richards_(character)", "Speed_(character)"], ["Brian_Braddock", "Ms._Marvel"], ["Garrison_Kane", "Rachel_Summers"], ["Cable_(character)", "Rachel_Summers"], ["Karnak_(character)", "Moon_Knight"], ["Franklin_Richards_(character)", "Killraven"], ["Anya_Corazon", "Spider-Girl"], ["Outlaw_(Marvel_Comics)", "Tarantula_(Marvel_Comics)"], ["Adam_Warlock", "Black_Panther_(character)"], ["Iron_Lad", "Wolverine_(character)"], ["Spider-Bitch_(Ashley_Barton)", "Star-Lord"], ["Elsa_Bloodstone", "Fin_Fang_Foom"], ["Deadpool", "Morbius"], ["Bucky_(Marvel_Comics)", "Frankenstein's_Monster_(Marvel_Comics)"], ["Morbius", "Wolverine_(character)"], ["Citizen_V", "Human_Torch_(android)"], ["Jack_Frost_(Marvel_Comics)", "Whizzer_(Robert_Frank)"], ["Jean_Grey", "Rachel_Summers"], ["Firelord_(character)", "Ghost_Rider"], ["Robbie_Baldwin", "Steel_Spider"], ["Black_Widow_(Natasha_Romanova)", "Spider-Man_Noir"], ["Surge_(Marvel_Comics)", "Wolverine_(character)"], ["Bill_Foster_(character)", "Debrii"], ["Spider-Bitch_(Ashley_Barton)", "Venom_(character)"], ["Quasar_(character)", "Starhawk_(character)"], ["Garrison_Kane", "Wolverine_(character)"], ["Debrii", "She-Hulk"], ["Hulk", "Power_Man_(Victor_Alvarez)"], ["Bucky_(Marvel_Comics)", "Jeffrey_Mace"], ["John_Jameson_(character)", "Spider-Woman_(Gwen_Stacy)"], ["Devil_Dinosaur", "Spider-Man"], ["Doctor_Druid", "Hulk"], ["Phoenix_Force", "Rockslide_(character)"], ["Morbius", "Werewolf_by_Night"], ["Iron_Fist_(character)", "Moon_Knight"], ["Mayday_Parker", "Spider-Woman_(Jessica_Drew)"], ["Noh-Varr", "Nova_(Richard_Rider)"], ["Emma_Frost", "Storm_(Marvel_Comics)"], ["Doctor_Spectrum", "Hank_Pym"], ["Crane_Mother", "Lei_Kung_(character)"], ["Gorgon_(Inhuman)", "Inferno_(Dante_Pertuz)"], ["Mayday_Parker", "Spider-Man"], ["Mockingbird_(Marvel_Comics)", "Quicksilver_(Marvel_Comics)"], ["Karnak_(character)", "Stingray_(Marvel_Comics)"], ["Jean_Grey", "Wolverine_(character)"], ["Blazing_Skull", "Ghost_Rider_(Johnny_Blaze)"], ["Quicksilver_(Marvel_Comics)", "Synapse_(character)"], ["Elsa_Bloodstone", "Frankenstein's_Monster_(Marvel_Comics)"], ["Captain_Marvel_(Marvel_Comics)", "Radioactive_Man_(comics)"], ["Ghost_Rider", "Ghost_Rider_(Danny_Ketch)"], ["Jericho_Drumm", "Zombie_(comics)"], ["Betsy_Braddock", "Doctor_Strange"], ["Cloak_and_Dagger_(characters)", "Iron_Fist_(character)"], ["Sentry_(Robert_Reynolds)", "She-Hulk_(Lyra)"], ["Spider-Woman_(Gwen_Stacy)", "Spider-Woman_(Jessica_Drew)"], ["Radioactive_Man_(comics)", "Shuri_(character)"], ["Doctor_Spectrum", "Star_Brand"], ["Dusk_(comics)", "Ricochet_(comics)"], ["Living_Lightning", "Quasar_(character)"], ["Adam_Warlock", "Gladiator_(Kallark)"], ["Black_Bolt", "Hulk"], ["Fin_Fang_Foom", "Man-Thing"], ["Phyla-Vell", "Star-Lord"], ["Agent_X_(Marvel_Comics)", "Deadpool"], ["Betsy_Braddock", "Jubilee_(character)"], ["Black_Cat_(Marvel_Comics)", "Cloak_and_Dagger_(characters)"], ["Jericho_Drumm", "Wolverine_(character)"], ["Eddie_Brock", "Silk_(character)"], ["Black_Panther_(character)", "Scarlet_Witch"], ["Genis-Vell", "Rom_the_Space_Knight"], ["Agent_X_(Marvel_Comics)", "Cable_(character)"], ["Iron_Fist_(character)", "Venom_(character)"], ["Eddie_Brock", "Hybrid_(Scott_Washington)"], ["Flatman_(character)", "Mockingbird_(Marvel_Comics)"], ["Quasar_(character)", "Rocket_Raccoon"], ["Doctor_Strange", "Sentry_(Robert_Reynolds)"], ["Gorgon_(Inhuman)", "Stingray_(Marvel_Comics)"], ["Scaredycat", "Toxyn"], ["Eddie_Brock", "Spider-Woman_(Gwen_Stacy)"], ["Justice_(New_Universe)", "Quasar_(character)"], ["Darkhawk", "Robbie_Baldwin"], ["Sabra_(character)", "Union_Jack_(Joseph_Chapman)"], ["Blade_(character)", "Moon_Knight"], ["Jericho_Drumm", "Werewolf_by_Night"], ["Bob,_Agent_of_Hydra", "Outlaw_(Marvel_Comics)"], ["Hank_Pym", "Magician_(Marvel_Comics)"], ["Elsa_Bloodstone", "Machine_Man"], ["Mayday_Parker", "Spider-Bitch_(Ashley_Barton)"], ["Devil_Dinosaur", "Paladin_(comics)"], ["Mania_(character)", "Wolverine_(character)"], ["Betsy_Braddock", "Jean_Grey"], ["Gwenpool", "Storm_(Marvel_Comics)"], ["Captain_Marvel_(Khn'nr)", "Hulkling"], ["Blade_(character)", "Man-Thing"], ["Janice_Lincoln", "Jessica_Jones"], ["Jack_Frost_(Marvel_Comics)", "Thin_Man_(character)"], ["Nightwatch_(character)", "Spider-Man"], ["Black_Knight_(Marvel_Comics)", "Black_Panther_(character)"], ["Janice_Lincoln", "Spider-Man"], ["Phil_Urich", "Turbo_(comics)"], ["Blue_Bullet", "Spitfire_(character)"], ["Northstar_(character)", "Surge_(Marvel_Comics)"], ["Moon_Knight", "Star_Brand"], ["Elsa_Bloodstone", "Misty_Knight"], ["Bucky_(Marvel_Comics)", "War_Machine"], ["Iron_Man_(Ultimate_Marvel_character)", "Spider-Man"], ["Gauntlet_(Joseph_Green)", "She-Hulk"], ["Anya_Corazon", "Dusk_(comics)"], ["Betsy_Braddock", "Man-Thing"], ["Iron_Fist_(character)", "Thunderbolt_(Marvel_Comics)"], ["Hybrid_(Scott_Washington)", "Vance_Astrovik"], ["Black_Widow_(Natasha_Romanova)", "Deadpool"], ["Mockingbird_(Marvel_Comics)", "Red_Guardian"], ["Force_(comics)", "Guardsman_(character)"], ["Red_Guardian", "Yelena_Belova"], ["Deadpool", "Doctor_Strange"], ["Frog-Man", "Thor_Girl"], ["Ares_(Marvel_Comics)", "Sentry_(Robert_Reynolds)"], ["Iron_Man_2020", "Stingray_(Marvel_Comics)"], ["Box_(comics)", "Vindicator_(comics)"], ["Delroy_Garrett", "Dragon_Lord_(character)"], ["Cloak_and_Dagger_(characters)", "Luke_Cage"], ["Shuri_(character)", "Storm_(Marvel_Comics)"], ["Black_Widow_(Natasha_Romanova)", "Firebird_(Marvel_Comics)"], ["Black_Cat_(Marvel_Comics)", "Misty_Knight"], ["Blue_Diamond_(character)", "Thin_Man_(character)"], ["Sabra_(character)", "Vance_Astrovik"], ["Black_Cat_(Marvel_Comics)", "Eddie_Brock"], ["Emma_Frost", "Northstar_(character)"], ["Iron_Fist_(character)", "Star_Brand"], ["Ghost_Rider", "Spider-Woman_(Gwen_Stacy)"], ["Anole_(character)", "Rockslide_(character)"], ["Darkdevil", "Mayday_Parker"], ["Jack_Monroe_(character)", "Nomad_(Marvel_Comics)"], ["Hellion_(character)", "Synapse_(character)"], ["Northstar_(character)", "Quicksilver_(Marvel_Comics)"], ["Deadpool", "Delroy_Garrett"], ["Moondragon", "Star-Lord"], ["Jessica_Jones", "Misty_Knight"], ["Spider-Man", "Storm_(Marvel_Comics)"], ["Cyclops_(Marvel_Comics)", "Lei_Kung_(character)"], ["Cyclops_(Marvel_Comics)", "Emma_Frost"], ["Black_Cat_(Marvel_Comics)", "Satana_(Marvel_Comics)"], ["Alex_Wilder", "Chase_Stein"], ["Leech_(character)", "Man-Thing"], ["Northstar_(character)", "Wolverine_(character)"], ["Doctor_Strange", "Xorn"], ["Cyclops_(Marvel_Comics)", "Oya_(comics)"], ["Nomad_(Marvel_Comics)", "Rikki_Barnes"], ["Black_Widow_(Natasha_Romanova)", "Wolverine_(character)"], ["Fin_Fang_Foom", "Gwenpool"], ["Black_Knight_(Marvel_Comics)", "Marvel_Boy_(Robert_Grayson)"], ["Jeffrey_Mace", "Thin_Man_(character)"], ["Darkhawk", "Spider-Man"], ["Mockingbird_(Marvel_Comics)", "U.S._Agent"], ["Phoenix_Force", "Shang-Chi"], ["Emma_Frost", "Jessica_Jones"], ["Iron_Lad", "Kristoff_Vernard"], ["Hulk", "Isaiah_Bradley"], ["Frog-Man", "Steel_Spider"], ["Emma_Frost", "Spider-Man"], ["Blade_(character)", "Elsa_Bloodstone"], ["Black_Widow_(Natasha_Romanova)", "Blue_Eagle_(character)"], ["Deathlok", "Doom_2099"], ["Black_Cat_(Marvel_Comics)", "Spider-Woman_(Jessica_Drew)"], ["Hank_Pym", "Vance_Astrovik"], ["Black_Knight_(Marvel_Comics)", "Radioactive_Man_(comics)"], ["Black_Panther_(character)", "Isaiah_Bradley"], ["Iron_Fist_(character)", "Rom_the_Space_Knight"], ["Gladiator_(Kallark)", "Nova_(Richard_Rider)"], ["Spider-Man", "Spider-Woman_(Gwen_Stacy)"], ["Deadpool", "Moon_Knight"], ["Black_Cat_(Marvel_Comics)", "Spider-Man"], ["Devil_Dinosaur", "Hulk"], ["Black_Rider_(character)", "Kid_Colt"], ["Cloak_and_Dagger_(characters)", "Nightwatch_(character)"], ["John_Jameson_(character)", "Spider-Bitch_(Ashley_Barton)"], ["Battlestar_(character)", "Bucky_(Marvel_Comics)"], ["Adam_Warlock", "Beta_Ray_Bill"], ["John_Jameson_(character)", "She-Hulk"], ["Lei_Kung_(character)", "Phoenix_Force"], ["Genis-Vell", "Phyla-Vell"], ["Jessica_Jones", "Spider-Man"], ["Ms._Marvel", "She-Hulk"], ["Frankenstein's_Monster_(Marvel_Comics)", "Spider-Man"], ["Jack_Frost_(Marvel_Comics)", "Scarlet_Witch"]], "islandIds": ["Radian_(Morituri)", "Scaredycat", "Vyking", "Toxyn", "Snapdragon_(Morituri)", "Scatterbrain_(Morituri)", "Blackthorn_(character)", "Shear_(character)", "Backhand_(character)"], "isolateIds": ["Baymax", "Bird-Brain_(Marvel_Comics)", "Black_Fox_(Robert_Paine)", "Brain_Drain_(character)", "Breeze_Barton", "Captain_Midlands", "Charcoal_(comics)", "Father_Time_(Marvel_Comics)", "Happy_Sam_Sawyer", "Hellfire_(J._T._Slade)", "Illuminator_(Marvel_Comics)", "Miracleman_(character)", "Ogre_(Marvel_Comics)", "Sean_and_Chris", "Solarman", "Super_Rabbit", "Yo-Yo_Rodriguez"], "centerId": "Spider-Man"}
 ;
-
+ 
 const NODES = GRAPH.nodes;
 const EDGES = GRAPH.edges;
 const nodeMap = {};
 NODES.forEach(function(n){ nodeMap[n.id] = n; });
-
+ 
 const adjAll = {};
 NODES.forEach(function(n){ adjAll[n.id] = []; });
 EDGES.forEach(function(e){ adjAll[e[0]].push(e[1]); adjAll[e[1]].push(e[0]); });
-
+ 
 const eligibleForMines = NODES.filter(function(n){ return adjAll[n.id].length > 0 && n.id !== GRAPH.centerId; }).map(function(n){ return n.id; });
-
+ 
 const DIFFICULTIES = { recon:0.10, assault:0.20, siege:0.32 };
 let difficulty = 'recon';
-
+ 
 let mines = new Set();
 let visited = new Set();
 let path = [];
@@ -300,18 +304,18 @@ let doors = [];
 let yaw = 0;
 let gameOver = false;
 let heldKey = null;
-
+ 
 function setDifficulty(d) {
   difficulty = d;
   document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('active'); });
   event.target.classList.add('active');
   startGame();
 }
-
+ 
 function mineCountTarget() {
   return Math.round(eligibleForMines.length * DIFFICULTIES[difficulty]);
 }
-
+ 
 function placeMines() {
   const excluded = new Set([GRAPH.centerId].concat(adjAll[GRAPH.centerId]));
   const pool = eligibleForMines.filter(function(id){ return !excluded.has(id); });
@@ -321,15 +325,15 @@ function placeMines() {
   }
   mines = new Set(pool.slice(0, Math.min(mineCountTarget(), pool.length)));
 }
-
+ 
 function dangerCount(id) {
   return adjAll[id].filter(function(nb){ return mines.has(nb); }).length;
 }
-
+ 
 // ===== THREE.JS SCENE =====
 let scene, camera, renderer, doorMeshes = [];
 const canvas = document.getElementById('scene-canvas');
-
+ 
 function initScene() {
   scene = new THREE.Scene();
   scene.fog = new THREE.Fog(0x0a0806, 8, 75);
@@ -341,21 +345,21 @@ function initScene() {
   renderer.setSize(initW, initH, false);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setClearColor(0x050403, 1);
-
+ 
   const floorGeo = new THREE.CircleGeometry(30, 32);
   const floorMat = new THREE.MeshStandardMaterial({color:0x2a2318, roughness:1});
   const floor = new THREE.Mesh(floorGeo, floorMat);
   floor.rotation.x = -Math.PI/2;
   scene.add(floor);
-
+ 
   const ambient = new THREE.AmbientLight(0x554433, 0.7);
   scene.add(ambient);
   const glow = new THREE.PointLight(0xd89628, 1.2, 20);
   glow.position.set(0, 3, 0);
   scene.add(glow);
-
+ 
   window.addEventListener('resize', onResize);
-
+ 
   if (window.ResizeObserver) {
     const ro = new ResizeObserver(function(){ onResize(); });
     ro.observe(document.querySelector('.game-area'));
@@ -365,10 +369,10 @@ function initScene() {
     setTimeout(onResize, 400);
     setTimeout(onResize, 1000);
   }
-
+ 
   requestAnimationFrame(loop);
 }
-
+ 
 function onResize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   if (!w || !h) return;
@@ -376,59 +380,59 @@ function onResize() {
   camera.updateProjectionMatrix();
   renderer.setSize(w, h, false);
 }
-
+ 
 let sidebarCollapsed = false;
 function toggleSidebar() {
   sidebarCollapsed = !sidebarCollapsed;
   document.querySelector('.sidebar').classList.toggle('collapsed', sidebarCollapsed);
   setTimeout(onResize, 260);
 }
-
+ 
 let droneView = false;
 function toggleDroneView() {
   droneView = !droneView;
   document.getElementById('drone-toggle').classList.toggle('active', droneView);
   document.querySelector('.center-crosshair').style.display = droneView ? 'none' : 'block';
 }
-
+ 
 function clearDoors() {
   doorMeshes.forEach(function(d){ scene.remove(d.sprite); });
   doorMeshes = [];
   ringMarkers.forEach(function(m){ scene.remove(m); });
   ringMarkers = [];
 }
-
+ 
 function hashHue(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) { h = (h * 31 + str.charCodeAt(i)) % 360; }
   return h;
 }
-
+ 
 function createDoorCard(name, degree, isVisited, ringHex) {
   const W = 512, H = 340;
   const cv = document.createElement('canvas');
   cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
-
+ 
   ctx.fillStyle = isVisited ? '#dce6d0' : '#e8dec8';
   ctx.fillRect(0,0,W,H);
-
+ 
   ctx.fillStyle = 'rgba(20,16,12,0.10)';
   for (let y=10; y<H; y+=11) {
     for (let x=10; x<W; x+=11) {
       ctx.beginPath(); ctx.arc(x,y,1.3,0,Math.PI*2); ctx.fill();
     }
   }
-
+ 
   const borderColor = isVisited ? '#4C5B3B' : '#14100c';
   ctx.strokeStyle = borderColor;
   ctx.lineWidth = 14;
   ctx.strokeRect(7,7,W-14,H-14);
-
+ 
   ctx.strokeStyle = ringHex;
   ctx.lineWidth = 6;
   ctx.strokeRect(20,20,W-40,H-40);
-
+ 
   ctx.fillStyle = '#14100c';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -440,19 +444,19 @@ function createDoorCard(name, degree, isVisited, ringHex) {
     ctx.font = '700 ' + fontSize + 'px Orbitron, sans-serif';
   }
   ctx.fillText(txt, W/2, H/2 - 6);
-
+ 
   ctx.font = '600 24px Orbitron, sans-serif';
   ctx.fillStyle = ringHex;
   ctx.textAlign = 'right';
   ctx.fillText('deg ' + degree, W-34, H-34);
-
+ 
   if (isVisited) {
     ctx.fillStyle = '#4C5B3B';
     ctx.textAlign = 'left';
     ctx.font = '700 22px Orbitron, sans-serif';
     ctx.fillText('SCOUTED', 34, H-34);
   }
-
+ 
   const tex = new THREE.CanvasTexture(cv);
   tex.minFilter = THREE.LinearFilter;
   const mat = new THREE.SpriteMaterial({map: tex, transparent: false, depthTest: true});
@@ -460,13 +464,13 @@ function createDoorCard(name, degree, isVisited, ringHex) {
   sprite.scale.set(3.4, 3.4 * (H/W), 1);
   return sprite;
 }
-
+ 
 const R_BASE = 9;
 const RING_GAP = 7;
 const RING_CAPACITY = 14;
 let ringMarkers = [];
 let currentMaxRadius = R_BASE;
-
+ 
 function addRingFloorMarker(radius, hslStr) {
   const geo = new THREE.RingGeometry(radius - 0.12, radius + 0.12, 48);
   const mat = new THREE.MeshBasicMaterial({color: new THREE.Color(hslStr), transparent: true, opacity: 0.6, side: THREE.DoubleSide});
@@ -476,7 +480,7 @@ function addRingFloorMarker(radius, hslStr) {
   scene.add(mesh);
   ringMarkers.push(mesh);
 }
-
+ 
 function buildDoors() {
   clearDoors();
   const neighbors = adjAll[currentId];
@@ -499,7 +503,7 @@ function buildDoors() {
       });
     });
   }
-
+ 
   doors.forEach(function(door){
     const isVisited = visited.has(door.id);
     const deg = adjAll[door.id].length;
@@ -510,7 +514,7 @@ function buildDoors() {
   });
   currentMaxRadius = doors.length ? Math.max.apply(null, doors.map(function(d){ return d.radius; })) : R_BASE;
 }
-
+ 
 function facingDoor() {
   if (!doors.length) return null;
   const fx = Math.sin(yaw), fz = -Math.cos(yaw);
@@ -521,7 +525,7 @@ function facingDoor() {
   });
   return bestDot > 0.94 ? best : null;
 }
-
+ 
 function updateHud() {
   const n = nodeMap[currentId];
   document.getElementById('loc-name').textContent = n.name;
@@ -529,7 +533,7 @@ function updateHud() {
   document.getElementById('danger-count').textContent = dangerCount(currentId);
   document.getElementById('visit-count').textContent = visited.size;
   document.getElementById('mine-count').textContent = mineCountTarget();
-
+ 
   if (droneView) {
     document.getElementById('facing-name').textContent = 'drone view';
     document.getElementById('facing-hint').textContent = 'click a panel or use the list to move';
@@ -545,7 +549,7 @@ function updateHud() {
     }
   }
 }
-
+ 
 function drawMinimap() {
   const cv = document.getElementById('minimap');
   const ctx = cv.getContext('2d');
@@ -568,7 +572,7 @@ function drawMinimap() {
   ctx.fillStyle = '#E8B94A';
   ctx.beginPath(); ctx.arc(sx(cur.x), sy(cur.y), 3, 0, Math.PI*2); ctx.fill();
 }
-
+ 
 function moveTo(id, isRetreat) {
   currentId = id;
   if (!isRetreat) path.push(id);
@@ -579,11 +583,12 @@ function moveTo(id, isRetreat) {
   drawMinimap();
   renderCorridorList();
 }
-
+ 
 function attemptStepToId(id) {
   if (gameOver) return;
   if (mines.has(id)) {
     gameOver = true;
+    playAmbushSting();
     document.getElementById('lose-flash').classList.add('show');
     document.getElementById('lose-big').textContent = 'AMBUSHED';
     document.getElementById('lose-small').textContent = nodeMap[id].name + ' had turned. Patrol ended after ' + visited.size + ' safe visits.';
@@ -593,14 +598,14 @@ function attemptStepToId(id) {
   }
   moveTo(id, false);
 }
-
+ 
 function attemptStep() {
   if (droneView) return;
   const facing = facingDoor();
   if (!facing) return;
   attemptStepToId(facing.id);
 }
-
+ 
 function renderCorridorList() {
   const listEl = document.getElementById('corridor-list');
   const q = (document.getElementById('corridor-search').value || '').toLowerCase();
@@ -617,13 +622,13 @@ function renderCorridorList() {
       '<span>' + it.name + '</span><span class="n">' + sub + '</span></div>';
   }).join('') || '<div style="padding:10px;font-size:0.75rem;color:#8a7a5a;">No match</div>';
 }
-
+ 
 document.getElementById('corridor-list').addEventListener('click', function(evt){
   const el = evt.target.closest('.corridor-item');
   if (!el) return;
   attemptStepToId(el.getAttribute('data-id'));
 });
-
+ 
 const raycaster = new THREE.Raycaster();
 const mouseVec = new THREE.Vector2();
 canvas.addEventListener('click', function(evt){
@@ -640,8 +645,8 @@ canvas.addEventListener('click', function(evt){
     if (entry) attemptStepToId(entry.door.id);
   }
 });
-
-
+ 
+ 
 function stepBack() {
   if (gameOver) return;
   if (path.length < 2) return;
@@ -649,10 +654,10 @@ function stepBack() {
   const prev = path[path.length-1];
   moveTo(prev, true);
 }
-
+ 
 function startHold(dir) { heldKey = dir; }
 function endHold() { heldKey = null; }
-
+ 
 const ROTATE_SPEED = 1.6;
 let lastTime = performance.now();
 function loop(t) {
@@ -676,7 +681,7 @@ function loop(t) {
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }
-
+ 
 document.addEventListener('keydown', function(e){
   if (gameOver) return;
   if (e.key === 'ArrowLeft' || e.key==='a' || e.key==='A') heldKey = 'left';
@@ -687,9 +692,10 @@ document.addEventListener('keydown', function(e){
 document.addEventListener('keyup', function(e){
   if (['ArrowLeft','a','A','ArrowRight','d','D'].indexOf(e.key)!==-1) heldKey = null;
 });
-
+ 
 function startGame() {
   gameOver = false;
+  resumeMusicAfterAmbush();
   document.getElementById('lose-flash').classList.remove('show');
   document.getElementById('new-op-btn').className = 'new-op-btn';
   document.getElementById('msg').textContent = '';
@@ -704,7 +710,7 @@ function startGame() {
   drawMinimap();
   renderCorridorList();
 }
-
+ 
 // ===== Briefing content (shared by modal + sidebar widget) =====
 const TUTORIAL_PAGES = [
   { title: 'MOVEMENT', text: "←/→ turn. ↑ steps in. ↓ retreats — always safe. Or just click a panel or the list.",
@@ -716,29 +722,29 @@ const TUTORIAL_PAGES = [
   { title: 'TOOLS', text: "Search the list to jump anywhere. DRONE VIEW shows the room from above. NEW OPERATION resets with a fresh layout.",
     keywords: ['SEARCH', 'DRONE VIEW', 'NEW OPERATION'] }
 ];
-
+ 
 function renderKeywords(el, words) {
   el.innerHTML = words.map(function(w){ return '<span>' + w + '</span>'; }).join('');
 }
-
+ 
 // ===== Centered launch briefing modal (shows once at start, reopenable via "?") =====
 let modalIndex = 0;
 let modalTyping = false;
 let modalTimer = null;
-
+ 
 function openModalBriefing() {
   modalIndex = 0;
   document.getElementById('modal-backdrop').style.display = 'flex';
   document.getElementById('modal-page-total').textContent = TUTORIAL_PAGES.length;
   renderModalPage();
 }
-
+ 
 function closeModalBriefing() {
   document.getElementById('modal-backdrop').style.display = 'none';
   clearInterval(modalTimer);
   modalTyping = false;
 }
-
+ 
 function renderModalPage() {
   const page = TUTORIAL_PAGES[modalIndex];
   document.getElementById('modal-page-num').textContent = modalIndex + 1;
@@ -750,7 +756,7 @@ function renderModalPage() {
   renderKeywords(document.getElementById('modal-keywords'), page.keywords);
   typeOutModal(page.text);
 }
-
+ 
 function typeOutModal(text) {
   const el = document.getElementById('modal-body-text');
   const cursor = document.getElementById('modal-cursor');
@@ -768,7 +774,7 @@ function typeOutModal(text) {
     }
   }, 16);
 }
-
+ 
 function modalNext() {
   if (modalTyping) {
     clearInterval(modalTimer);
@@ -783,18 +789,21 @@ function modalNext() {
     closeModalBriefing();
   }
 }
-
+ 
 // ===== Background music =====
 const bgm = document.getElementById('bgm');
+const ambushSfx = document.getElementById('ambush-sfx');
 bgm.volume = 0.45;
-
+ambushSfx.volume = 0.7;
+let musicWasPlaying = false;
+ 
 function setMusicBtnState(playing) {
   const btn = document.getElementById('music-toggle');
   btn.classList.toggle('playing', playing);
   btn.classList.toggle('prompt', !playing);
   btn.textContent = playing ? '♫' : '♪';
 }
-
+ 
 function toggleMusic() {
   if (bgm.paused) {
     bgm.play().then(function(){ setMusicBtnState(true); }).catch(function(){});
@@ -803,9 +812,27 @@ function toggleMusic() {
     setMusicBtnState(false);
   }
 }
-
-// Try to start on first genuine user interaction anywhere on the page,
-// since browsers block audio.play() until a real gesture happens.
+ 
+function playAmbushSting() {
+  musicWasPlaying = !bgm.paused;
+  bgm.pause();
+  ambushSfx.currentTime = 0;
+  ambushSfx.play().catch(function(){});
+}
+ 
+function resumeMusicAfterAmbush() {
+  ambushSfx.pause();
+  ambushSfx.currentTime = 0;
+  if (musicWasPlaying) {
+    bgm.play().then(function(){ setMusicBtnState(true); }).catch(function(){});
+  }
+}
+ 
+// Try to play immediately on load. Browsers will usually block this without
+// a prior user gesture — that's a hard browser policy, not something we can
+// override — so we also fall back to starting on the first real interaction.
+bgm.play().then(function(){ setMusicBtnState(true); }).catch(function(){ setMusicBtnState(false); });
+ 
 function tryAutoStartMusic() {
   if (!bgm.paused) return;
   bgm.play().then(function(){ setMusicBtnState(true); }).catch(function(){});
@@ -813,7 +840,7 @@ function tryAutoStartMusic() {
 ['pointerdown', 'keydown'].forEach(function(evt){
   document.addEventListener(evt, tryAutoStartMusic, {once: true});
 });
-
+ 
 startGame();
 openModalBriefing();
 if (document.fonts && document.fonts.load) {
@@ -825,3 +852,12 @@ if (document.fonts && document.fonts.load) {
 </script>
 </body>
 </html>
+ 
+
+
+
+
+
+
+
+
