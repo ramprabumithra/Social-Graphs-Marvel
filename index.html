@@ -46,6 +46,45 @@
  
   .minimap-wrap { position: absolute; bottom: 90px; right: 14px; background: rgba(20,16,12,0.85); border: 2px solid var(--gold); }
   #minimap { display: block; }
+
+  /* Little nudge toward the Week 2 panel — easy to notice, but not in the way. */
+  .week2-guide {
+    position: absolute;
+    right: 18px;
+    bottom: 250px;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    animation: week2-bob 1.15s ease-in-out infinite;
+  }
+  .week2-guide .guide-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.58rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(5,4,3,0.88);
+    border: 1px solid var(--gold);
+    padding: 6px 8px;
+    box-shadow: 2px 2px 0 #000;
+    white-space: nowrap;
+  }
+  .week2-guide .guide-arrow {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 #000;
+  }
+  @keyframes week2-bob {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-9px); }
+  }
+  @media (max-width: 780px) {
+    .week2-guide { right: 12px; bottom: 18px; }
+  }
  
   .lose-flash { position: absolute; inset: 0; background: rgba(179,36,28,0.35); display: none; align-items: center; justify-content: center;
     flex-direction: column; text-align: center; pointer-events: none; }
@@ -221,6 +260,41 @@
   #w2-progress-bar { height:100%; width:0%; background:#8fc76a; transition:width .25s ease; }
   .week2-buttons { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
   .week2-buttons button { width:100%; }
+
+  /* Little nudge toward the Week 2 panel. It gets out of the way once the player moves. */
+  .week2-arrow {
+    position: absolute;
+    right: 18px;
+    bottom: 74px;
+    z-index: 12;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 10px;
+    background: rgba(5,4,3,0.88);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    pointer-events: none;
+    animation: week2-arrow-bob 0.9s ease-in-out infinite;
+    transition: opacity .25s ease, transform .25s ease;
+  }
+  .week2-arrow .arrow-mark {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .week2-arrow.hidden {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  @keyframes week2-arrow-bob {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(6px); }
+  }
+
 </style>
 </head>
 <body>
@@ -249,6 +323,7 @@
   </div>
   <div class="center-crosshair"></div>
   <div class="minimap-wrap"><canvas id="minimap" width="180" height="150"></canvas></div>
+
   <div class="controls-row">
     <div class="dpad">
       <button class="dbtn up" onmousedown="startHold('up')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('up')" ontouchend="endHold()">▲</button>
@@ -257,6 +332,12 @@
       <button class="dbtn right" onmousedown="startHold('right')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('right')" ontouchend="endHold()">▶</button>
     </div>
   </div>
+
+  <div class="week2-arrow" id="week2-arrow" aria-hidden="true">
+    <span>WEEK 2 DETAILS</span>
+    <span class="arrow-mark">→</span>
+  </div>
+
   <div class="lose-flash" id="lose-flash">
     <div class="big" id="lose-big">AMBUSHED</div>
     <div class="small" id="lose-small"></div>
@@ -636,6 +717,7 @@ function drawMinimap() {
 }
  
 function moveTo(id, isRetreat) {
+  hideWeek2Arrow();
   currentId = id;
   if (!isRetreat) path.push(id);
   visited.add(id);
@@ -781,6 +863,12 @@ function renderCorridorList() {
       '<span>' + it.name + '</span>' +
       '<span class="n">deg ' + it.degree + ' · C ' + w2Number(it.clustering,2) + '</span></div>';
   }).join('') || '<div style="padding:10px;font-size:0.75rem;color:#8a7a5a;">No match</div>';
+}
+
+
+function hideWeek2Arrow() {
+  var arrow = document.getElementById('week2-arrow');
+  if (arrow) arrow.classList.add('hidden');
 }
 
 function startGame() {
@@ -1310,6 +1398,7 @@ function updateHud() {
   }
 }
 
+// No more random "ambush" endings. Moving is now the experiment.
 function attemptStepToId(id) {
   if (!id || !nodeMap[id]) return;
   moveTo(id, false);
@@ -1345,6 +1434,7 @@ function startGame() {
   renderCorridorList();
 }
 
+// Start over once, using the same real graph and the existing 3D scene.
 startGame();
 setWeek2Mode('real');
 </script>
