@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Web of Heroes — The Turncoat Protocol</title>
+<title>Web of Heroes — Week 2: Models &amp; Null Models</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Oswald:wght@400;500&display=swap');
  
@@ -191,11 +191,36 @@
   .msg.lose { color: var(--blood); }
  
   @media (max-width: 780px) {
+    .week2-buttons { grid-template-columns:1fr 1fr 1fr; }
+
     body { flex-direction: column; }
     .sidebar { width: 100%; height: 42vh; border-left: none; border-top: 1px solid #1a1611; }
     .sidebar.collapsed { height: 0; width: 100%; border-top: none; }
     .game-area { height: 58vh; }
   }
+ 
+  /* ===== Week 2 investigation console ===== */
+  .week2-lab { border-top: 1px solid #332a1c; padding-top: 14px; margin-top: 2px; }
+  .lab-kicker { font-family:'Orbitron',sans-serif; font-size:.55rem; letter-spacing:.14em; color:#8a7350; }
+  .lab-title { font-family:'Orbitron',sans-serif; font-size:1rem; font-weight:700; color:var(--gold); margin:4px 0 5px; }
+  .lab-copy { color:#b3a888; font-size:.74rem; line-height:1.45; margin-bottom:10px; }
+  .metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:9px; }
+  .metric-grid div { background:#17110b; border:1px solid #332a1c; padding:7px 8px; }
+  .metric-grid span { display:block; font-size:.58rem; text-transform:uppercase; color:#796a50; }
+  .metric-grid b { display:block; color:#e0cf9c; font-family:'Orbitron',sans-serif; font-size:.82rem; margin-top:2px; }
+  .lab-card { background:#100c08; border:1px solid #4a3a23; padding:10px; margin-bottom:10px; }
+  .lab-card-head { display:flex; justify-content:space-between; gap:8px; font-family:'Orbitron',sans-serif; font-size:.6rem; color:#a67a2e; letter-spacing:.05em; }
+  #experiment-body { color:#d8c98a; font-size:.76rem; line-height:1.5; margin:8px 0; }
+  .experiment-actions { display:flex; flex-wrap:wrap; gap:5px; }
+  .experiment-actions button, .week2-buttons button { background:#20170e; border:1px solid #594525; color:#cdbb89; padding:6px 7px; cursor:pointer; font-family:'Orbitron',sans-serif; font-size:.55rem; }
+  .experiment-actions button:hover, .week2-buttons button:hover { border-color:var(--gold); color:#fff0bd; }
+  .experiment-result { color:#8fc76a; font-size:.72rem; line-height:1.45; margin-top:7px; min-height:1em; }
+  .progress-wrap { margin:10px 0; }
+  .progress-label { display:flex; justify-content:space-between; font-family:'Orbitron',sans-serif; font-size:.55rem; color:#8a7a5a; }
+  .progress-track { height:5px; background:#20170e; border:1px solid #332a1c; margin-top:4px; }
+  #w2-progress-bar { height:100%; width:0%; background:#8fc76a; transition:width .25s ease; }
+  .week2-buttons { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
+  .week2-buttons button { width:100%; }
 </style>
 </head>
 <body>
@@ -254,28 +279,65 @@
 </div>
  
 <div class="sidebar">
-  <h1>WEB OF HEROES — THE TURNCOAT PROTOCOL</h1>
-  <div class="tagline">Walk the real network node by node. Every corridor is a real Wikipedia link. Somewhere out there, some of these characters have turned.</div>
+  <h1>WEB OF HEROES — WEEK 2</h1>
+  <div class="tagline">Explore the real Marvel network, then test it against random graphs, small-world models, hubs, and null models.</div>
  
   <div class="hud-row">
-    <div class="readout"><span class="label">Compromised</span><span class="value" id="mine-count">30</span></div>
+    <div class="readout"><span class="label">Model</span><span class="value" id="mine-count">REAL</span></div>
     <div class="readout good"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
-    <div class="readout"><span class="label">Danger here</span><span class="value" id="danger-count">-</span></div>
+    <div class="readout"><span class="label">Week 2</span><span class="value" id="danger-count">LIVE</span></div>
   </div>
  
   <div class="diff-row">
-    <button class="diff-btn active" onclick="setDifficulty('recon')">RECON</button>
-    <button class="diff-btn" onclick="setDifficulty('assault')">ASSAULT</button>
-    <button class="diff-btn" onclick="setDifficulty('siege')">SIEGE</button>
+    <button class="diff-btn active" onclick="setWeek2Mode('real')">REAL NETWORK</button>
+    <button class="diff-btn" onclick="setWeek2Mode('random')">RANDOM MODEL</button>
+    <button class="diff-btn" onclick="setWeek2Mode('null')">NULL MODEL</button>
   </div>
-  <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW OPERATION</button>
+  <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW NETWORK TEST</button>
   <div class="msg" id="msg"></div>
  
   <h3>CORRIDORS HERE</h3>
   <input class="corridor-search" id="corridor-search" placeholder="Search corridors..." oninput="renderCorridorList()">
   <div class="corridor-list" id="corridor-list"></div>
+
+  <div class="week2-lab">
+    <div class="lab-kicker">WEEK 2 / MODELS &amp; NULL MODELS</div>
+    <div class="lab-title" id="lab-title">REAL NETWORK</div>
+    <div class="lab-copy" id="lab-copy">The Marvel graph is the thing we are trying to explain.</div>
+
+    <div class="metric-grid">
+      <div><span>Nodes</span><b id="w2-n">—</b></div>
+      <div><span>Edges</span><b id="w2-m">—</b></div>
+      <div><span>Density</span><b id="w2-density">—</b></div>
+      <div><span>Avg degree</span><b id="w2-avgdeg">—</b></div>
+    </div>
+
+    <div class="lab-card">
+      <div class="lab-card-head">
+        <span id="experiment-name">NETWORK EVIDENCE</span>
+        <span id="experiment-status">READY</span>
+      </div>
+      <div id="experiment-body">Move through the network and inspect what the structure is actually doing.</div>
+      <div id="experiment-actions" class="experiment-actions"></div>
+      <div id="experiment-result" class="experiment-result"></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label"><span>WEEK 2 NOTEBOOK</span><span id="w2-progress">0 / 6</span></div>
+      <div class="progress-track"><div id="w2-progress-bar"></div></div>
+    </div>
+
+    <div class="week2-buttons">
+      <button onclick="runWeek2Experiment('random')">G(N,P)</button>
+      <button onclick="runWeek2Experiment('smallworld')">SMALL WORLD</button>
+      <button onclick="runWeek2Experiment('cluster')">CLUSTERING</button>
+      <button onclick="runWeek2Experiment('hubs')">HUBS</button>
+      <button onclick="runWeek2Experiment('null')">SHUFFLE TEST</button>
+      <button onclick="runWeek2Experiment('paradox')">FRIENDSHIP PARADOX</button>
+    </div>
+  </div>
 </div>
- 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const GRAPH = 
@@ -693,6 +755,34 @@ document.addEventListener('keyup', function(e){
   if (['ArrowLeft','a','A','ArrowRight','d','D'].indexOf(e.key)!==-1) heldKey = null;
 });
  
+function renderCorridorList() {
+  var listEl = document.getElementById('corridor-list');
+  var searchEl = document.getElementById('corridor-search');
+  var q = (searchEl ? searchEl.value : '').toLowerCase();
+  var items = doors
+    .map(function(d){
+      return {
+        id:d.id,
+        name:nodeMap[d.id].name,
+        visited:visited.has(d.id),
+        degree:adjAll[d.id].length,
+        clustering:w2Clustering(d.id, adjAll)
+      };
+    })
+    .filter(function(it){ return it.name.toLowerCase().indexOf(q) !== -1; })
+    .sort(function(a,b){
+      if (a.visited !== b.visited) return a.visited ? -1 : 1;
+      return b.degree - a.degree;
+    });
+
+  listEl.innerHTML = items.map(function(it){
+    return '<div class="corridor-item' + (it.visited?' visited':'') +
+      '" data-id="' + it.id.replace(/"/g,'&quot;') + '">' +
+      '<span>' + it.name + '</span>' +
+      '<span class="n">deg ' + it.degree + ' · C ' + w2Number(it.clustering,2) + '</span></div>';
+  }).join('') || '<div style="padding:10px;font-size:0.75rem;color:#8a7a5a;">No match</div>';
+}
+
 function startGame() {
   gameOver = false;
   resumeMusicAfterAmbush();
@@ -713,14 +803,14 @@ function startGame() {
  
 // ===== Briefing content (shared by modal + sidebar widget) =====
 const TUTORIAL_PAGES = [
-  { title: 'MOVEMENT', text: "←/→ turn. ↑ steps in. ↓ retreats — always safe. Or just click a panel or the list.",
-    keywords: ['TURN', 'STEP IN', 'RETREAT', 'CLICK TO MOVE'] },
-  { title: 'PANELS', text: "Each panel is a real linked character. 'deg' = their real connections. Green + SCOUTED = already visited.",
-    keywords: ['REAL LINK', 'DEGREE', 'SCOUTED'] },
-  { title: 'THREAT', text: "Some characters have turned. Compromised = how many. Danger here = turned neighbors in this room. Higher difficulty = riskier.",
-    keywords: ['COMPROMISED', 'DANGER HERE', 'DIFFICULTY'] },
-  { title: 'TOOLS', text: "Search the list to jump anywhere. DRONE VIEW shows the room from above. NEW OPERATION resets with a fresh layout.",
-    keywords: ['SEARCH', 'DRONE VIEW', 'NEW OPERATION'] }
+  { title: 'THE REAL NETWORK', text: "Every panel is a real Marvel character and every corridor is an edge from the network. Start by looking at degree, clustering, and paths instead of treating connections as random noise.",
+    keywords: ['REAL NETWORK', 'DEGREE', 'EDGES'] },
+  { title: 'RANDOM GRAPH', text: "Week 2 starts with a simple null idea: what if every possible pair connected independently with probability p? Compare the Marvel network with that baseline.",
+    keywords: ['G(N,P)', 'EXPECTED DEGREE', 'BASELINE'] },
+  { title: 'SMALL WORLD + HUBS', text: "Marvel can have short paths without being random. Look for triangles, shortcuts, and high-degree hubs. Then grow a toy network using preferential attachment.",
+    keywords: ['SMALL WORLD', 'CLUSTERING', 'PREFERENTIAL ATTACHMENT'] },
+  { title: 'NULL MODEL', text: "A null model asks whether a pattern is actually unusual. Shuffle edges while preserving each character's degree, measure the same statistic again, and compare.",
+    keywords: ['DEGREE-PRESERVING', 'SHUFFLE TEST', 'NULL MODEL'] }
 ];
  
 function renderKeywords(el, words) {
@@ -850,11 +940,418 @@ if (document.fonts && document.fonts.load) {
   ]).then(function(){ buildDoors(); renderCorridorList(); }).catch(function(){});
 }
 </script>
+
+<script>
+// ================================================================
+// WEEK 2 OVERRIDE
+// The original patrol logic is kept above so the real Marvel graph,
+// movement, minimap, music, and 3D panels still work. From here on,
+// the "danger" game is replaced by the Week 2 experiments.
+// ================================================================
+
+var week2Mode = 'real';
+var week2Done = {};
+var week2Order = ['random','smallworld','cluster','hubs','null','paradox'];
+
+function w2Number(x, digits) {
+  if (!isFinite(x)) return '—';
+  return Number(x).toFixed(digits == null ? 2 : digits);
+}
+
+function w2EdgeKey(a,b) {
+  return a < b ? a + '|' + b : b + '|' + a;
+}
+
+function w2Clustering(id, adjacency) {
+  var ns = adjacency[id] || [];
+  if (ns.length < 2) return 0;
+  var links = 0;
+  for (var i=0;i<ns.length;i++) {
+    for (var j=i+1;j<ns.length;j++) {
+      if ((adjacency[ns[i]] || []).indexOf(ns[j]) !== -1) links++;
+    }
+  }
+  return (2 * links) / (ns.length * (ns.length - 1));
+}
+
+function w2AverageClustering(adjacency) {
+  var total = 0, count = 0;
+  NODES.forEach(function(n) {
+    if ((adjacency[n.id] || []).length >= 2) {
+      total += w2Clustering(n.id, adjacency);
+      count++;
+    }
+  });
+  return count ? total / count : 0;
+}
+
+function w2Bfs(start, adjacency) {
+  var dist = {};
+  var q = [start];
+  dist[start] = 0;
+  for (var qi=0; qi<q.length; qi++) {
+    var here = q[qi];
+    (adjacency[here] || []).forEach(function(nb) {
+      if (dist[nb] === undefined) {
+        dist[nb] = dist[here] + 1;
+        q.push(nb);
+      }
+    });
+  }
+  return dist;
+}
+
+function w2AverageDistance(adjacency) {
+  var total = 0, pairs = 0;
+  // This is small enough for the Marvel graph, so I would rather keep
+  // this boring and readable than hide it behind a clever algorithm.
+  NODES.forEach(function(n, i) {
+    var d = w2Bfs(n.id, adjacency);
+    for (var j=i+1;j<NODES.length;j++) {
+      var x = d[NODES[j].id];
+      if (x !== undefined) {
+        total += x;
+        pairs++;
+      }
+    }
+  });
+  return pairs ? total / pairs : 0;
+}
+
+function w2RealStats() {
+  var n = NODES.length;
+  var m = EDGES.length;
+  var p = n > 1 ? (2*m)/(n*(n-1)) : 0;
+  var avg = n ? (2*m)/n : 0;
+  var clustering = w2AverageClustering(adjAll);
+  return {
+    n:n, m:m, p:p, avgDegree:avg,
+    clustering:clustering,
+    avgDistance:w2AverageDistance(adjAll)
+  };
+}
+
+function w2SetText(id, value) {
+  var el = document.getElementById(id);
+  if (el) el.innerHTML = value;
+}
+
+function w2RefreshStats() {
+  var s = w2RealStats();
+  w2SetText('w2-n', s.n);
+  w2SetText('w2-m', s.m);
+  w2SetText('w2-density', w2Number(s.p, 3));
+  w2SetText('w2-avgdeg', w2Number(s.avgDegree, 2));
+}
+
+function w2Complete(name) {
+  week2Done[name] = true;
+  var done = week2Order.filter(function(k){ return week2Done[k]; }).length;
+  w2SetText('w2-progress', done + ' / ' + week2Order.length);
+  var bar = document.getElementById('w2-progress-bar');
+  if (bar) bar.style.width = ((done/week2Order.length)*100) + '%';
+}
+
+function setWeek2Mode(mode) {
+  week2Mode = mode;
+  document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('active'); });
+  var buttons = document.querySelectorAll('.diff-btn');
+  var idx = mode === 'real' ? 0 : mode === 'random' ? 1 : 2;
+  if (buttons[idx]) buttons[idx].classList.add('active');
+
+  var title = mode === 'real' ? 'REAL NETWORK' :
+              mode === 'random' ? 'RANDOM BASELINE' : 'DEGREE-PRESERVING NULL';
+  var copy = mode === 'real'
+    ? 'The Marvel graph is the thing we are trying to explain.'
+    : mode === 'random'
+      ? 'Erase the interesting story for a moment. If edges appeared independently, what would we expect?'
+      : 'Keep every character’s degree, scramble who is connected to whom, and see what survives.';
+  w2SetText('lab-title', title);
+  w2SetText('lab-copy', copy);
+  w2RefreshStats();
+  updateHud();
+}
+
+function w2RandomExperiment() {
+  var s = w2RealStats();
+  var expected = s.p * (s.n - 1);
+  var body = 'With p = ' + w2Number(s.p,3) +
+    ', a G(n,p) graph predicts an average degree of about ' + w2Number(expected,2) +
+    '. The real Marvel average degree is ' + w2Number(s.avgDegree,2) + '.';
+  w2SetText('experiment-name','RANDOM GRAPH / G(N,P)');
+  w2SetText('experiment-status','BASELINE');
+  document.getElementById('experiment-body').innerHTML = body;
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2RandomQuiz(0)">p(n−1)</button>' +
+    '<button onclick="w2RandomQuiz(1)">p(n)</button>' +
+    '<button onclick="w2RandomQuiz(2)">n/p</button>';
+  w2SetText('experiment-result','Pick the expression for expected degree.');
+}
+
+function w2RandomQuiz(choice) {
+  var correct = choice === 0;
+  w2SetText('experiment-result', correct
+    ? '✓ Correct. Expected degree = p(n−1).'
+    : 'Not quite. For each node there are n−1 possible neighbors.');
+  if (correct) w2Complete('random');
+}
+
+function w2SmallWorldExperiment() {
+  var s = w2RealStats();
+  var target = NODES[Math.floor(Math.random()*NODES.length)];
+  if (target.id === currentId) target = NODES[(NODES.indexOf(target)+1)%NODES.length];
+  var dist = w2Bfs(currentId, adjAll)[target.id];
+  var shown = dist === undefined ? 'not connected' : dist + ' hops';
+  w2SetText('experiment-name','SMALL WORLD');
+  w2SetText('experiment-status','PATH TEST');
+  document.getElementById('experiment-body').innerHTML =
+    'From <b>' + nodeMap[currentId].name + '</b> to <b>' + target.name +
+    '</b>: <b>' + shown + '</b>. The whole network averages about ' +
+    w2Number(s.avgDistance,2) + ' hops between connected pairs.';
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2NewPath()">TRACE ANOTHER PATH</button>';
+  w2SetText('experiment-result','Short paths alone do not prove a network is random.');
+  w2Complete('smallworld');
+}
+
+function w2NewPath() {
+  w2SmallWorldExperiment();
+}
+
+function w2ClusterExperiment() {
+  var id = currentId;
+  var c = w2Clustering(id, adjAll);
+  var ns = adjAll[id] || [];
+  var links = 0;
+  for (var i=0;i<ns.length;i++) {
+    for (var j=i+1;j<ns.length;j++) {
+      if (adjAll[ns[i]].indexOf(ns[j]) !== -1) links++;
+    }
+  }
+  w2SetText('experiment-name','CLUSTERING COEFFICIENT');
+  w2SetText('experiment-status',nodeMap[id].name.toUpperCase());
+  w2SetText('experiment-body',
+    '<b>' + nodeMap[id].name + '</b> has degree ' + ns.length +
+    '. Among its neighbors, ' + links + ' pairs are linked. ' +
+    'Local clustering = 2e / k(k−1) = <b>' + w2Number(c,3) + '</b>.');
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2ClusterQuiz()">WHY TRIANGLES?</button>';
+  w2SetText('experiment-result','The Week 2 question: does Marvel have more triangles than a random baseline?');
+  w2Complete('cluster');
+}
+
+function w2ClusterQuiz() {
+  var s = w2RealStats();
+  w2SetText('experiment-result',
+    'Marvel average clustering is ' + w2Number(s.clustering,3) +
+    '. Its random G(n,p) baseline is about p = ' + w2Number(s.p,3) +
+    '. That gap is the interesting bit.');
+}
+
+function w2PreferentialAttachment() {
+  var count = 45, attach = 2;
+  var degrees = [2,2,2];
+
+  for (var newcomer=3; newcomer<count; newcomer++) {
+    var picked = new Set();
+    while (picked.size < attach) {
+      var total = degrees.reduce(function(a,b){return a+b;},0);
+      var r = Math.random()*total;
+      var acc = 0;
+      for (var k=0;k<degrees.length;k++) {
+        acc += degrees[k];
+        if (r <= acc) {
+          picked.add(k);
+          break;
+        }
+      }
+    }
+
+    picked.forEach(function(k){ degrees[k]++; });
+    degrees.push(attach);
+  }
+
+  degrees.sort(function(a,b){return b-a;});
+  var maxReal = Math.max.apply(null,NODES.map(function(n){
+    return adjAll[n.id].length;
+  }));
+
+  w2SetText('experiment-name','PREFERENTIAL ATTACHMENT');
+  w2SetText('experiment-status','GROW A NETWORK');
+  document.getElementById('experiment-body').innerHTML =
+    'New nodes repeatedly choose existing nodes with probability proportional to degree. ' +
+    'In this toy run the biggest hub reached <b>' + degrees[0] +
+    '</b> links. Marvel’s biggest observed degree is <b>' + maxReal + '</b>.';
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2PreferentialAttachment()">GROW AGAIN</button>';
+  w2SetText('experiment-result','Growth + preference is the recipe behind the hub idea.');
+  w2Complete('hubs');
+}
+
+function w2ShuffleEdges() {
+  var edges = EDGES.map(function(e){ return [e[0],e[1]]; });
+  var seen = new Set(edges.map(function(e){return w2EdgeKey(e[0],e[1]);}));
+  var swaps = 0;
+  var tries = 0;
+  while (swaps < 250 && tries < 4000) {
+    tries++;
+    var a = Math.floor(Math.random()*edges.length);
+    var b = Math.floor(Math.random()*edges.length);
+    if (a === b) continue;
+    var e1 = edges[a], e2 = edges[b];
+    if (Math.random() < 0.5) {
+      var x1=e1[0], y1=e1[1], x2=e2[0], y2=e2[1];
+      var n1=[x1,y2], n2=[x2,y1];
+    } else {
+      var x1b=e1[0], y1b=e1[1], x2b=e2[0], y2b=e2[1];
+      var n1=[x1b,x2b], n2=[y1b,y2b];
+    }
+    if (n1[0]===n1[1] || n2[0]===n2[1]) continue;
+    var k1=w2EdgeKey(n1[0],n1[1]), k2=w2EdgeKey(n2[0],n2[1]);
+    var old1=w2EdgeKey(e1[0],e1[1]), old2=w2EdgeKey(e2[0],e2[1]);
+    if (k1===k2 || (k1!==old1 && seen.has(k1)) || (k2!==old2 && seen.has(k2))) continue;
+    seen.delete(old1); seen.delete(old2);
+    edges[a]=n1; edges[b]=n2;
+    seen.add(k1); seen.add(k2);
+    swaps++;
+  }
+
+  var adj = {};
+  NODES.forEach(function(n){adj[n.id]=[];});
+  edges.forEach(function(e){
+    adj[e[0]].push(e[1]); adj[e[1]].push(e[0]);
+  });
+  return {adj:adj, swaps:swaps, clustering:w2AverageClustering(adj)};
+}
+
+function w2NullExperiment() {
+  var real = w2AverageClustering(adjAll);
+  var results = [];
+  for (var i=0;i<7;i++) {
+    results.push(w2ShuffleEdges().clustering);
+  }
+  var mean = results.reduce(function(a,b){return a+b;},0)/results.length;
+  var sd = Math.sqrt(results.reduce(function(a,b){return a+Math.pow(b-mean,2);},0)/results.length) || 0.0001;
+  var z = (real-mean)/sd;
+  w2SetText('experiment-name','DEGREE-PRESERVING NULL MODEL');
+  w2SetText('experiment-status','SHUFFLE TEST');
+  w2SetText('experiment-body',
+    'Seven shuffled networks kept the same degree sequence. Their mean clustering was <b>' +
+    w2Number(mean,3) + '</b>; the real network was <b>' + w2Number(real,3) +
+    '</b>. Approximate z-score: <b>' + w2Number(z,2) + '</b>.');
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2NullExperiment()">SHUFFLE AGAIN</button>';
+  w2SetText('experiment-result',
+    Math.abs(z) > 2 ? 'The real clustering is noticeably above this null baseline.' :
+    'This shuffle did not make the difference look especially large.');
+  w2Complete('null');
+}
+
+function w2FriendshipParadox() {
+  var samples = 30, nodeSum=0, neighborSum=0, usable=0;
+  for (var i=0;i<samples;i++) {
+    var n = NODES[Math.floor(Math.random()*NODES.length)];
+    var ns = adjAll[n.id];
+    if (!ns.length) continue;
+    var nb = ns[Math.floor(Math.random()*ns.length)];
+    nodeSum += ns.length;
+    neighborSum += adjAll[nb].length;
+    usable++;
+  }
+  var a = usable ? nodeSum/usable : 0;
+  var b = usable ? neighborSum/usable : 0;
+  w2SetText('experiment-name','FRIENDSHIP PARADOX');
+  w2SetText('experiment-status','SAMPLING');
+  w2SetText('experiment-body',
+    'Across ' + usable + ' random node/neighbor samples, the sampled node averaged <b>' +
+    w2Number(a,1) + '</b> links while the sampled neighbor averaged <b>' +
+    w2Number(b,1) + '</b>. High-degree characters are more likely to appear as someone’s neighbor.');
+  document.getElementById('experiment-actions').innerHTML =
+    '<button onclick="w2FriendshipParadox()">SAMPLE AGAIN</button>';
+  w2SetText('experiment-result',
+    b >= a ? '✓ The paradox showed up in this sample.' : 'This sample missed it — try again.');
+  w2Complete('paradox');
+}
+
+function runWeek2Experiment(kind) {
+  if (kind === 'random') w2RandomExperiment();
+  if (kind === 'smallworld') w2SmallWorldExperiment();
+  if (kind === 'cluster') w2ClusterExperiment();
+  if (kind === 'hubs') w2PreferentialAttachment();
+  if (kind === 'null') w2NullExperiment();
+  if (kind === 'paradox') w2FriendshipParadox();
+}
+
+function updateWeek2Node() {
+  var n = nodeMap[currentId];
+  var deg = adjAll[currentId].length;
+  var c = w2Clustering(currentId, adjAll);
+  w2SetText('loc-name', n.name);
+  w2SetText('loc-stats', 'degree ' + deg + ' — clustering ' + w2Number(c,2));
+  w2SetText('danger-count', 'LIVE');
+  w2SetText('mine-count', week2Mode === 'real' ? 'REAL' : week2Mode === 'random' ? 'G(n,p)' : 'NULL');
+  w2RefreshStats();
+}
+
+function updateHud() {
+  updateWeek2Node();
+  if (droneView) {
+    w2SetText('facing-name','network map');
+    w2SetText('facing-hint','click a panel or use the list');
+  } else {
+    var facing = facingDoor();
+    if (facing) {
+      w2SetText('facing-name',nodeMap[facing.id].name);
+      w2SetText('facing-hint','aligned — press Up');
+    } else {
+      w2SetText('facing-name','turn to face a panel');
+      w2SetText('facing-hint',doors.length + ' real edges here');
+    }
+  }
+}
+
+function attemptStepToId(id) {
+  if (!id || !nodeMap[id]) return;
+  moveTo(id, false);
+  var c = w2Clustering(id, adjAll);
+  w2SetText('experiment-status','OBSERVING');
+  w2SetText('experiment-body',
+    '<b>' + nodeMap[id].name + '</b> has degree <b>' + adjAll[id].length +
+    '</b> and local clustering <b>' + w2Number(c,3) +
+    '</b>. Pick a Week 2 experiment below to investigate why.');
+  w2SetText('experiment-result','');
+}
+
+function startGame() {
+  gameOver = false;
+  document.getElementById('lose-flash').classList.remove('show');
+  visited = new Set([GRAPH.centerId]);
+  path = [GRAPH.centerId];
+  currentId = GRAPH.centerId;
+  yaw = 0;
+  week2Done = {};
+  if (!scene) initScene();
+  buildDoors();
+  w2RefreshStats();
+  setWeek2Mode('real');
+  w2SetText('experiment-name','NETWORK EVIDENCE');
+  w2SetText('experiment-status','READY');
+  w2SetText('experiment-body','Choose a Week 2 experiment. The network itself is your evidence.');
+  w2SetText('experiment-result','');
+  document.getElementById('experiment-actions').innerHTML = '';
+  w2SetText('w2-progress','0 / 6');
+  var bar=document.getElementById('w2-progress-bar');
+  if(bar) bar.style.width='0%';
+  renderCorridorList();
+}
+
+startGame();
+setWeek2Mode('real');
+</script>
+
 </body>
 </html>
  
-
-
 
 
 
