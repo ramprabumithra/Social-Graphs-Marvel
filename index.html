@@ -46,7 +46,7 @@
  
   .minimap-wrap { position: absolute; bottom: 90px; right: 14px; background: rgba(20,16,12,0.85); border: 2px solid var(--gold); }
   #minimap { display: block; }
-
+ 
   /* Little nudge toward the Week 2 panel — easy to notice, but not in the way. */
   .week2-guide {
     position: absolute;
@@ -91,6 +91,12 @@
   .lose-flash.show { display: flex; }
   .lose-flash .big { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--ink); }
   .lose-flash .small { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #fce; margin-top: 8px; max-width: 480px; }
+ 
+  .win-flash { position: absolute; inset: 0; background: rgba(88,166,90,0.35); display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; pointer-events: none; }
+  .win-flash.show { display: flex; }
+  .win-flash .big { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--ink); }
+  .win-flash .small { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #eafce0; margin-top: 8px; max-width: 480px; }
  
   .controls-row { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
     display: flex; align-items: center; gap: 8px; }
@@ -197,6 +203,7 @@
   .readout .label { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.03em; color: #b3a888; text-transform: uppercase; }
   .readout .value { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1.1rem; color: var(--gold); }
   .readout.good .value { color: #8fc76a; }
+  .readout.bad .value { color: var(--blood); }
  
   .diff-row { display: flex; gap: 6px; margin-bottom: 8px; }
   .diff-btn { flex: 1; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.78rem; padding: 6px 4px; background: #1c160f;
@@ -218,6 +225,7 @@
     font-size: 0.76rem; font-weight: 500; cursor: pointer; border-bottom: 1px solid #332a1c; color: #d8c98a; }
   .corridor-item:hover { background: var(--amber); color: #14100c; }
   .corridor-item.visited { color: #8fc76a; font-weight: 600; }
+  .corridor-item.target { color: #fff0bd; font-weight: 700; border: 1px solid #8fc76a; }
   .corridor-item .n { font-size: 0.62rem; color: #8a7a5a; }
   .corridor-item:hover .n { color: #14100c; }
  
@@ -231,7 +239,7 @@
  
   @media (max-width: 780px) {
     .week2-buttons { grid-template-columns:1fr 1fr 1fr; }
-
+ 
     body { flex-direction: column; }
     .sidebar { width: 100%; height: 42vh; border-left: none; border-top: 1px solid #1a1611; }
     .sidebar.collapsed { height: 0; width: 100%; border-top: none; }
@@ -260,7 +268,7 @@
   #w2-progress-bar { height:100%; width:0%; background:#8fc76a; transition:width .25s ease; }
   .week2-buttons { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
   .week2-buttons button { width:100%; }
-
+ 
   /* Little nudge toward the Week 2 panel. It gets out of the way once the player moves. */
   .week2-arrow {
     position: absolute;
@@ -294,7 +302,7 @@
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(6px); }
   }
-
+ 
 </style>
 </head>
 <body>
@@ -323,7 +331,7 @@
   </div>
   <div class="center-crosshair"></div>
   <div class="minimap-wrap"><canvas id="minimap" width="180" height="150"></canvas></div>
-
+ 
   <div class="controls-row">
     <div class="dpad">
       <button class="dbtn up" onmousedown="startHold('up')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('up')" ontouchend="endHold()">▲</button>
@@ -332,15 +340,20 @@
       <button class="dbtn right" onmousedown="startHold('right')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('right')" ontouchend="endHold()">▶</button>
     </div>
   </div>
-
+ 
   <div class="week2-arrow" id="week2-arrow" aria-hidden="true">
     <span>WEEK 2 DETAILS</span>
     <span class="arrow-mark">→</span>
   </div>
-
+ 
   <div class="lose-flash" id="lose-flash">
     <div class="big" id="lose-big">AMBUSHED</div>
     <div class="small" id="lose-small"></div>
+  </div>
+ 
+  <div class="win-flash" id="win-flash">
+    <div class="big" id="win-big">EXTRACTED</div>
+    <div class="small" id="win-small"></div>
   </div>
  
   <div class="modal-backdrop" id="modal-backdrop">
@@ -361,12 +374,14 @@
  
 <div class="sidebar">
   <h1>WEB OF HEROES — WEEK 2</h1>
-  <div class="tagline">Explore the real Marvel network, then test it against random graphs, small-world models, hubs, and null models.</div>
+  <div class="tagline">Find EXTRACTION before you're AMBUSHED. Every move's risk comes from real network structure — use the Week 2 panel to plan your route.</div>
  
   <div class="hud-row">
     <div class="readout"><span class="label">Model</span><span class="value" id="mine-count">REAL</span></div>
-    <div class="readout good"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
     <div class="readout"><span class="label">Week 2</span><span class="value" id="danger-count">LIVE</span></div>
+    <div class="readout"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
+    <div class="readout"><span class="label">Extraction</span><span class="value" id="extraction-name">—</span></div>
+    <div class="readout good"><span class="label">Status</span><span class="value" id="life-status">ALIVE</span></div>
   </div>
  
   <div class="diff-row">
@@ -374,25 +389,25 @@
     <button class="diff-btn" onclick="setWeek2Mode('random')">RANDOM MODEL</button>
     <button class="diff-btn" onclick="setWeek2Mode('null')">NULL MODEL</button>
   </div>
-  <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW NETWORK TEST</button>
+  <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW ATTEMPT</button>
   <div class="msg" id="msg"></div>
  
   <h3>CORRIDORS HERE</h3>
   <input class="corridor-search" id="corridor-search" placeholder="Search corridors..." oninput="renderCorridorList()">
   <div class="corridor-list" id="corridor-list"></div>
-
+ 
   <div class="week2-lab">
     <div class="lab-kicker">WEEK 2 / MODELS &amp; NULL MODELS</div>
     <div class="lab-title" id="lab-title">REAL NETWORK</div>
     <div class="lab-copy" id="lab-copy">The Marvel graph is the thing we are trying to explain.</div>
-
+ 
     <div class="metric-grid">
       <div><span>Nodes</span><b id="w2-n">—</b></div>
       <div><span>Edges</span><b id="w2-m">—</b></div>
       <div><span>Density</span><b id="w2-density">—</b></div>
       <div><span>Avg degree</span><b id="w2-avgdeg">—</b></div>
     </div>
-
+ 
     <div class="lab-card">
       <div class="lab-card-head">
         <span id="experiment-name">NETWORK EVIDENCE</span>
@@ -402,12 +417,12 @@
       <div id="experiment-actions" class="experiment-actions"></div>
       <div id="experiment-result" class="experiment-result"></div>
     </div>
-
+ 
     <div class="progress-wrap">
       <div class="progress-label"><span>WEEK 2 NOTEBOOK</span><span id="w2-progress">0 / 6</span></div>
       <div class="progress-track"><div id="w2-progress-bar"></div></div>
     </div>
-
+ 
     <div class="week2-buttons">
       <button onclick="runWeek2Experiment('random')">G(N,P)</button>
       <button onclick="runWeek2Experiment('smallworld')">SMALL WORLD</button>
@@ -418,7 +433,7 @@
     </div>
   </div>
 </div>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const GRAPH = 
@@ -841,6 +856,7 @@ function renderCorridorList() {
   var listEl = document.getElementById('corridor-list');
   var searchEl = document.getElementById('corridor-search');
   var q = (searchEl ? searchEl.value : '').toLowerCase();
+  var clusterFn = (typeof w2Clustering === 'function') ? w2Clustering : function(){ return 0; };
   var items = doors
     .map(function(d){
       return {
@@ -848,7 +864,7 @@ function renderCorridorList() {
         name:nodeMap[d.id].name,
         visited:visited.has(d.id),
         degree:adjAll[d.id].length,
-        clustering:w2Clustering(d.id, adjAll)
+        clustering:clusterFn(d.id, adjAll)
       };
     })
     .filter(function(it){ return it.name.toLowerCase().indexOf(q) !== -1; })
@@ -856,21 +872,24 @@ function renderCorridorList() {
       if (a.visited !== b.visited) return a.visited ? -1 : 1;
       return b.degree - a.degree;
     });
-
+ 
   listEl.innerHTML = items.map(function(it){
-    return '<div class="corridor-item' + (it.visited?' visited':'') +
+    var isTarget = (typeof extractionId !== 'undefined' && it.id === extractionId);
+    var riskStr = (typeof w2RiskFor === 'function') ? Math.round(w2RiskFor(it.id)*100) + '% risk' : '';
+    var label = isTarget ? '🏁 ' + it.name + ' (EXTRACTION)' : it.name;
+    return '<div class="corridor-item' + (it.visited?' visited':'') + (isTarget?' target':'') +
       '" data-id="' + it.id.replace(/"/g,'&quot;') + '">' +
-      '<span>' + it.name + '</span>' +
-      '<span class="n">deg ' + it.degree + ' · C ' + w2Number(it.clustering,2) + '</span></div>';
+      '<span>' + label + '</span>' +
+      '<span class="n">deg ' + it.degree + (isTarget ? '' : ' · ' + riskStr) + '</span></div>';
   }).join('') || '<div style="padding:10px;font-size:0.75rem;color:#8a7a5a;">No match</div>';
 }
-
-
+ 
+ 
 function hideWeek2Arrow() {
   var arrow = document.getElementById('week2-arrow');
   if (arrow) arrow.classList.add('hidden');
 }
-
+ 
 function startGame() {
   gameOver = false;
   resumeMusicAfterAmbush();
@@ -891,14 +910,14 @@ function startGame() {
  
 // ===== Briefing content (shared by modal + sidebar widget) =====
 const TUTORIAL_PAGES = [
-  { title: 'THE REAL NETWORK', text: "Every panel is a real Marvel character and every corridor is an edge from the network. Start by looking at degree, clustering, and paths instead of treating connections as random noise.",
-    keywords: ['REAL NETWORK', 'DEGREE', 'EDGES'] },
-  { title: 'RANDOM GRAPH', text: "Week 2 starts with a simple null idea: what if every possible pair connected independently with probability p? Compare the Marvel network with that baseline.",
-    keywords: ['G(N,P)', 'EXPECTED DEGREE', 'BASELINE'] },
-  { title: 'SMALL WORLD + HUBS', text: "Marvel can have short paths without being random. Look for triangles, shortcuts, and high-degree hubs. Then grow a toy network using preferential attachment.",
-    keywords: ['SMALL WORLD', 'CLUSTERING', 'PREFERENTIAL ATTACHMENT'] },
-  { title: 'NULL MODEL', text: "A null model asks whether a pattern is actually unusual. Shuffle edges while preserving each character's degree, measure the same statistic again, and compare.",
-    keywords: ['DEGREE-PRESERVING', 'SHUFFLE TEST', 'NULL MODEL'] }
+  { title: 'YOUR GOAL', text: "Find the EXTRACTION point before you get AMBUSHED. You have one life. EXTRACTION = WIN. AMBUSHED = GAME OVER.",
+    keywords: ['ONE LIFE', 'EXTRACTION = WIN', 'AMBUSHED = GAME OVER'] },
+  { title: 'HOW TO MOVE', text: "Circles are heroes. Lines are real connections. Follow the lines to move from hero to hero. Left/Right turn, Up moves forward — or just click a connected hero.",
+    keywords: ['CIRCLES = HEROES', 'LINES = CONNECTIONS', 'CLICK TO MOVE'] },
+  { title: 'AMBUSH RISK', text: "Every move can trigger an ambush. Low-degree heroes are safer. Highly connected heroes are more dangerous. Check a hero's degree before you move.",
+    keywords: ['LOW DEGREE = SAFER', 'HIGH DEGREE = RISKIER', 'CHECK BEFORE YOU MOVE'] },
+  { title: 'USE WEEK 2', text: "The Week 2 panel on the right gives you real clues about the network — degree, clustering, paths. Use it to help choose your route. Find EXTRACTION. Stay alive.",
+    keywords: ['WEEK 2 PANEL', 'PLAN YOUR ROUTE', 'STAY ALIVE'] }
 ];
  
 function renderKeywords(el, words) {
@@ -1028,7 +1047,7 @@ if (document.fonts && document.fonts.load) {
   ]).then(function(){ buildDoors(); renderCorridorList(); }).catch(function(){});
 }
 </script>
-
+ 
 <script>
 // ================================================================
 // WEEK 2 OVERRIDE
@@ -1036,20 +1055,65 @@ if (document.fonts && document.fonts.load) {
 // movement, minimap, music, and 3D panels still work. From here on,
 // the "danger" game is replaced by the Week 2 experiments.
 // ================================================================
-
+ 
 var week2Mode = 'real';
 var week2Done = {};
 var week2Order = ['random','smallworld','cluster','hubs','null','paradox'];
-
+ 
+// ===== EXTRACTION / AMBUSH STAKES =====
+var extractionId = null;
+var lifeStatus = 'ALIVE'; // ALIVE | AMBUSHED | EXTRACTED
+ 
+function w2MaxDegree() {
+  return Math.max.apply(null, NODES.map(function(n){ return adjAll[n.id].length; }));
+}
+ 
+// Ambush risk scales directly with degree: the real Week 2 lesson, made literal.
+// Low-degree heroes are genuinely safer; hubs are genuinely more dangerous.
+function w2RiskFor(id) {
+  var maxDeg = w2MaxDegree();
+  var deg = adjAll[id].length;
+  var risk = 0.05 + (deg / maxDeg) * 0.75;
+  return Math.min(0.85, risk);
+}
+ 
+function w2PickExtraction() {
+  var reachable = w2Bfs(GRAPH.centerId, adjAll);
+  var candidates = NODES.filter(function(n){
+    return n.id !== GRAPH.centerId &&
+      adjAll[n.id].length >= 1 && adjAll[n.id].length <= 4 &&
+      reachable[n.id] !== undefined;
+  });
+  if (!candidates.length) {
+    candidates = NODES.filter(function(n){ return n.id !== GRAPH.centerId && adjAll[n.id].length >= 1 && reachable[n.id] !== undefined; });
+  }
+  return candidates[Math.floor(Math.random()*candidates.length)].id;
+}
+ 
+function showLoseFlash(id, risk) {
+  document.getElementById('lose-flash').classList.add('show');
+  document.getElementById('lose-big').textContent = 'AMBUSHED';
+  document.getElementById('lose-small').textContent =
+    nodeMap[id].name + ' had turned. Degree ' + adjAll[id].length + ' meant roughly a ' +
+    Math.round(risk*100) + '% ambush chance. You reached ' + visited.size + ' heroes before it happened.';
+  if (typeof playAmbushSting === 'function') playAmbushSting();
+}
+ 
+function showWinFlash() {
+  document.getElementById('win-flash').classList.add('show');
+  document.getElementById('win-small').textContent =
+    'You reached ' + nodeMap[extractionId].name + ' safely after visiting ' + visited.size + ' heroes.';
+}
+ 
 function w2Number(x, digits) {
   if (!isFinite(x)) return '—';
   return Number(x).toFixed(digits == null ? 2 : digits);
 }
-
+ 
 function w2EdgeKey(a,b) {
   return a < b ? a + '|' + b : b + '|' + a;
 }
-
+ 
 function w2Clustering(id, adjacency) {
   var ns = adjacency[id] || [];
   if (ns.length < 2) return 0;
@@ -1061,7 +1125,7 @@ function w2Clustering(id, adjacency) {
   }
   return (2 * links) / (ns.length * (ns.length - 1));
 }
-
+ 
 function w2AverageClustering(adjacency) {
   var total = 0, count = 0;
   NODES.forEach(function(n) {
@@ -1072,7 +1136,7 @@ function w2AverageClustering(adjacency) {
   });
   return count ? total / count : 0;
 }
-
+ 
 function w2Bfs(start, adjacency) {
   var dist = {};
   var q = [start];
@@ -1088,7 +1152,7 @@ function w2Bfs(start, adjacency) {
   }
   return dist;
 }
-
+ 
 function w2AverageDistance(adjacency) {
   var total = 0, pairs = 0;
   // This is small enough for the Marvel graph, so I would rather keep
@@ -1105,7 +1169,7 @@ function w2AverageDistance(adjacency) {
   });
   return pairs ? total / pairs : 0;
 }
-
+ 
 function w2RealStats() {
   var n = NODES.length;
   var m = EDGES.length;
@@ -1118,12 +1182,12 @@ function w2RealStats() {
     avgDistance:w2AverageDistance(adjAll)
   };
 }
-
+ 
 function w2SetText(id, value) {
   var el = document.getElementById(id);
   if (el) el.innerHTML = value;
 }
-
+ 
 function w2RefreshStats() {
   var s = w2RealStats();
   w2SetText('w2-n', s.n);
@@ -1131,7 +1195,7 @@ function w2RefreshStats() {
   w2SetText('w2-density', w2Number(s.p, 3));
   w2SetText('w2-avgdeg', w2Number(s.avgDegree, 2));
 }
-
+ 
 function w2Complete(name) {
   week2Done[name] = true;
   var done = week2Order.filter(function(k){ return week2Done[k]; }).length;
@@ -1139,14 +1203,14 @@ function w2Complete(name) {
   var bar = document.getElementById('w2-progress-bar');
   if (bar) bar.style.width = ((done/week2Order.length)*100) + '%';
 }
-
+ 
 function setWeek2Mode(mode) {
   week2Mode = mode;
   document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('active'); });
   var buttons = document.querySelectorAll('.diff-btn');
   var idx = mode === 'real' ? 0 : mode === 'random' ? 1 : 2;
   if (buttons[idx]) buttons[idx].classList.add('active');
-
+ 
   var title = mode === 'real' ? 'REAL NETWORK' :
               mode === 'random' ? 'RANDOM BASELINE' : 'DEGREE-PRESERVING NULL';
   var copy = mode === 'real'
@@ -1159,7 +1223,7 @@ function setWeek2Mode(mode) {
   w2RefreshStats();
   updateHud();
 }
-
+ 
 function w2RandomExperiment() {
   var s = w2RealStats();
   var expected = s.p * (s.n - 1);
@@ -1175,7 +1239,7 @@ function w2RandomExperiment() {
     '<button onclick="w2RandomQuiz(2)">n/p</button>';
   w2SetText('experiment-result','Pick the expression for expected degree.');
 }
-
+ 
 function w2RandomQuiz(choice) {
   var correct = choice === 0;
   w2SetText('experiment-result', correct
@@ -1183,7 +1247,7 @@ function w2RandomQuiz(choice) {
     : 'Not quite. For each node there are n−1 possible neighbors.');
   if (correct) w2Complete('random');
 }
-
+ 
 function w2SmallWorldExperiment() {
   var s = w2RealStats();
   var target = NODES[Math.floor(Math.random()*NODES.length)];
@@ -1201,11 +1265,11 @@ function w2SmallWorldExperiment() {
   w2SetText('experiment-result','Short paths alone do not prove a network is random.');
   w2Complete('smallworld');
 }
-
+ 
 function w2NewPath() {
   w2SmallWorldExperiment();
 }
-
+ 
 function w2ClusterExperiment() {
   var id = currentId;
   var c = w2Clustering(id, adjAll);
@@ -1227,7 +1291,7 @@ function w2ClusterExperiment() {
   w2SetText('experiment-result','The Week 2 question: does Marvel have more triangles than a random baseline?');
   w2Complete('cluster');
 }
-
+ 
 function w2ClusterQuiz() {
   var s = w2RealStats();
   w2SetText('experiment-result',
@@ -1235,11 +1299,11 @@ function w2ClusterQuiz() {
     '. Its random G(n,p) baseline is about p = ' + w2Number(s.p,3) +
     '. That gap is the interesting bit.');
 }
-
+ 
 function w2PreferentialAttachment() {
   var count = 45, attach = 2;
   var degrees = [2,2,2];
-
+ 
   for (var newcomer=3; newcomer<count; newcomer++) {
     var picked = new Set();
     while (picked.size < attach) {
@@ -1254,16 +1318,16 @@ function w2PreferentialAttachment() {
         }
       }
     }
-
+ 
     picked.forEach(function(k){ degrees[k]++; });
     degrees.push(attach);
   }
-
+ 
   degrees.sort(function(a,b){return b-a;});
   var maxReal = Math.max.apply(null,NODES.map(function(n){
     return adjAll[n.id].length;
   }));
-
+ 
   w2SetText('experiment-name','PREFERENTIAL ATTACHMENT');
   w2SetText('experiment-status','GROW A NETWORK');
   document.getElementById('experiment-body').innerHTML =
@@ -1275,7 +1339,7 @@ function w2PreferentialAttachment() {
   w2SetText('experiment-result','Growth + preference is the recipe behind the hub idea.');
   w2Complete('hubs');
 }
-
+ 
 function w2ShuffleEdges() {
   var edges = EDGES.map(function(e){ return [e[0],e[1]]; });
   var seen = new Set(edges.map(function(e){return w2EdgeKey(e[0],e[1]);}));
@@ -1303,7 +1367,7 @@ function w2ShuffleEdges() {
     seen.add(k1); seen.add(k2);
     swaps++;
   }
-
+ 
   var adj = {};
   NODES.forEach(function(n){adj[n.id]=[];});
   edges.forEach(function(e){
@@ -1311,7 +1375,7 @@ function w2ShuffleEdges() {
   });
   return {adj:adj, swaps:swaps, clustering:w2AverageClustering(adj)};
 }
-
+ 
 function w2NullExperiment() {
   var real = w2AverageClustering(adjAll);
   var results = [];
@@ -1334,7 +1398,7 @@ function w2NullExperiment() {
     'This shuffle did not make the difference look especially large.');
   w2Complete('null');
 }
-
+ 
 function w2FriendshipParadox() {
   var samples = 30, nodeSum=0, neighborSum=0, usable=0;
   for (var i=0;i<samples;i++) {
@@ -1360,7 +1424,7 @@ function w2FriendshipParadox() {
     b >= a ? '✓ The paradox showed up in this sample.' : 'This sample missed it — try again.');
   w2Complete('paradox');
 }
-
+ 
 function runWeek2Experiment(kind) {
   if (kind === 'random') w2RandomExperiment();
   if (kind === 'smallworld') w2SmallWorldExperiment();
@@ -1369,18 +1433,26 @@ function runWeek2Experiment(kind) {
   if (kind === 'null') w2NullExperiment();
   if (kind === 'paradox') w2FriendshipParadox();
 }
-
+ 
 function updateWeek2Node() {
   var n = nodeMap[currentId];
   var deg = adjAll[currentId].length;
   var c = w2Clustering(currentId, adjAll);
-  w2SetText('loc-name', n.name);
+  w2SetText('loc-name', n.name + (currentId === extractionId ? ' 🏁' : ''));
   w2SetText('loc-stats', 'degree ' + deg + ' — clustering ' + w2Number(c,2));
   w2SetText('danger-count', 'LIVE');
   w2SetText('mine-count', week2Mode === 'real' ? 'REAL' : week2Mode === 'random' ? 'G(n,p)' : 'NULL');
+  w2SetText('extraction-name', extractionId ? nodeMap[extractionId].name : '—');
+  var statusEl = document.getElementById('life-status');
+  if (statusEl) {
+    statusEl.textContent = lifeStatus;
+    statusEl.parentElement.classList.remove('good','bad');
+    if (lifeStatus === 'EXTRACTED') statusEl.parentElement.classList.add('good');
+    if (lifeStatus === 'AMBUSHED') statusEl.parentElement.classList.add('bad');
+  }
   w2RefreshStats();
 }
-
+ 
 function updateHud() {
   updateWeek2Node();
   if (droneView) {
@@ -1389,59 +1461,98 @@ function updateHud() {
   } else {
     var facing = facingDoor();
     if (facing) {
-      w2SetText('facing-name',nodeMap[facing.id].name);
-      w2SetText('facing-hint','aligned — press Up');
+      var isTarget = facing.id === extractionId;
+      var risk = w2RiskFor(facing.id);
+      w2SetText('facing-name', nodeMap[facing.id].name + (isTarget ? ' 🏁 EXTRACTION' : ''));
+      w2SetText('facing-hint', isTarget
+        ? 'aligned — press Up to extract'
+        : 'degree ' + adjAll[facing.id].length + ' — ~' + Math.round(risk*100) + '% ambush risk — press Up');
     } else {
       w2SetText('facing-name','turn to face a panel');
       w2SetText('facing-hint',doors.length + ' real edges here');
     }
   }
 }
-
-// No more random "ambush" endings. Moving is now the experiment.
+ 
+// Moving is now real: reach EXTRACTION to win, get AMBUSHED and it's over. One life.
 function attemptStepToId(id) {
   if (!id || !nodeMap[id]) return;
+  if (lifeStatus !== 'ALIVE') return;
+ 
+  if (id === extractionId) {
+    moveTo(id, false);
+    lifeStatus = 'EXTRACTED';
+    gameOver = true;
+    showWinFlash();
+    updateHud();
+    return;
+  }
+ 
+  var risk = w2RiskFor(id);
+  var ambushed = Math.random() < risk;
+ 
   moveTo(id, false);
+ 
+  if (ambushed) {
+    lifeStatus = 'AMBUSHED';
+    gameOver = true;
+    showLoseFlash(id, risk);
+    updateHud();
+    return;
+  }
+ 
   var c = w2Clustering(id, adjAll);
   w2SetText('experiment-status','OBSERVING');
   w2SetText('experiment-body',
-    '<b>' + nodeMap[id].name + '</b> has degree <b>' + adjAll[id].length +
-    '</b> and local clustering <b>' + w2Number(c,3) +
-    '</b>. Pick a Week 2 experiment below to investigate why.');
+    '<b>' + nodeMap[id].name + '</b> had degree <b>' + adjAll[id].length +
+    '</b> — roughly a ' + Math.round(risk*100) + '% ambush chance, and you made it through. Local clustering <b>' +
+    w2Number(c,3) + '</b>. Pick a Week 2 experiment below, or check the corridor list for your safest next move.');
   w2SetText('experiment-result','');
+  updateHud();
 }
-
+ 
 function startGame() {
   gameOver = false;
+  lifeStatus = 'ALIVE';
   document.getElementById('lose-flash').classList.remove('show');
+  document.getElementById('win-flash').classList.remove('show');
   visited = new Set([GRAPH.centerId]);
   path = [GRAPH.centerId];
   currentId = GRAPH.centerId;
   yaw = 0;
   week2Done = {};
+  extractionId = w2PickExtraction();
   if (!scene) initScene();
   buildDoors();
   w2RefreshStats();
   setWeek2Mode('real');
   w2SetText('experiment-name','NETWORK EVIDENCE');
   w2SetText('experiment-status','READY');
-  w2SetText('experiment-body','Choose a Week 2 experiment. The network itself is your evidence.');
+  w2SetText('experiment-body','Find <b>' + nodeMap[extractionId].name + '</b> — EXTRACTION — without getting AMBUSHED. Check each hero\'s degree in the corridor list before you move; high degree means high risk. Week 2 experiments below can help you reason about the network as you go.');
   w2SetText('experiment-result','');
   document.getElementById('experiment-actions').innerHTML = '';
   w2SetText('w2-progress','0 / 6');
   var bar=document.getElementById('w2-progress-bar');
   if(bar) bar.style.width='0%';
+  updateHud();
   renderCorridorList();
 }
-
-// Start over once, using the same real graph and the existing 3D scene.
 startGame();
 setWeek2Mode('real');
 </script>
-
+ 
 </body>
 </html>
  
+
+
+
+
+
+
+
+
+
 
 
 
