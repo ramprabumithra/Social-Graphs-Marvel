@@ -67,4 +67,4 @@ Real Wikipedia scrape, frozen as a Week 1 snapshot: **303 nodes**, **1,434 undir
 
 ---
 
-*Built for a Social Graphs & Interactions course — same dataset every week, a different way to sit inside it each time.*
+*_Built for a Social Graphs & Interactions course — same dataset, different execution._*
