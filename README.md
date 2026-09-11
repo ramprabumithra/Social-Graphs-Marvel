@@ -1,4 +1,4 @@
-# 🎯 WEB OF HEROES — WEEK 2: EXTRACTION
+# WEB OF HEROES — WEEK 2: EXTRACTION
 
 **Network science with a pulse.**
 
