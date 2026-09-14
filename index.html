@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,9 +23,10 @@
     font-family: 'Oswald', sans-serif;
     color: var(--ink);
     display: flex;
+    flex-direction: column;
   }
  
-  .game-area { flex: 1; position: relative; background: #050403; min-width: 0; }
+  .game-area { flex: 0 0 58vh; height: 58vh; position: relative; background: #050403; min-width: 0; }
   #scene-canvas { display: block; width: 100%; height: 100%; cursor: pointer; }
  
   .hud-overlay { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between;
@@ -46,7 +46,7 @@
  
   .minimap-wrap { position: absolute; bottom: 90px; right: 14px; background: rgba(20,16,12,0.85); border: 2px solid var(--gold); }
   #minimap { display: block; }
- 
+
   /* Little nudge toward the Week 2 panel — easy to notice, but not in the way. */
   .week2-guide {
     position: absolute;
@@ -91,33 +91,24 @@
   .lose-flash.show { display: flex; }
   .lose-flash .big { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--ink); }
   .lose-flash .small { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #fce; margin-top: 8px; max-width: 480px; }
- 
+
   .win-flash { position: absolute; inset: 0; background: rgba(88,166,90,0.35); display: none; align-items: center; justify-content: center;
     flex-direction: column; text-align: center; pointer-events: none; }
   .win-flash.show { display: flex; }
   .win-flash .big { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 3rem; color: #fff; text-shadow: 4px 4px 0 var(--ink); }
   .win-flash .small { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #eafce0; margin-top: 8px; max-width: 480px; }
  
-  .controls-row { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-    display: flex; align-items: center; gap: 8px; }
-  .dbtn { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 1.2rem; width: 52px; height: 44px; background: rgba(217,202,168,0.9);
-    border: 2px solid var(--ink); color: var(--ink); cursor: pointer; box-shadow: 3px 3px 0 var(--ink); }
-  .dbtn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
-  .dpad { display: grid; grid-template-columns: 52px 52px 52px; grid-template-rows: 44px 44px; gap: 6px; }
-  .dpad .up { grid-column: 2; grid-row: 1; }
-  .dpad .left { grid-column: 1; grid-row: 2; }
-  .dpad .down { grid-column: 2; grid-row: 2; }
-  .dpad .right { grid-column: 3; grid-row: 2; }
- 
   .sidebar {
-    width: 340px; flex-shrink: 0; background: #050403;
-    border-left: 1px solid #1a1611;
+    flex: 1; width: 100%; flex-shrink: 0; background: #050403;
+    border-top: 1px solid #1a1611; border-left: none;
     display: flex; flex-direction: column;
-    height: 100%; overflow-y: auto;
+    height: 42vh; overflow: hidden;
     padding: 16px;
-    transition: width 0.25s ease, padding 0.25s ease;
+    transition: height 0.25s ease, padding 0.25s ease;
   }
-  .sidebar.collapsed { width: 0; padding: 0; overflow: hidden; border-left: none; }
+  .sidebar.collapsed { height: 0; padding: 0; overflow: hidden; border-top: none; }
+  .sidebar-panels { display: flex; flex-direction: row; gap: 16px; flex: 1; min-height: 0; overflow-x: auto; }
+  .sidebar-panels .panel-section { flex: 1 1 380px; min-width: 340px; height: 100%; overflow-y: auto; margin-bottom: 0; }
  
   .sidebar-toggle {
     position: absolute; top: 14px; right: 14px; z-index: 10;
@@ -217,9 +208,6 @@
   .new-op-btn.lost { background: #000; color: var(--blood); }
  
   .sidebar h3 { font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.9rem; color: var(--gold); margin: 4px 0 6px; }
-  .corridor-search { width: 100%; padding: 6px 8px; border: 2px solid var(--gold); font-family: 'Oswald', sans-serif;
-    font-size: 0.8rem; background: #1c160f; color: #E8DEC8; margin-bottom: 6px; }
-  .corridor-search::placeholder { color: #8a7a5a; }
   .corridor-list { max-height: 180px; overflow-y: auto; border: 2px solid var(--gold); margin-bottom: 14px; background: #1c160f; }
   .corridor-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;
     font-size: 0.76rem; font-weight: 500; cursor: pointer; border-bottom: 1px solid #332a1c; color: #d8c98a; }
@@ -239,11 +227,10 @@
  
   @media (max-width: 780px) {
     .week2-buttons { grid-template-columns:1fr 1fr 1fr; }
- 
-    body { flex-direction: column; }
-    .sidebar { width: 100%; height: 42vh; border-left: none; border-top: 1px solid #1a1611; }
-    .sidebar.collapsed { height: 0; width: 100%; border-top: none; }
-    .game-area { height: 58vh; }
+    .sidebar-panels { flex-direction: column; overflow-x: hidden; overflow-y: auto; }
+    .sidebar-panels .panel-section { flex: 0 0 auto; min-width: 0; height: auto; overflow-y: visible; }
+    .sidebar { height: 48vh; }
+    .game-area { height: 52vh; }
   }
  
   /* ===== Week 2 investigation console ===== */
@@ -268,16 +255,18 @@
   #w2-progress-bar { height:100%; width:0%; background:#8fc76a; transition:width .25s ease; }
   .week2-buttons { display:grid; grid-template-columns:1fr 1fr; gap:5px; }
   .week2-buttons button { width:100%; }
- 
-  /* Little nudge toward the Week 2 panel. It gets out of the way once the player moves. */
+
+  /* Little nudge toward the Week 2 panel below. It gets out of the way once the player moves. */
   .week2-arrow {
     position: absolute;
-    right: 18px;
-    bottom: 74px;
+    left: 50%;
+    bottom: 20px;
+    transform: translateX(-50%);
     z-index: 12;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 7px;
+    gap: 2px;
     padding: 7px 10px;
     background: rgba(5,4,3,0.88);
     border: 1px solid var(--gold);
@@ -296,13 +285,80 @@
   }
   .week2-arrow.hidden {
     opacity: 0;
-    transform: translateX(10px);
+    transform: translateX(-50%) translateY(10px);
   }
   @keyframes week2-arrow-bob {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(6px); }
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
   }
- 
+  .intel-btn {
+    width: 100%; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; font-size: 0.78rem; padding: 8px; background: #1c160f;
+    border: 2px solid var(--gold); color: #d8c98a; cursor: pointer; box-shadow: 3px 3px 0 #000; margin-bottom: 8px;
+  }
+  .intel-btn:hover { background: var(--amber); color: #14100c; }
+  .intel-btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #000; }
+
+  .extraction-box {
+    display: flex; flex-direction: column; background: #1c160f; border: 2px solid var(--gold);
+    padding: 6px 10px; margin-bottom: 8px; box-shadow: 3px 3px 0 #000;
+  }
+  .extraction-box .label { font-size: 0.55rem; font-weight: 600; letter-spacing: 0.03em; color: #b3a888; text-transform: uppercase; }
+  .extraction-box .value { font-family: 'Orbitron', sans-serif; font-weight: 700; letter-spacing: 0.02em;
+    font-size: 1rem; color: var(--gold); white-space: normal; word-break: break-word; line-height: 1.3; }
+
+  .fullscreen-modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(2,2,1,0.92);
+    display: none; align-items: center; justify-content: center;
+    padding: 30px;
+  }
+  .fullscreen-modal-backdrop.show { display: flex; }
+  .fullscreen-modal-panel {
+    position: relative; width: min(700px, 100%); max-height: 85vh;
+    background: rgba(10,8,5,0.97); border: 2px solid var(--gold);
+    box-shadow: 0 0 40px rgba(184,149,82,0.2);
+    padding: 30px 34px; overflow-y: auto;
+  }
+  .fullscreen-modal-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 36px; height: 36px; background: rgba(20,16,12,0.8); border: 1px solid var(--gold);
+    color: var(--gold); font-family: 'Orbitron', sans-serif; font-size: 1.1rem; cursor: pointer;
+  }
+  .fullscreen-modal-close:hover { background: var(--amber); color: #14100c; }
+  .fullscreen-modal-title {
+    font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--gold); font-size: 1.3rem; margin: 0 30px 18px 0; border-bottom: 1px solid rgba(184,149,82,0.3); padding-bottom: 14px;
+  }
+  .fullscreen-modal-body {
+    font-family: 'Oswald', sans-serif; font-size: 1.05rem; line-height: 1.7; color: #e8dec8;
+  }
+  .lab-card { cursor: pointer; }  .panel-section {
+    margin-bottom: 16px; padding: 12px; border: 2px solid #332a1c; background: #120e09;
+  }
+  .panel-header {
+    display: flex; align-items: center; gap: 8px; margin: -12px -12px 12px; padding: 8px 12px;
+    font-family: 'Orbitron', sans-serif; font-weight: 700; font-size: 0.82rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: #14100c;
+  }
+  .panel-concept { border-color: var(--olive); }
+  .panel-concept .panel-header { background: #7a9a5c; }
+  .panel-mission { border-color: var(--gold); }
+  .panel-mission .panel-header { background: var(--gold); }
+  .panel-sub { font-size: 0.7rem; color: #9a8a6a; margin-bottom: 10px; line-height: 1.4; }
+
+  @keyframes story-pulse {
+    0%, 100% { box-shadow: 4px 4px 0 #000, 0 0 0 rgba(143,199,106,0); }
+    50% { box-shadow: 4px 4px 0 #000, 0 0 14px rgba(143,199,106,0.65); }
+  }
+  .story-btn {
+    width: 100%; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; font-size: 0.82rem; padding: 12px; margin-bottom: 12px;
+    background: #263a18; border: 2px solid #8fc76a; color: #d8f0c0; cursor: pointer;
+    box-shadow: 4px 4px 0 #000; animation: story-pulse 2.2s ease-in-out infinite;
+  }
+  .story-btn:hover { background: #345024; }
+  .story-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #000; }
 </style>
 </head>
 <body>
@@ -330,27 +386,18 @@
     </div>
   </div>
   <div class="center-crosshair"></div>
-  <div class="minimap-wrap"><canvas id="minimap" width="180" height="150"></canvas></div>
- 
-  <div class="controls-row">
-    <div class="dpad">
-      <button class="dbtn up" onmousedown="startHold('up')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('up')" ontouchend="endHold()">▲</button>
-      <button class="dbtn left" onmousedown="startHold('left')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('left')" ontouchend="endHold()">◀</button>
-      <button class="dbtn down" onclick="stepBack()">▼</button>
-      <button class="dbtn right" onmousedown="startHold('right')" onmouseup="endHold()" onmouseleave="endHold()" ontouchstart="startHold('right')" ontouchend="endHold()">▶</button>
-    </div>
-  </div>
- 
+  <div class="minimap-wrap"><canvas id="minimap" width="180" height="150" style="cursor:pointer;" title="Click to enlarge" onclick="openMinimapFullscreen()"></canvas></div>
+
   <div class="week2-arrow" id="week2-arrow" aria-hidden="true">
     <span>WEEK 2 DETAILS</span>
-    <span class="arrow-mark">→</span>
+    <span class="arrow-mark">↓</span>
   </div>
- 
+
   <div class="lose-flash" id="lose-flash">
     <div class="big" id="lose-big">AMBUSHED</div>
     <div class="small" id="lose-small"></div>
   </div>
- 
+
   <div class="win-flash" id="win-flash">
     <div class="big" id="win-big">EXTRACTED</div>
     <div class="small" id="win-small"></div>
@@ -374,41 +421,22 @@
  
 <div class="sidebar">
   <h1>WEB OF HEROES — WEEK 2</h1>
-  <div class="tagline">Find EXTRACTION before you're AMBUSHED. Every move's risk comes from real network structure — use the Week 2 panel to plan your route.</div>
- 
-  <div class="hud-row">
-    <div class="readout"><span class="label">Model</span><span class="value" id="mine-count">REAL</span></div>
-    <div class="readout"><span class="label">Week 2</span><span class="value" id="danger-count">LIVE</span></div>
-    <div class="readout"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
-    <div class="readout"><span class="label">Extraction</span><span class="value" id="extraction-name">—</span></div>
-    <div class="readout good"><span class="label">Status</span><span class="value" id="life-status">ALIVE</span></div>
-  </div>
- 
-  <div class="diff-row">
-    <button class="diff-btn active" onclick="setWeek2Mode('real')">REAL NETWORK</button>
-    <button class="diff-btn" onclick="setWeek2Mode('random')">RANDOM MODEL</button>
-    <button class="diff-btn" onclick="setWeek2Mode('null')">NULL MODEL</button>
-  </div>
-  <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW ATTEMPT</button>
-  <div class="msg" id="msg"></div>
- 
-  <h3>CORRIDORS HERE</h3>
-  <input class="corridor-search" id="corridor-search" placeholder="Search corridors..." oninput="renderCorridorList()">
-  <div class="corridor-list" id="corridor-list"></div>
- 
-  <div class="week2-lab">
-    <div class="lab-kicker">WEEK 2 / MODELS &amp; NULL MODELS</div>
-    <div class="lab-title" id="lab-title">REAL NETWORK</div>
-    <div class="lab-copy" id="lab-copy">The Marvel graph is the thing we are trying to explain.</div>
- 
+  <div class="tagline">Find EXTRACTION before you're AMBUSHED. Every move's risk comes from real network structure below.</div>
+
+  <div class="sidebar-panels">
+  <div class="panel-section panel-concept">
+    <div class="panel-header">📖 Week 2 — Models &amp; Null Models</div>
+    <button class="story-btn" onclick="openWeek2Story()">📖 THE WHOLE STORY — READ THIS FIRST</button>
+    <div class="panel-sub" id="lab-copy">Each experiment below tries one model, sees what it gets wrong, then the next one fixes it — same order the field actually discovered them in.</div>
+
     <div class="metric-grid">
       <div><span>Nodes</span><b id="w2-n">—</b></div>
       <div><span>Edges</span><b id="w2-m">—</b></div>
       <div><span>Density</span><b id="w2-density">—</b></div>
       <div><span>Avg degree</span><b id="w2-avgdeg">—</b></div>
     </div>
- 
-    <div class="lab-card">
+
+    <div class="lab-card" onclick="openLabFullscreen(event)">
       <div class="lab-card-head">
         <span id="experiment-name">NETWORK EVIDENCE</span>
         <span id="experiment-status">READY</span>
@@ -417,23 +445,61 @@
       <div id="experiment-actions" class="experiment-actions"></div>
       <div id="experiment-result" class="experiment-result"></div>
     </div>
- 
+
     <div class="progress-wrap">
       <div class="progress-label"><span>WEEK 2 NOTEBOOK</span><span id="w2-progress">0 / 6</span></div>
       <div class="progress-track"><div id="w2-progress-bar"></div></div>
     </div>
- 
+
     <div class="week2-buttons">
-      <button onclick="runWeek2Experiment('random')">G(N,P)</button>
-      <button onclick="runWeek2Experiment('smallworld')">SMALL WORLD</button>
-      <button onclick="runWeek2Experiment('cluster')">CLUSTERING</button>
-      <button onclick="runWeek2Experiment('hubs')">HUBS</button>
-      <button onclick="runWeek2Experiment('null')">SHUFFLE TEST</button>
-      <button onclick="runWeek2Experiment('paradox')">FRIENDSHIP PARADOX</button>
+      <button onclick="runWeek2Experiment('random')">1. RANDOM BASELINE</button>
+      <button onclick="runWeek2Experiment('smallworld')">2. SHORT PATHS</button>
+      <button onclick="runWeek2Experiment('cluster')">3. CLUSTERING GAP</button>
+      <button onclick="runWeek2Experiment('hubs')">4. HUBS (BA MODEL)</button>
+      <button onclick="runWeek2Experiment('null')">5. NULL MODEL TEST</button>
+      <button onclick="runWeek2Experiment('paradox')">6. FRIENDSHIP PARADOX</button>
     </div>
+    <div style="display:none;" id="lab-title"></div>
+  </div>
+
+  <div class="panel-section panel-mission">
+    <div class="panel-header">🎯 Mission</div>
+
+    <div class="extraction-box">
+      <span class="label">Extraction target</span>
+      <span class="value" id="extraction-name">—</span>
+    </div>
+    <div class="hud-row">
+      <div class="readout"><span class="label">Model</span><span class="value" id="mine-count">REAL</span></div>
+      <div class="readout"><span class="label">Week 2</span><span class="value" id="danger-count">LIVE</span></div>
+      <div class="readout"><span class="label">Visited</span><span class="value" id="visit-count">1</span></div>
+      <div class="readout good"><span class="label">Status</span><span class="value" id="life-status">ALIVE</span></div>
+    </div>
+
+    <button class="intel-btn" id="intel-btn" onclick="fetchExtractionIntel()">🔍 EXTRACTION INTEL</button>
+
+    <div class="diff-row">
+      <button class="diff-btn active" onclick="setWeek2Mode('real')">REAL NETWORK</button>
+      <button class="diff-btn" onclick="setWeek2Mode('random')">RANDOM MODEL</button>
+      <button class="diff-btn" onclick="setWeek2Mode('null')">NULL MODEL</button>
+    </div>
+    <button class="new-op-btn" id="new-op-btn" onclick="startGame()">NEW ATTEMPT</button>
+    <div class="msg" id="msg"></div>
+
+    <h3>CORRIDORS HERE</h3>
+    <div class="corridor-list" id="corridor-list"></div>
+  </div>
   </div>
 </div>
- 
+
+<div class="fullscreen-modal-backdrop" id="fullscreen-modal-backdrop" onclick="if(event.target===this) closeFullscreenPanel()">
+  <div class="fullscreen-modal-panel">
+    <button class="fullscreen-modal-close" onclick="closeFullscreenPanel()">✕</button>
+    <div class="fullscreen-modal-title" id="fullscreen-modal-title"></div>
+    <div class="fullscreen-modal-body" id="fullscreen-modal-body"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const GRAPH = 
@@ -708,8 +774,10 @@ function updateHud() {
   }
 }
  
-function drawMinimap() {
-  const cv = document.getElementById('minimap');
+function drawMinimap(cv, opts) {
+  opts = opts || {};
+  cv = cv || document.getElementById('minimap');
+  const big = !!opts.large;
   const ctx = cv.getContext('2d');
   ctx.clearRect(0,0,cv.width,cv.height);
   const xs = NODES.map(function(n){return n.x;}), ys = NODES.map(function(n){return n.y;});
@@ -717,18 +785,51 @@ function drawMinimap() {
   const miny = Math.min.apply(null,ys), maxy = Math.max.apply(null,ys);
   function sx(x){ return 8 + (x-minx)/(maxx-minx) * (cv.width-16); }
   function sy(y){ return 8 + (y-miny)/(maxy-miny) * (cv.height-16); }
-  ctx.fillStyle = 'rgba(216,150,40,0.35)';
-  NODES.forEach(function(n){ ctx.fillRect(sx(n.x)-0.5, sy(n.y)-0.5, 1, 1); });
-  ctx.strokeStyle = '#88bb66'; ctx.lineWidth = 1.5;
+
+  ctx.fillStyle = 'rgba(216,150,40,0.3)';
+  const dotSize = big ? 1.6 : 1;
+  NODES.forEach(function(n){ ctx.fillRect(sx(n.x)-dotSize/2, sy(n.y)-dotSize/2, dotSize, dotSize); });
+
+  // Full trajectory, never clipped — every stop you've made, in order.
+  ctx.strokeStyle = '#88bb66'; ctx.lineWidth = big ? 2 : 1.5;
   ctx.beginPath();
   path.forEach(function(id,i){
     const n = nodeMap[id];
     if (i===0) ctx.moveTo(sx(n.x), sy(n.y)); else ctx.lineTo(sx(n.x), sy(n.y));
   });
   ctx.stroke();
+
+  // Every visited character gets its own marker, not just the current one.
+  visited.forEach(function(id){
+    if (id === currentId) return;
+    const n = nodeMap[id];
+    ctx.fillStyle = '#a8d68a';
+    ctx.beginPath(); ctx.arc(sx(n.x), sy(n.y), big ? 4 : 2, 0, Math.PI*2); ctx.fill();
+    if (big) {
+      ctx.font = '500 10px Oswald, sans-serif';
+      ctx.fillStyle = '#c9dcae';
+      ctx.fillText(n.name, sx(n.x)+6, sy(n.y)+3);
+    }
+  });
+
   const cur = nodeMap[currentId];
   ctx.fillStyle = '#E8B94A';
-  ctx.beginPath(); ctx.arc(sx(cur.x), sy(cur.y), 3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(sx(cur.x), sy(cur.y), big ? 7 : 3, 0, Math.PI*2); ctx.fill();
+  if (big) {
+    ctx.font = '700 13px Oswald, sans-serif';
+    ctx.fillStyle = '#E8B94A';
+    ctx.fillText(cur.name + ' (you)', sx(cur.x)+11, sy(cur.y)+5);
+  }
+}
+
+function openMinimapFullscreen() {
+  console.log('openMinimapFullscreen: clicked');
+  const title = 'NETWORK TRAJECTORY — ' + visited.size + ' VISITED';
+  document.getElementById('fullscreen-modal-title').textContent = title;
+  const bodyEl = document.getElementById('fullscreen-modal-body');
+  bodyEl.innerHTML = '<canvas id="minimap-large" width="620" height="480" style="width:100%;height:auto;display:block;background:#0a0806;border:1px solid #332a1c;"></canvas>';
+  document.getElementById('fullscreen-modal-backdrop').classList.add('show');
+  drawMinimap(document.getElementById('minimap-large'), {large: true});
 }
  
 function moveTo(id, isRetreat) {
@@ -767,7 +868,7 @@ function attemptStep() {
  
 function renderCorridorList() {
   const listEl = document.getElementById('corridor-list');
-  const q = (document.getElementById('corridor-search').value || '').toLowerCase();
+  const q = '';
   const items = doors
     .map(function(d){ return {id:d.id, name: nodeMap[d.id].name, visited: visited.has(d.id)}; })
     .filter(function(it){ return it.name.toLowerCase().indexOf(q) !== -1; })
@@ -825,9 +926,9 @@ function loop(t) {
   if (!gameOver) {
     if (droneView) {
       const alt = currentMaxRadius * 1.35 + 6;
-      camera.position.set(0, alt, 0.001);
-      camera.up.set(0, 0, -1);
-      camera.lookAt(0, 0, 0);
+      camera.up.set(0, 1, 0);
+      camera.position.set(0, alt, 0);
+      camera.rotation.set(-Math.PI / 2, 0, 0);
     } else {
       camera.up.set(0, 1, 0);
       camera.position.set(0, 1.6, 0);
@@ -854,8 +955,7 @@ document.addEventListener('keyup', function(e){
  
 function renderCorridorList() {
   var listEl = document.getElementById('corridor-list');
-  var searchEl = document.getElementById('corridor-search');
-  var q = (searchEl ? searchEl.value : '').toLowerCase();
+  var q = '';
   var clusterFn = (typeof w2Clustering === 'function') ? w2Clustering : function(){ return 0; };
   var items = doors
     .map(function(d){
@@ -872,10 +972,12 @@ function renderCorridorList() {
       if (a.visited !== b.visited) return a.visited ? -1 : 1;
       return b.degree - a.degree;
     });
- 
+
   listEl.innerHTML = items.map(function(it){
     var isTarget = (typeof extractionId !== 'undefined' && it.id === extractionId);
-    var riskStr = (typeof w2RiskFor === 'function') ? Math.round(w2RiskFor(it.id)*100) + '% risk' : '';
+    var riskPct = (typeof w2RiskFor === 'function') ? Math.round(w2RiskFor(it.id)*100) : null;
+    var riskColor = riskPct === null ? '#8a7a5a' : riskPct < 25 ? '#8fc76a' : riskPct < 55 ? '#e0b84a' : '#d24a3a';
+    var riskStr = riskPct === null ? '' : '<span style="color:' + riskColor + ';font-weight:700;">' + riskPct + '% risk</span>';
     var label = isTarget ? '🏁 ' + it.name + ' (EXTRACTION)' : it.name;
     return '<div class="corridor-item' + (it.visited?' visited':'') + (isTarget?' target':'') +
       '" data-id="' + it.id.replace(/"/g,'&quot;') + '">' +
@@ -883,13 +985,13 @@ function renderCorridorList() {
       '<span class="n">deg ' + it.degree + (isTarget ? '' : ' · ' + riskStr) + '</span></div>';
   }).join('') || '<div style="padding:10px;font-size:0.75rem;color:#8a7a5a;">No match</div>';
 }
- 
- 
+
+
 function hideWeek2Arrow() {
   var arrow = document.getElementById('week2-arrow');
   if (arrow) arrow.classList.add('hidden');
 }
- 
+
 function startGame() {
   gameOver = false;
   resumeMusicAfterAmbush();
@@ -910,14 +1012,16 @@ function startGame() {
  
 // ===== Briefing content (shared by modal + sidebar widget) =====
 const TUTORIAL_PAGES = [
-  { title: 'YOUR GOAL', text: "Find the EXTRACTION point before you get AMBUSHED. You have one life. EXTRACTION = WIN. AMBUSHED = GAME OVER.",
-    keywords: ['ONE LIFE', 'EXTRACTION = WIN', 'AMBUSHED = GAME OVER'] },
-  { title: 'HOW TO MOVE', text: "Circles are heroes. Lines are real connections. Follow the lines to move from hero to hero. Left/Right turn, Up moves forward — or just click a connected hero.",
-    keywords: ['CIRCLES = HEROES', 'LINES = CONNECTIONS', 'CLICK TO MOVE'] },
-  { title: 'AMBUSH RISK', text: "Every move can trigger an ambush. Low-degree heroes are safer. Highly connected heroes are more dangerous. Check a hero's degree before you move.",
-    keywords: ['LOW DEGREE = SAFER', 'HIGH DEGREE = RISKIER', 'CHECK BEFORE YOU MOVE'] },
-  { title: 'USE WEEK 2', text: "The Week 2 panel on the right gives you real clues about the network — degree, clustering, paths. Use it to help choose your route. Find EXTRACTION. Stay alive.",
-    keywords: ['WEEK 2 PANEL', 'PLAN YOUR ROUTE', 'STAY ALIVE'] }
+  { title: 'YOUR GOAL', text: "A hero called EXTRACTION is hiding somewhere in this real network — a different one every attempt. Find them before you get AMBUSHED. You have exactly one life: reaching EXTRACTION is an instant win, getting ambushed anywhere else ends the run on the spot. There's no partial credit — plan your route before you commit to a step.",
+    keywords: ['ONE LIFE', 'EXTRACTION = WIN', 'AMBUSHED = GAME OVER', 'NO RETRIES MID-RUN'] },
+  { title: 'HOW TO MOVE', text: "Every circle around you is a real Marvel character, and every line between them is a real Wikipedia connection — nothing here is invented. Turn with Left/Right (or A/D), step forward with Up (or W) once you're lined up with a corridor, and retreat safely along your own trail with Down (or S). You can also just click any connected hero directly in the 3D view, or pick one from the CORRIDORS HERE list in the Mission panel below — clicking works exactly the same as walking there.",
+    keywords: ['CIRCLES = HEROES', 'LINES = REAL CONNECTIONS', 'CLICK OR WALK', 'DOWN = SAFE RETREAT'] },
+  { title: 'AMBUSH RISK', text: "Every step you haven't taken yet carries a real chance of ambush, and that chance isn't random flavor — it's computed directly from that hero's actual degree in the network. A character with only 1–2 real connections is close to safe. A hub with dozens or hundreds of connections is close to guaranteed trouble. Before you commit to a step, check the corridor list on the left of the Mission panel: every entry shows the real degree and a color-coded risk percentage — green is low, amber is medium, red is high. The same numbers appear on the hero you're currently facing in the 3D view.",
+    keywords: ['RISK = REAL DEGREE', 'LOW DEGREE = SAFER', 'CHECK THE CORRIDOR LIST', 'GREEN / AMBER / RED'] },
+  { title: 'YOUR TOOLS', text: "Two tools help you plan instead of guessing. EXTRACTION INTEL fetches the real, live Wikipedia article for your target and highlights any other real character mentioned in it — a genuine clue about who might lead you there. Click the small map bottom-right of the 3D view to expand it fullscreen and see your entire trajectory so far, with every hero you've already visited labeled. Both open in a large readable view — click outside or press Escape to close them.",
+    keywords: ['EXTRACTION INTEL', 'REAL WIKIPEDIA TEXT', 'EXPAND THE MINIMAP', 'ESC TO CLOSE'] },
+  { title: 'THE WEEK 2 PANEL', text: "Below the game, the green panel holds this week's actual course material — the same real network powering everything else. Start with THE WHOLE STORY button for a full walkthrough: why network scientists build simple models, what each one gets wrong, and how that failure points to the next idea. Then the six numbered experiments let you run each concept yourself — random baselines, clustering, hubs, null models, the friendship paradox — all computed live on the network you're currently standing inside, not a toy example.",
+    keywords: ['READ THE STORY FIRST', '6 LIVE EXPERIMENTS', 'SAME NETWORK, LIVE'] }
 ];
  
 function renderKeywords(el, words) {
@@ -1047,7 +1151,7 @@ if (document.fonts && document.fonts.load) {
   ]).then(function(){ buildDoors(); renderCorridorList(); }).catch(function(){});
 }
 </script>
- 
+
 <script>
 // ================================================================
 // WEEK 2 OVERRIDE
@@ -1055,19 +1159,19 @@ if (document.fonts && document.fonts.load) {
 // movement, minimap, music, and 3D panels still work. From here on,
 // the "danger" game is replaced by the Week 2 experiments.
 // ================================================================
- 
+
 var week2Mode = 'real';
 var week2Done = {};
 var week2Order = ['random','smallworld','cluster','hubs','null','paradox'];
- 
+
 // ===== EXTRACTION / AMBUSH STAKES =====
 var extractionId = null;
 var lifeStatus = 'ALIVE'; // ALIVE | AMBUSHED | EXTRACTED
- 
+
 function w2MaxDegree() {
   return Math.max.apply(null, NODES.map(function(n){ return adjAll[n.id].length; }));
 }
- 
+
 // Ambush risk scales directly with degree: the real Week 2 lesson, made literal.
 // Low-degree heroes are genuinely safer; hubs are genuinely more dangerous.
 function w2RiskFor(id) {
@@ -1076,7 +1180,7 @@ function w2RiskFor(id) {
   var risk = 0.05 + (deg / maxDeg) * 0.75;
   return Math.min(0.85, risk);
 }
- 
+
 function w2PickExtraction() {
   var reachable = w2Bfs(GRAPH.centerId, adjAll);
   var candidates = NODES.filter(function(n){
@@ -1089,7 +1193,7 @@ function w2PickExtraction() {
   }
   return candidates[Math.floor(Math.random()*candidates.length)].id;
 }
- 
+
 function showLoseFlash(id, risk) {
   document.getElementById('lose-flash').classList.add('show');
   document.getElementById('lose-big').textContent = 'AMBUSHED';
@@ -1098,22 +1202,87 @@ function showLoseFlash(id, risk) {
     Math.round(risk*100) + '% ambush chance. You reached ' + visited.size + ' heroes before it happened.';
   if (typeof playAmbushSting === 'function') playAmbushSting();
 }
- 
+
 function showWinFlash() {
   document.getElementById('win-flash').classList.add('show');
   document.getElementById('win-small').textContent =
     'You reached ' + nodeMap[extractionId].name + ' safely after visiting ' + visited.size + ' heroes.';
 }
- 
+
+// Live Wikipedia lookup for the extraction target — same pattern used in
+// The Final Panel: fetch the real article intro, no local flavor text.
+function stripDisambiguation(name) {
+  return name.replace(/\s*\([^)]*\)\s*$/, '').trim();
+}
+
+// Highlights any other real character name from the network that shows up
+// in the fetched Wikipedia text — turns prose into an actual map of who
+// might lead toward the extraction target.
+function highlightRelatedCharacters(text, excludeId) {
+  let escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const seen = new Set();
+  const candidates = NODES
+    .filter(function(n){ return n.id !== excludeId; })
+    .map(function(n){ return stripDisambiguation(n.name); })
+    .filter(function(s){ return s.length >= 3; })
+    .sort(function(a,b){ return b.length - a.length; });
+
+  candidates.forEach(function(name){
+    const key = name.toLowerCase();
+    if (seen.has(key)) return;
+    seen.add(key);
+    const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const re = new RegExp('\\b(' + escapedName + ')\\b', 'g');
+    escaped = escaped.replace(re, '<mark style="background:transparent;color:#8fc76a;font-weight:700;">$1</mark>');
+  });
+  return escaped;
+}
+
+async function fetchExtractionIntel() {
+  if (!extractionId) return;
+  console.log('fetchExtractionIntel: starting for', extractionId);
+  const fullTitle = nodeMap[extractionId].name.toUpperCase() + ' — LIVE FROM WIKIPEDIA';
+  openFullscreenPanel(fullTitle, 'Fetching the real Wikipedia record for ' + nodeMap[extractionId].name + ' — looking for storylines and relationships, not just the summary...');
+  try {
+    const url = 'https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&explaintext=1&redirects=1&origin=*&titles=' + encodeURIComponent(extractionId);
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error('Wikipedia API returned HTTP ' + res.status);
+    }
+    const data = await res.json();
+    if (data.error) {
+      throw new Error('Wikipedia API error: ' + (data.error.info || data.error.code || 'unknown'));
+    }
+    if (!data.query || !data.query.pages) {
+      throw new Error('Unexpected response shape: ' + JSON.stringify(data).slice(0, 200));
+    }
+    const pages = data.query.pages;
+    const page = pages[Object.keys(pages)[0]];
+    const extract = (page && page.extract) ? page.extract : 'No summary available for this article.';
+    const longText = extract.length > 3000 ? extract.slice(0, 3000) + '…' : extract;
+    const highlighted = highlightRelatedCharacters(longText, extractionId);
+    console.log('fetchExtractionIntel: success, opening fullscreen');
+    const note = '<p style="color:#8fc76a;font-size:0.85em;margin-top:0;">Green names below are other real characters in this network — a real connection worth routing toward.</p>';
+    openFullscreenPanel(fullTitle, note + highlighted.replace(/\n/g, '<br><br>'));
+  } catch (e) {
+    console.error('fetchExtractionIntel failed:', e);
+    const isFetchBlocked = e.message === 'Failed to fetch';
+    const msg = isFetchBlocked
+      ? 'Could not reach Wikipedia. If you opened this file directly (file://...), that\'s the cause — browsers block live requests from local files. Serve it instead: run "python3 -m http.server" in this folder and open http://localhost:8000/ in your browser.'
+      : 'Could not reach Wikipedia right now (' + e.message + '). Check the browser console for details.';
+    openFullscreenPanel(fullTitle, msg);
+  }
+}
+
 function w2Number(x, digits) {
   if (!isFinite(x)) return '—';
   return Number(x).toFixed(digits == null ? 2 : digits);
 }
- 
+
 function w2EdgeKey(a,b) {
   return a < b ? a + '|' + b : b + '|' + a;
 }
- 
+
 function w2Clustering(id, adjacency) {
   var ns = adjacency[id] || [];
   if (ns.length < 2) return 0;
@@ -1125,7 +1294,7 @@ function w2Clustering(id, adjacency) {
   }
   return (2 * links) / (ns.length * (ns.length - 1));
 }
- 
+
 function w2AverageClustering(adjacency) {
   var total = 0, count = 0;
   NODES.forEach(function(n) {
@@ -1136,7 +1305,7 @@ function w2AverageClustering(adjacency) {
   });
   return count ? total / count : 0;
 }
- 
+
 function w2Bfs(start, adjacency) {
   var dist = {};
   var q = [start];
@@ -1152,7 +1321,7 @@ function w2Bfs(start, adjacency) {
   }
   return dist;
 }
- 
+
 function w2AverageDistance(adjacency) {
   var total = 0, pairs = 0;
   // This is small enough for the Marvel graph, so I would rather keep
@@ -1169,7 +1338,7 @@ function w2AverageDistance(adjacency) {
   });
   return pairs ? total / pairs : 0;
 }
- 
+
 function w2RealStats() {
   var n = NODES.length;
   var m = EDGES.length;
@@ -1182,12 +1351,12 @@ function w2RealStats() {
     avgDistance:w2AverageDistance(adjAll)
   };
 }
- 
+
 function w2SetText(id, value) {
   var el = document.getElementById(id);
   if (el) el.innerHTML = value;
 }
- 
+
 function w2RefreshStats() {
   var s = w2RealStats();
   w2SetText('w2-n', s.n);
@@ -1195,7 +1364,7 @@ function w2RefreshStats() {
   w2SetText('w2-density', w2Number(s.p, 3));
   w2SetText('w2-avgdeg', w2Number(s.avgDegree, 2));
 }
- 
+
 function w2Complete(name) {
   week2Done[name] = true;
   var done = week2Order.filter(function(k){ return week2Done[k]; }).length;
@@ -1203,14 +1372,14 @@ function w2Complete(name) {
   var bar = document.getElementById('w2-progress-bar');
   if (bar) bar.style.width = ((done/week2Order.length)*100) + '%';
 }
- 
+
 function setWeek2Mode(mode) {
   week2Mode = mode;
   document.querySelectorAll('.diff-btn').forEach(function(b){ b.classList.remove('active'); });
   var buttons = document.querySelectorAll('.diff-btn');
   var idx = mode === 'real' ? 0 : mode === 'random' ? 1 : 2;
   if (buttons[idx]) buttons[idx].classList.add('active');
- 
+
   var title = mode === 'real' ? 'REAL NETWORK' :
               mode === 'random' ? 'RANDOM BASELINE' : 'DEGREE-PRESERVING NULL';
   var copy = mode === 'real'
@@ -1223,7 +1392,7 @@ function setWeek2Mode(mode) {
   w2RefreshStats();
   updateHud();
 }
- 
+
 function w2RandomExperiment() {
   var s = w2RealStats();
   var expected = s.p * (s.n - 1);
@@ -1239,7 +1408,7 @@ function w2RandomExperiment() {
     '<button onclick="w2RandomQuiz(2)">n/p</button>';
   w2SetText('experiment-result','Pick the expression for expected degree.');
 }
- 
+
 function w2RandomQuiz(choice) {
   var correct = choice === 0;
   w2SetText('experiment-result', correct
@@ -1247,7 +1416,7 @@ function w2RandomQuiz(choice) {
     : 'Not quite. For each node there are n−1 possible neighbors.');
   if (correct) w2Complete('random');
 }
- 
+
 function w2SmallWorldExperiment() {
   var s = w2RealStats();
   var target = NODES[Math.floor(Math.random()*NODES.length)];
@@ -1265,11 +1434,11 @@ function w2SmallWorldExperiment() {
   w2SetText('experiment-result','Short paths alone do not prove a network is random.');
   w2Complete('smallworld');
 }
- 
+
 function w2NewPath() {
   w2SmallWorldExperiment();
 }
- 
+
 function w2ClusterExperiment() {
   var id = currentId;
   var c = w2Clustering(id, adjAll);
@@ -1291,7 +1460,7 @@ function w2ClusterExperiment() {
   w2SetText('experiment-result','The Week 2 question: does Marvel have more triangles than a random baseline?');
   w2Complete('cluster');
 }
- 
+
 function w2ClusterQuiz() {
   var s = w2RealStats();
   w2SetText('experiment-result',
@@ -1299,11 +1468,11 @@ function w2ClusterQuiz() {
     '. Its random G(n,p) baseline is about p = ' + w2Number(s.p,3) +
     '. That gap is the interesting bit.');
 }
- 
+
 function w2PreferentialAttachment() {
   var count = 45, attach = 2;
   var degrees = [2,2,2];
- 
+
   for (var newcomer=3; newcomer<count; newcomer++) {
     var picked = new Set();
     while (picked.size < attach) {
@@ -1318,16 +1487,16 @@ function w2PreferentialAttachment() {
         }
       }
     }
- 
+
     picked.forEach(function(k){ degrees[k]++; });
     degrees.push(attach);
   }
- 
+
   degrees.sort(function(a,b){return b-a;});
   var maxReal = Math.max.apply(null,NODES.map(function(n){
     return adjAll[n.id].length;
   }));
- 
+
   w2SetText('experiment-name','PREFERENTIAL ATTACHMENT');
   w2SetText('experiment-status','GROW A NETWORK');
   document.getElementById('experiment-body').innerHTML =
@@ -1339,7 +1508,7 @@ function w2PreferentialAttachment() {
   w2SetText('experiment-result','Growth + preference is the recipe behind the hub idea.');
   w2Complete('hubs');
 }
- 
+
 function w2ShuffleEdges() {
   var edges = EDGES.map(function(e){ return [e[0],e[1]]; });
   var seen = new Set(edges.map(function(e){return w2EdgeKey(e[0],e[1]);}));
@@ -1367,7 +1536,7 @@ function w2ShuffleEdges() {
     seen.add(k1); seen.add(k2);
     swaps++;
   }
- 
+
   var adj = {};
   NODES.forEach(function(n){adj[n.id]=[];});
   edges.forEach(function(e){
@@ -1375,7 +1544,7 @@ function w2ShuffleEdges() {
   });
   return {adj:adj, swaps:swaps, clustering:w2AverageClustering(adj)};
 }
- 
+
 function w2NullExperiment() {
   var real = w2AverageClustering(adjAll);
   var results = [];
@@ -1398,7 +1567,7 @@ function w2NullExperiment() {
     'This shuffle did not make the difference look especially large.');
   w2Complete('null');
 }
- 
+
 function w2FriendshipParadox() {
   var samples = 30, nodeSum=0, neighborSum=0, usable=0;
   for (var i=0;i<samples;i++) {
@@ -1424,7 +1593,7 @@ function w2FriendshipParadox() {
     b >= a ? '✓ The paradox showed up in this sample.' : 'This sample missed it — try again.');
   w2Complete('paradox');
 }
- 
+
 function runWeek2Experiment(kind) {
   if (kind === 'random') w2RandomExperiment();
   if (kind === 'smallworld') w2SmallWorldExperiment();
@@ -1433,7 +1602,7 @@ function runWeek2Experiment(kind) {
   if (kind === 'null') w2NullExperiment();
   if (kind === 'paradox') w2FriendshipParadox();
 }
- 
+
 function updateWeek2Node() {
   var n = nodeMap[currentId];
   var deg = adjAll[currentId].length;
@@ -1452,7 +1621,7 @@ function updateWeek2Node() {
   }
   w2RefreshStats();
 }
- 
+
 function updateHud() {
   updateWeek2Node();
   if (droneView) {
@@ -1463,22 +1632,24 @@ function updateHud() {
     if (facing) {
       var isTarget = facing.id === extractionId;
       var risk = w2RiskFor(facing.id);
+      var riskPct = Math.round(risk*100);
+      var riskColor = riskPct < 25 ? '#8fc76a' : riskPct < 55 ? '#e0b84a' : '#d24a3a';
       w2SetText('facing-name', nodeMap[facing.id].name + (isTarget ? ' 🏁 EXTRACTION' : ''));
       w2SetText('facing-hint', isTarget
         ? 'aligned — press Up to extract'
-        : 'degree ' + adjAll[facing.id].length + ' — ~' + Math.round(risk*100) + '% ambush risk — press Up');
+        : 'degree ' + adjAll[facing.id].length + ' — <span style="color:' + riskColor + ';font-weight:700;">~' + riskPct + '% ambush risk</span> — press Up');
     } else {
       w2SetText('facing-name','turn to face a panel');
       w2SetText('facing-hint',doors.length + ' real edges here');
     }
   }
 }
- 
+
 // Moving is now real: reach EXTRACTION to win, get AMBUSHED and it's over. One life.
 function attemptStepToId(id) {
   if (!id || !nodeMap[id]) return;
   if (lifeStatus !== 'ALIVE') return;
- 
+
   if (id === extractionId) {
     moveTo(id, false);
     lifeStatus = 'EXTRACTED';
@@ -1487,12 +1658,12 @@ function attemptStepToId(id) {
     updateHud();
     return;
   }
- 
+
   var risk = w2RiskFor(id);
   var ambushed = Math.random() < risk;
- 
+
   moveTo(id, false);
- 
+
   if (ambushed) {
     lifeStatus = 'AMBUSHED';
     gameOver = true;
@@ -1500,7 +1671,7 @@ function attemptStepToId(id) {
     updateHud();
     return;
   }
- 
+
   var c = w2Clustering(id, adjAll);
   w2SetText('experiment-status','OBSERVING');
   w2SetText('experiment-body',
@@ -1510,7 +1681,7 @@ function attemptStepToId(id) {
   w2SetText('experiment-result','');
   updateHud();
 }
- 
+
 function startGame() {
   gameOver = false;
   lifeStatus = 'ALIVE';
@@ -1537,25 +1708,87 @@ function startGame() {
   updateHud();
   renderCorridorList();
 }
+
+function openFullscreenPanel(title, bodyHTML) {
+  console.log('openFullscreenPanel called with title:', title);
+  document.getElementById('fullscreen-modal-title').textContent = title;
+  document.getElementById('fullscreen-modal-body').innerHTML = bodyHTML;
+  document.getElementById('fullscreen-modal-backdrop').classList.add('show');
+}
+function closeFullscreenPanel() {
+  document.getElementById('fullscreen-modal-backdrop').classList.remove('show');
+}
+document.addEventListener('keydown', function(e){
+  if (e.key === 'Escape') closeFullscreenPanel();
+});
+
+function openLabFullscreen(evt) {
+  console.log('openLabFullscreen: clicked');
+  if (evt && evt.target && evt.target.closest && evt.target.closest('button')) return;
+  const name = document.getElementById('experiment-name').textContent;
+  const status = document.getElementById('experiment-status').textContent;
+  const body = document.getElementById('experiment-body').innerHTML;
+  const result = document.getElementById('experiment-result').innerHTML;
+  openFullscreenPanel(name + ' — ' + status, body + (result ? '<br><br><b>' + result + '</b>' : ''));
+}
+
+// The whole Week 2 arc in one place: build a model, see what it gets wrong,
+// add one ingredient, repeat — then turn the last model into a statistical
+// test. Numbers are pulled live from this exact network, not hardcoded.
+function openWeek2Story() {
+  console.log('openWeek2Story: clicked');
+  const s = w2RealStats();
+  const maxDeg = w2MaxDegree();
+  const spiderDeg = adjAll[GRAPH.centerId] ? adjAll[GRAPH.centerId].length : maxDeg;
+  const randomMaxGuess = Math.round(s.avgDegree + 4 * Math.sqrt(s.avgDegree));
+  const html = `
+    <p><b style="color:#e0cf9c;">The question network science started with:</b> is there a simple mechanism — two or three ingredients — that produces something that looks like a real network? Every model below is one attempt. Each one gets something right and something wrong. The wrongness tells you what ingredient is missing next.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">1. The random graph — the "no data" baseline</h3>
+    <p>In 1959, Erdős and Rényi asked: what if a network were wired by pure chance? Take ${s.n} nodes, and for every possible pair, flip a biased coin with probability <b>p</b>. Heads means a link.</p>
+    <p>For <b>this exact network</b>: ${s.n} nodes, ${s.m} edges, density (= p) <b>${w2Number(s.p,3)}</b>, average degree <b>${w2Number(s.avgDegree,2)}</b>.</p>
+    <p>A random graph like this has a <b>Poisson</b> degree distribution — nearly everyone sits close to the average, no hubs. It already has short paths (distances grow like log n), but its clustering is essentially zero: <b>C = p = ${w2Number(s.p,3)}</b>.</p>
+    <p style="color:#8fc76a;">Run <b>1. RANDOM BASELINE</b> below to see the actual predicted average degree against this network's real one.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">2. Six degrees — real networks have short paths too</h3>
+    <p>Milgram's 1967 letter experiment found strangers could reach a target in about six hand-offs. Random graphs already explain this: reach grows like ⟨k⟩^d, so distance grows only like log n. Short paths alone are <b>not</b> evidence a network is anything special — the random graph gets this part right.</p>
+    <p style="color:#8fc76a;">Run <b>2. SHORT PATHS</b> to trace a real path between two heroes and compare it to the network average.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">3. Something is missing — clustering</h3>
+    <p>Local clustering C_i = 2e_i / [k_i(k_i−1)] — the fraction of a node's neighbors who are also neighbors of each other. Real Marvel: <b>C ≈ ${w2Number(s.clustering,2)}</b>. A random graph with the same density: <b>C = p ≈ ${w2Number(s.p,3)}</b>. That's roughly a ${Math.round(s.clustering/Math.max(s.p,0.0001))}× gap — real superhero teams cluster into tight groups; pure chance does not.</p>
+    <p style="color:#8fc76a;">Run <b>3. CLUSTERING GAP</b> to compute a specific hero's local clustering coefficient by hand.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">4. Watts &amp; Strogatz — order and randomness, perched together</h3>
+    <p>1998: start from a <b>lattice</b> (every node linked to its nearest neighbors) — all clustering, but distances grow like n, not log n. Rewire just a small fraction q of links to random destinations, and those rewired links become <b>shortcuts</b>. A handful of shortcuts collapse the distances while barely touching the clustering, because the clustering comes from the 99% of links you didn't touch. Small q gives you a network that is simultaneously clustered <b>and</b> a small world — exactly what real networks are.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">5. Still missing — hubs</h3>
+    <p>This network's biggest hub, Spider-Man, has degree <b>${spiderDeg}</b> against an average of ${w2Number(s.avgDegree,1)}. A random graph this size would only ever produce a biggest node around <b>${randomMaxGuess}</b> — nowhere close. Neither the random graph nor Watts–Strogatz explains that gap; their degree distributions are narrow by construction.</p>
+    <p>Barabási &amp; Albert's 1999 fix needed two ingredients together: real networks <b>grow</b> (nodes are added over time), and newcomers <b>preferentially attach</b> to already-popular nodes — Π(k_i) = k_i / Σk_j. Growth plus preference gives a power law, P(k) ~ k^(−γ), the mathematical signature of hubs. Either ingredient alone does not.</p>
+    <p style="color:#8fc76a;">Run <b>4. HUBS (BA MODEL)</b> to grow a toy network with this exact mechanism and see how close its biggest hub gets to Spider-Man's real ${spiderDeg}.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">6. Null models — turning a model into a test</h3>
+    <p>Here's the twist: a model doesn't have to be a hypothesis about how the network was <b>built</b>. It can instead be a <b>baseline</b> for "nothing interesting going on." That's a <b>null model</b>.</p>
+    <p>The most useful one here: take the real network and <b>shuffle</b> it — pick two links A–B and C–D, rewire them to A–D and C–B, thousands of times. Every node keeps its exact real degree; who-links-to-whom is scrambled. This is the honest way to ask "is the clustering surplus caused by the hubs, or by something else?" — because this baseline has the real hubs, and the random-graph baseline from step 1 does not.</p>
+    <p>Shuffle many times and you get a <b>distribution</b>, not just one number. Compare the real value against it: how many standard deviations out is it (a <b>z-score</b>), or what fraction of shuffles ever reach it (an empirical <b>p-value</b>)? If the real value sits far outside the shuffled distribution, the effect is real — not a byproduct of degree alone.</p>
+    <p style="color:#8fc76a;">Run <b>5. NULL MODEL TEST</b> to shuffle this exact network several times and see where the real clustering lands.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">7. The friendship paradox — a null model in action</h3>
+    <p>Your friends probably do have more friends than you, on average — and it's not paranoia, it's math. Picking a random <b>neighbor</b> of a random person is degree-biased sampling: a hub is somebody's neighbor far more often than a low-degree node is, simply because it has more edges to be sampled through.</p>
+    <p>The formula: a random neighbor's mean degree is ⟨k⟩ + σ²/⟨k⟩ — always at least the network average, more so the more the degrees vary. It's strongest in scale-free networks (huge variance) and weakest — but never fully gone — in random ones.</p>
+    <p style="color:#8fc76a;">Run <b>6. FRIENDSHIP PARADOX</b> to sample real character/neighbor pairs and watch the paradox show up in this exact data.</p>
+
+    <h3 style="color:var(--gold);margin-top:22px;">The one-paragraph version</h3>
+    <p>Random graphs explain short paths but not clustering or hubs. Watts–Strogatz adds clustering with shortcuts. Barabási–Albert adds hubs with growth plus preferential attachment. None of the three is "the" model of the Marvel network — each one is right about one thing and wrong about another, and that pattern of being wrong is itself the finding. Then shuffling turns any one of these models from a hypothesis into a <b>test</b> you can run on any network property, any time you want to know whether something you measured is real or just what chance would give you.</p>
+  `;
+  document.getElementById('fullscreen-modal-title').textContent = 'WEEK 2 — THE WHOLE STORY';
+  document.getElementById('fullscreen-modal-body').innerHTML = html;
+  document.getElementById('fullscreen-modal-backdrop').classList.add('show');
+}
+
+// Start over once, using the same real graph and the existing 3D scene.
 startGame();
 setWeek2Mode('real');
 </script>
- 
+
 </body>
 </html>
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
